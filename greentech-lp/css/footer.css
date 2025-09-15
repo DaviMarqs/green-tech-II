@@ -1,0 +1,127 @@
+footer {
+  background: var(--green-900, #14532d);
+  width: 100%;
+
+  margin-top: 5rem;
+  padding: 0 1rem;
+}
+
+footer .social-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+footer .social-icons span {
+  color: #fff;
+  font-family: "DM Sans";
+  text-align: right;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+footer .top-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2.5rem;
+}
+
+footer .footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+footer .footer-section h4 {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+footer .footer-section ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+footer .footer-section ul li {
+  color: #fff;
+  font-family: "DM Sans";
+  font-size: 0.875rem;
+  font-weight: 400;
+  opacity: 0.67;
+  list-style: none;
+}
+
+footer .listas {
+  display: flex;
+  gap: 4.5rem;
+  padding: 0 0 3.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+footer .contact-box {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2rem;
+}
+
+footer .contact-box img,
+footer .contact-box svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0; /* Impede que o ícone encolha */
+}
+
+footer .contact-box span {
+  color: #fff;
+  font-family: "DM Sans";
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 150%; /* 21px */
+  opacity: 1;
+}
+
+footer .contact-box p {
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 150%;
+  opacity: 0.67;
+}
+
+@media (max-width: 768px) {
+  footer .top-section {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  footer .social-icons {
+    gap: 1rem;
+  }
+
+  footer .social-icons span {
+    text-align: center;
+  }
+
+  footer .listas {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  footer .footer-section {
+    text-align: center;
+  }
+
+  footer .contact-box {
+    flex-direction: column;
+    max-width: 100%;
+  }
+}

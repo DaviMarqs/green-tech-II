@@ -1,0 +1,80 @@
+.s-beneficios .title h1 {
+    color: #343638;
+    text-align: center;
+    font-size: 3.5rem;
+    font-weight: 600;
+    max-width: 37.5rem;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+}
+
+.s-beneficios .title strong {
+    color: var(--green-600, #16A34A);
+    font-size: 3.5rem;
+    font-weight: 600;
+}
+
+.s-beneficios .title p {
+    color: #343638;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 400;
+    padding-bottom: 1rem;
+}
+
+.s-beneficios .grid-beneficios {
+    display: grid;
+    padding-top: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.s-beneficios .card-beneficio {
+    display: flex;
+    padding: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-radius: 1.5rem;
+    border: 0.5px solid #E5E5E5;
+    background: #FFF;
+}
+
+.s-beneficios .card-beneficio h5 {
+    color: #343638;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.s-beneficios .card-beneficio p {
+    color: #343638;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+@media (max-width: 1024px) {
+    .s-beneficios .grid-beneficios {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .s-beneficios {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .s-beneficios .title h1,
+    .s-beneficios .title strong {
+        font-size: 2.25rem;
+    }
+
+    .s-beneficios .title p {
+        font-size: 1.25rem;
+    }
+
+    .s-beneficios .grid-beneficios {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}

@@ -1,0 +1,123 @@
+.s-faq {
+    padding-top: 4rem;
+    padding-bottom: 3rem;
+}
+
+.s-faq h1 {
+    color: #343638;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    padding-bottom: 2rem;
+}
+
+.s-faq .grid-faq {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.s-faq .pergunta {
+    width: 100%;
+    max-width: 63.75rem;
+    padding: 2rem;
+    border-radius: 0;
+    transition: background .4s ease-in-out, border-radius .3s ease-in-out;
+    border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+}
+
+.s-faq .pergunta.active{
+    border-radius: 16px;
+    background: linear-gradient(257deg, #fdfdff -6.81%, #f7f9fc 71.78%);
+    border-bottom: none;
+}
+
+.s-faq .pergunta img {
+    transition: transform .3s;
+}
+
+.s-faq .pergunta.active img{
+    transform: rotate(180deg);
+}
+
+.s-faq .title{
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.s-faq .title h3 {
+    color: #343638;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.s-faq .pergunta p {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height .4s ease-in-out, opacity .4s ease-in-out, padding-top .4s ease-in-out;
+    color: #343638;
+    font-size: 1.125rem;
+    line-height: 166%;
+    font-weight: 400;
+    padding-top: 0;
+}
+
+.s-faq .pergunta.active p {
+    opacity: 1;
+    max-height: 31.25rem;
+    padding-top: 1rem;
+}
+
+.s-faq .contato {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 3rem;
+}
+
+.s-faq .contato h5 {
+    color: #343638;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.s-faq .contato a {
+        border-radius: 3rem;
+        background: var(--green-600, #22C55E);
+        color: var(--green-950, #052E16);
+        font-family: "DM Sans";
+        font-size: 1.25rem;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .s-faq {
+        padding-top: 3rem;
+        padding-bottom: 2rem;
+    }
+
+    .s-faq h1 {
+        font-size: 2rem;
+    }
+
+    .s-faq .pergunta {
+        padding: 1.5rem;
+    }
+
+    .s-faq .title h3 {
+        font-size: 1.25rem;
+    }
+
+    .s-faq .pergunta p {
+        font-size: 1rem;
+    }
+}
