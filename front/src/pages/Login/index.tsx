@@ -1,48 +1,47 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
 
 export function Login() {
   return (
-    <section className="flex w-screen justify-between items-center">
-      <div className="flex w-1/2 h-screen">
+      <section className="flex w-screen justify-between items-center ">
+      <div className="w-1/2 h-screen hidden sm:flex">
         <img
           className="w-full h-full object-cover"
           src="/icon-login.svg"
           alt="icon-login"
         />
       </div>
-      <div className="content gap-2 flex w-1/2 flex-col">
-        <div className="flex flex-col gap-6 w-3/5 m-auto">
+      <div className="content gap-2 flex w-full flex-col h-screen sm:w-1/2">
+        <div className="flex flex-col gap-6 w-auto lg:w-3/5 m-auto">
           <div className="flex-col w-fit">
-            <h2 className="font-[Dm Sans] text-3xl weight-medium pt-16 justify-between">
+            <h2 className="font-[Dm Sans] text-3xl text-center font-semibold justify-between">
               Bem vindo(a) de volta!
             </h2>
             <div className="flex justify-between">
-              <p className="flex w-full justify-between pt-2">
+              <p className="flex w-full justify-between text-wrap:-nowrap pt-2">
                 Não possui uma conta?
-                <a className="ml-auto text-[#00C06B]" href="">
-                  Registre-se
-                </a>
+                <Link to="/register" className="ml-auto text-[#00C06B] text-wrap:-nowrap underline">Registre-se</Link>
               </p>
             </div>
           </div>
           <div className="campo pt-3">
-            <Label htmlFor="email" name="email" className="mb-2">
+            <Label htmlFor="email" className="mb-2">
               Email
             </Label>
             <Input
-              className="flex center rounded-md border border-gray-300 w-full bg-white"
+              className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
               type="email"
               placeholder="user@gmail.com"
             />
           </div>
           <div className="flex-col w-full">
-            <Label htmlFor="password" name="password" className="mb-2">
+            <Label htmlFor="password" className="mb-2">
               Senha
             </Label>
             <Input
-              className="flex center rounded-md border border-gray-300 w-full bg-white"
+              className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
               type="password"
               placeholder="*****"
             />

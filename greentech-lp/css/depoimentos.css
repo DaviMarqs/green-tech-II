@@ -41,6 +41,10 @@
     white-space: nowrap;
 }
 
+.s-depoimentos .swiper-slide img {
+    max-width: 2rem;
+    height: auto;
+}
 
 .s-depoimentos .swiper-slide {
     padding: 2rem;
@@ -48,6 +52,7 @@
     border: 1px solid #E5E5E5;
     width: 100%;
     background-color: #FFF;
+    height: 13.75rem;
 }
 
 .s-depoimentos .swiper-slide p {
@@ -98,6 +103,19 @@
     font-weight: 400;
 }
 
+.s-depoimentos .swiper-button-next,
+.s-depoimentos .swiper-button-prev {
+    color: #16A34A; /* Cor verde principal do tema */
+}
+
+.s-depoimentos .profile img {
+    width: 100%;
+    max-width: 48px;
+    height: auto;
+    border-radius: 50%;
+}
+
+
 @media(max-width: 1024px) {
     .s-depoimentos .title {
         justify-content: center;
@@ -116,9 +134,14 @@
     .s-depoimentos .swiper-pagination {
         display: none;
     }
+
 }
 
 @media(max-width: 768px) {
+
+    .s-depoimentos .swiper-slide {
+    height: 16.5rem;
+}
 
     .s-depoimentos h1 {
         text-wrap: wrap;
@@ -131,4 +154,8 @@
         font-size: 32px;
         padding: 0 1rem;
     }
+
+    .s-depoimentos .swiper-slide {
+    height: 17rem;
+}
 }

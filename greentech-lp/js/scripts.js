@@ -2,9 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var swiper = new Swiper(".slide-depositions", {
     slidesPerView: 1,
     spaceBetween: 16,
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
     },
     breakpoints: {
       768: {
@@ -18,29 +18,20 @@ document.addEventListener("DOMContentLoaded", function () {
     },
   });
 
-  AOS.init({
-    duration: 1000,
-  });
-
   const perguntas = document.querySelectorAll(".s-faq .pergunta");
 
   perguntas.forEach((pergunta) => {
     pergunta.addEventListener("click", () => {
       const estaAtivo = pergunta.classList.contains("active");
 
-      // Primeiro, fecha todas as perguntas para garantir que apenas uma esteja aberta
       perguntas.forEach((item) => {
         item.classList.remove("active");
         item.querySelector("p").style.maxHeight = null;
       });
 
-      // Se a pergunta clicada não estava ativa, então a abre.
       if (!estaAtivo) {
         pergunta.classList.add("active");
         const resposta = pergunta.querySelector("p");
-        // O problema provavelmente está no valor de `resposta.scrollHeight`.
-        // Inspecione o CSS para este elemento <p> e verifique se há alguma regra
-        // (como `height` ou `max-height`) limitando seu tamanho.
 
         resposta.style.maxHeight = resposta.scrollHeight + 10 + "px";
       }
