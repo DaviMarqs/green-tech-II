@@ -1,7 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
 
 export function Register() {
   return (
@@ -13,89 +13,104 @@ export function Register() {
           alt="icon-login"
         />
       </div>
-        <div className="content flex flex-col h-screen w-full lg:w-1/2">
-            <div className="flex flex-col gap-3 p-6 m-auto">
-                <div className="flex-col w-fit">
-                    <h2 className="font-[Dm Sans] text-3xl w-full text-center font-semibold justify-between">
-                    Crie uma conta GreenTech
-                    </h2>
-                    <div className="flex justify-between">
-                    <p className="flex w-full justify-between pt-2">
-                        Já possui uma conta?
-                        <Link to="/" className="ml-auto text-[#00C06B] underline">
-                        Faça login
-                        </Link>
-                    </p>
-                    </div>
-                    </div>
-                <div className="campo pt-3">
-                    <Label htmlFor="email" className="mb-2">
-                    Email
-                    </Label>
-                    <Input
-                    className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
-                    type="email"
-                    placeholder="user@gmail.com"
-                    />
-                </div>
-                <div className="flex gap-3 lg:gap-7">
-                <div className="flex-col w-full">
-                    <Label htmlFor="password" className="mb-2">
-                    Senha
-                    </Label>
-                    <Input
-                    className="flex center rounded-md border border-gray-300 w-full bg-white"
-                    type="password"
-                    placeholder="*****"
-                    />
-                </div>
-                <div className="flex-col w-full">
-                    <Label htmlFor="password" className="mb-2">
-                    Confirmar senha
-                    </Label>
-                    <Input
-                    className="flex center rounded-md border border-gray-300 w-full bg-white"
-                    type="password"
-                    placeholder="*****"
-                    />
-                </div>
-
-                </div>
-                <p className="text-neutral-700 text-sm">A senha deve ter no mínimo 8 caracteres</p>
-                    <div className="campo pt-3">
-                    <Label htmlFor="CPF" className="mb-2">
-                    CPF / CNPJ
-                    </Label>
-                    <Input
-                    className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
-                    type="string"
-                    placeholder="000.000.000-00"
-                    />
-                </div>
-                    <div className="campo pt-3">
-                    <Label htmlFor="email" className="mb-2">
-                    Número de telefone
-                    </Label>
-                    <Input
-                    className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
-                    type="string"
-                    placeholder="(00) 00000-0000"
-                    />
-                </div>
-                    <div className="flex gap-2 justify-between">
-                        <div className="flex items-center gap-2">
-                        <Checkbox id="lembrarSenha" className="w-4 h-4" />
-                        <Label htmlFor="lembrarSenha" className="text-sm lg:text-base">Concordo com os <span className="text-[#00C06B] underline text-sm lg:text-base">Termos de Uso</span></Label>
-                        </div>
-                </div>
-                <div className="Cadastro">
-                    <button className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full cursor-pointer">
-                    Fazer cadastro
-                    </button>
-                </div>
+      <div className="content flex flex-col h-screen w-full lg:w-1/2">
+        <div className="flex flex-col gap-3 p-6 m-auto">
+          <div className="flex-col w-fit">
+            <h2 className="font-[Dm Sans] text-3xl w-full text-center font-semibold justify-between">
+              Crie uma conta
+              <span className="ml-2 text-[#00C06B]">GreenTech</span>
+            </h2>
+            <div className="flex">
+              <p className="flex w-full pt-2">
+                Já possui uma conta?
+                <Link
+                  to="/"
+                  className="ml-auto sm:ml-2 text-[#00C06B] underline"
+                >
+                  Faça login
+                </Link>
+              </p>
+            </div>
+          </div>
+          <div className="pt-3">
+            <Label htmlFor="email" className="mb-2">
+              Email
+            </Label>
+            <Input
+              className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
+              type="email"
+              placeholder="user@gmail.com"
+            />
+          </div>
+          <div className="flex gap-3 lg:gap-7">
+            <div className="flex-col w-full">
+              <Label htmlFor="password" className="mb-2">
+                Senha
+              </Label>
+              <Input
+                className="flex center rounded-md border border-gray-300 w-full bg-white"
+                type="password"
+                placeholder="*****"
+              />
+            </div>
+            <div className="flex-col w-full">
+              <Label htmlFor="password" className="mb-2">
+                Confirmar senha
+              </Label>
+              <Input
+                className="flex center rounded-md border border-gray-300 w-full bg-white"
+                type="password"
+                placeholder="*****"
+              />
+            </div>
+          </div>
+          <p className="text-neutral-700 text-sm">
+            A senha deve ter no mínimo 8 caracteres
+          </p>
+          <div className="pt-3">
+            <Label htmlFor="CPF" className="mb-2">
+              CPF / CNPJ
+            </Label>
+            <Input
+              className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
+              type="string"
+              placeholder="000.000.000-00"
+            />
+          </div>
+          <div className="pt-3">
+            <Label htmlFor="email" className="mb-2">
+              Número de telefone
+            </Label>
+            <Input
+              className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
+              type="string"
+              placeholder="(00) 00000-0000"
+            />
+          </div>
+          <div className="flex gap-2 justify-between">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="lembrarSenha"
+                className="w-4 h-4 hover:cursor-pointer"
+              />
+              <Label
+                htmlFor="lembrarSenha"
+                className="text-sm lg:text-base hover:cursor-pointer"
+              >
+                Concordo com os{" "}
+                <span className="text-[#00C06B] underline text-sm lg:text-base">
+                  Termos de Uso{" "}
+                </span>
+              </Label>
+            </div>
+          </div>
+          <div className="Cadastro">
+            <button className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full cursor-pointer">
+              Fazer cadastro
+            </button>
+          </div>
         </div>
-
-        </div>
+      </div>
     </section>
   );
 }

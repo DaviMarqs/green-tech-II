@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export function Login() {
   return (
-      <section className="flex w-screen justify-between items-center ">
+    <section className="flex w-screen justify-between items-center ">
       <div className="w-1/2 h-screen hidden sm:flex">
         <img
           className="w-full h-full object-cover"
@@ -20,17 +20,24 @@ export function Login() {
               Bem vindo(a) de volta!
             </h2>
             <div className="flex justify-between">
-              <p className="flex w-full justify-between text-wrap:-nowrap pt-2">
+              <p className="flex w-full text-wrap:-nowrap pt-2">
                 Não possui uma conta?
-                <Link to="/register" className="ml-auto text-[#00C06B] text-wrap:-nowrap underline">Registre-se</Link>
+                <Link
+                  to="/register"
+                  className="ml-2 text-[#00C06B] text-wrap:-nowrap underline"
+                >
+                  Registre-se
+                </Link>
               </p>
             </div>
           </div>
-          <div className="campo pt-3">
-            <Label htmlFor="email" className="mb-2">
+          <div className="pt-3">
+            <Label htmlFor="email" className="mb-2" id="email">
               Email
             </Label>
             <Input
+              id="email"
+              name="email"
               className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
               type="email"
               placeholder="user@gmail.com"
@@ -48,15 +55,20 @@ export function Login() {
           </div>
           <div className="flex gap-2 justify-between">
             <div className="flex items-center gap-2">
-              <Checkbox id="lembrarSenha" className="w-4 h-4" />
-              <Label htmlFor="lembrarSenha">Manter conectado</Label>
+              <Checkbox
+                id="lembrarSenha"
+                className="w-4 h-4 hover:cursor-pointer"
+              />
+              <Label htmlFor="lembrarSenha" className="hover:cursor-pointer">
+                Manter conectado
+              </Label>
             </div>
-            <a className="text-[#00C06B]" href="#">
+            <a className="text-[#00C06B] underline" href="#">
               Esqueci a senha
             </a>
           </div>
           <div className="fazerLogin">
-            <button className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full">
+            <button className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full hover:cursor-pointer">
               Fazer login
             </button>
           </div>
