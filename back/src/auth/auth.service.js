@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { pool } from "../config/pg.js";
+import bcrypt from "bcryptjs";
+import { pool } from "../pg.js";
 
 class AppError extends Error {
 	constructor(message, statusCode) {
@@ -11,7 +11,7 @@ class AppError extends Error {
 
 export const register = async ({ name, cpf, email, senha, telefone, cep }) => {
 	const userExists = await pool.query(
-		"SELECT id FROM gt_usuario WHERE email = $1 OR cpf_cnpj = $2",
+		"SELECT id_usuario FROM gt_usuario WHERE email = $1 OR cpf_cnpj = $2",
 		[email, cpf],
 	);
 
@@ -19,23 +19,22 @@ export const register = async ({ name, cpf, email, senha, telefone, cep }) => {
 		throw new AppError("E-mail ou CPF já cadastrado.", 409);
 	}
 
-	const saltRounds = 10;
-	const passwordHash = await bcrypt.hash(senha, saltRounds);
+	const salt = 10;
+	const passwordHash = await bcrypt.hash(senha, salt);
 
 	const sql = `
     INSERT INTO gt_usuario (nome, cpf_cnpj, email, senha, telefone, cep)
     VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING id, nome, email;
+		RETURNING id_usuario, nome, email;
   `;
 	const values = [name, cpf, email, passwordHash, telefone, cep];
 	const { rows } = await pool.query(sql, values);
-
 	return rows[0];
 };
 
 export const login = async ({ email, senha }) => {
 	const result = await pool.query(
-		"SELECT id, nome, email, senha FROM gt_usuario WHERE email = $1",
+		"SELECT id_usuario, nome, email, senha FROM gt_usuario WHERE email = $1",
 		[email],
 	);
 	const user = result.rows[0];
