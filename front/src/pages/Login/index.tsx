@@ -1,9 +1,26 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import api from "@/lib/api";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLogin = async (event: React.FormEvent) => {
+    try {
+      event.preventDefault();
+      const response = await api.post("/auth/login", {
+        email,
+        senha: password,
+      });
+      console.log("Login bem-sucedido:", response.data);
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+    }
+  };
+
   return (
     <section className="flex w-screen justify-between items-center ">
       <div className="w-1/2 h-screen hidden sm:flex">
@@ -41,6 +58,8 @@ export function Login() {
               className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
               type="email"
               placeholder="user@gmail.com"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
             />
           </div>
           <div className="flex-col w-full">
@@ -51,6 +70,10 @@ export function Login() {
               className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
               type="password"
               placeholder="*****"
+              id="password"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
             />
           </div>
           <div className="flex gap-2 justify-between">
@@ -68,7 +91,10 @@ export function Login() {
             </a>
           </div>
           <div className="fazerLogin">
-            <button className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full hover:cursor-pointer">
+            <button
+              className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full hover:cursor-pointer"
+              onClick={handleLogin}
+            >
               Fazer login
             </button>
           </div>

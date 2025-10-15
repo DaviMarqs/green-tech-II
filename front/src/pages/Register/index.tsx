@@ -1,9 +1,35 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import api from "@/lib/api";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function Register() {
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [cpfCnpj, setCpfCnpj] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [dataNasc, setDataNasc] = useState("");
+  const handleRegister = async (event: React.FormEvent) => {
+    try {
+      event.preventDefault();
+      const response = await api.post("/auth/register", {
+        nome,
+        email,
+        senha: password,
+        cpf: cpfCnpj,
+        telefone: phoneNumber,
+        data_nasc: dataNasc,
+      });
+      console.log("Registro bem-sucedido:", response.data);
+    } catch (error) {
+      console.error("Erro ao registrar:", error);
+    }
+  };
+
   return (
     <section className="flex w-screen justify-between items-center">
       <div className="w-1/2 h-screen hidden lg:block">
@@ -34,12 +60,26 @@ export function Register() {
           </div>
           <div className="pt-3">
             <Label htmlFor="email" className="mb-2">
+              Nome completo
+            </Label>
+            <Input
+              className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
+              type="text"
+              placeholder="Seu nome"
+              onChange={(e) => setNome(e.target.value)}
+              value={nome}
+            />
+          </div>
+          <div className="pt-3">
+            <Label htmlFor="email" className="mb-2">
               Email
             </Label>
             <Input
               className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
               type="email"
               placeholder="user@gmail.com"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
             />
           </div>
           <div className="flex gap-3 lg:gap-7">
@@ -51,6 +91,8 @@ export function Register() {
                 className="flex center rounded-md border border-gray-300 w-full bg-white"
                 type="password"
                 placeholder="*****"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
             </div>
             <div className="flex-col w-full">
@@ -61,6 +103,8 @@ export function Register() {
                 className="flex center rounded-md border border-gray-300 w-full bg-white"
                 type="password"
                 placeholder="*****"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={confirmPassword}
               />
             </div>
           </div>
@@ -75,17 +119,35 @@ export function Register() {
               className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
               type="string"
               placeholder="000.000.000-00"
+              onChange={(e) => setCpfCnpj(e.target.value)}
+              value={cpfCnpj}
             />
           </div>
-          <div className="pt-3">
-            <Label htmlFor="email" className="mb-2">
-              Número de telefone
-            </Label>
-            <Input
-              className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
-              type="string"
-              placeholder="(00) 00000-0000"
-            />
+          <div className="flex gap-3 lg:gap-7">
+            <div className="pt-3 w-1/2">
+              <Label htmlFor="email" className="mb-2">
+                Número de telefone
+              </Label>
+              <Input
+                className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
+                type="string"
+                placeholder="(00) 00000-0000"
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                value={phoneNumber}
+              />
+            </div>
+            <div className="pt-3 w-1/2">
+              <Label htmlFor="email" className="mb-2">
+                Data de Nasc.
+              </Label>
+              <Input
+                className="flex center rounded-md border border-gray-300 w-full bg-white text-sm lg:text-base"
+                type="string"
+                placeholder="01/01/2000"
+                onChange={(e) => setDataNasc(e.target.value)}
+                value={dataNasc}
+              />
+            </div>
           </div>
           <div className="flex gap-2 justify-between">
             <div className="flex items-center gap-2">
@@ -105,7 +167,10 @@ export function Register() {
             </div>
           </div>
           <div className="Cadastro">
-            <button className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full cursor-pointer">
+            <button
+              className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full cursor-pointer"
+              onClick={handleRegister}
+            >
               Fazer cadastro
             </button>
           </div>
