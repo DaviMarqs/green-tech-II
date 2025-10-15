@@ -30,12 +30,16 @@ export const register = async ({
 	const salt = 10;
 	const passwordHash = await bcrypt.hash(senha, salt);
 
+	const [dia, mes, ano] = data_nasc.split("/");
+
+	const dataFormatada = `${ano}-${mes}-${dia}`;
+
 	const sql = `
     INSERT INTO gt_usuario (nome, cpf_cnpj, email, senha, telefone, cep, data_nasc)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id_usuario, nome, email;
   `;
-	const values = [nome, cpf, email, passwordHash, telefone, cep, data_nasc];
+	const values = [nome, cpf, email, passwordHash, telefone, cep, dataFormatada];
 	const { rows } = await pool.query(sql, values);
 	return rows[0];
 };
