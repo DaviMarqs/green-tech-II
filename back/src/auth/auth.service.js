@@ -1,13 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { pool } from "../pg.js";
-
-class AppError extends Error {
-	constructor(message, statusCode) {
-		super(message);
-		this.statusCode = statusCode;
-	}
-}
+import { AppError } from "../errors/AppError.js";
 
 export const register = async ({
 	nome,
@@ -46,7 +40,7 @@ export const register = async ({
 
 export const login = async ({ email, senha }) => {
 	const result = await pool.query(
-		"SELECT id_usuario, nome, email, senha FROM gt_usuario WHERE email = $1",
+		"SELECT id_usuario, nome, email, senha FROM gt_usuario WHERE email = $1 AND disabled_at IS NULL",
 		[email],
 	);
 	const user = result.rows[0];
@@ -61,7 +55,7 @@ export const login = async ({ email, senha }) => {
 	}
 
 	const token = jwt.sign(
-		{ id: user.id, email: user.email },
+		{ id: user.id_usuario, email: user.email },
 		process.env.JWT_SECRET,
 		{ expiresIn: "8h" },
 	);
