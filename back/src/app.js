@@ -1,30 +1,22 @@
 import express from "express";
-import { pool } from "./pg.js";
+import authRoutes from "./auth/auth.routes.js";
 
 const app = express();
 
 app.use(express.json());
 
 app.get("/health", (req, res) => res.json({ status: "ok" }));
+app.use("/auth", authRoutes);
 
+// Middleware
 app.use((err, req, res, next) => {
-	console.log(err);
-	res.status(500).json({ message: "Erro interno" });
-});
+	console.error(err);
 
-app.post("/auth/register", async (req, res) => {
-	try {
-		const { body } = req;
-		const sql = `INSERT INTO gt_usuario (nome, cpf_cnpj, email, senha, telefone, cep)
-    VALUES ('${body.name}', '${body.cpf}', '${body.email}', '${body.senha}', '${body.telefone}', '${body.cep}')`;
-		console.log("sql", sql);
-		console.log(body, "body");
-		const { rows } = await pool.query(sql);
-	} catch (err) {
-		console.log(err);
+	if (err.statusCode) {
+		return res.status(err.statusCode).json({ message: err.message });
 	}
 
-	res.json({ status: "usuario criado com sucesso!" });
+	res.status(500).json({ message: "Ocorreu um erro interno no servidor." });
 });
 
 export default app;
