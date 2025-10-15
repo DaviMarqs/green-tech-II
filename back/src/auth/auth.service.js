@@ -9,7 +9,15 @@ class AppError extends Error {
 	}
 }
 
-export const register = async ({ name, cpf, email, senha, telefone, cep }) => {
+export const register = async ({
+	nome,
+	cpf,
+	email,
+	senha,
+	telefone,
+	cep,
+	data_nasc,
+}) => {
 	const userExists = await pool.query(
 		"SELECT id_usuario FROM gt_usuario WHERE email = $1 OR cpf_cnpj = $2",
 		[email, cpf],
@@ -23,11 +31,11 @@ export const register = async ({ name, cpf, email, senha, telefone, cep }) => {
 	const passwordHash = await bcrypt.hash(senha, salt);
 
 	const sql = `
-    INSERT INTO gt_usuario (nome, cpf_cnpj, email, senha, telefone, cep)
+    INSERT INTO gt_usuario (nome, cpf_cnpj, email, senha, telefone, cep, data_nasc)
     VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id_usuario, nome, email;
   `;
-	const values = [name, cpf, email, passwordHash, telefone, cep];
+	const values = [nome, cpf, email, passwordHash, telefone, cep, data_nasc];
 	const { rows } = await pool.query(sql, values);
 	return rows[0];
 };

@@ -2,19 +2,20 @@ import * as authService from "./auth.service.js";
 
 export const registerController = async (req, res, next) => {
 	try {
-		const { name, cpf, email, senha, telefone, cep } = req.body;
+		const { nome, cpf, email, senha, telefone, cep, data_nasc } = req.body;
 
-		if (!name || !email || !senha || !cpf) {
+		if (!nome || !email || !senha || !cpf) {
 			return res.status(400).json({ message: "Dados obrigatórios ausentes." });
 		}
 
 		const newUser = await authService.register({
-			name,
+			nome,
 			cpf,
 			email,
 			senha,
 			telefone,
 			cep,
+			data_nasc,
 		});
 
 		res.status(201).json({
@@ -36,7 +37,6 @@ export const loginController = async (req, res, next) => {
 				.json({ message: "E-mail e senha são obrigatórios." });
 		}
 
-		// Chama a função 'login' diretamente do service importado
 		const { user, token } = await authService.login({ email, senha });
 
 		res.status(200).json({
