@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { AppError } from "../errors/AppError.js";
 import { pool } from "../pg.js";
 
@@ -63,4 +64,27 @@ export const deactivateUser = async (id) => {
 	}
 
 	return { message: "Usuário desativado com sucesso." };
+};
+
+export const resetPassword = async (email, senha) => {
+	const userExists = await pool.query(
+		"SELECT * FROM gt_usuario WHERE email = $1 AND disabled_at IS NULL",
+		[email],
+	);
+
+	if (userExists.rowCount === 0) {
+		throw new AppError("Usuário não encontrado ou desativado.", 404);
+	}
+
+	const salt = 10;
+	const passwordHash = await bcrypt.hash(senha, salt);
+
+	const sql = `
+    UPDATE gt_usuario
+    SET senha='${passwordHash}'
+    WHERE email = '${email}'
+  `;
+
+	const { rows } = await pool.query(sql);
+	return rows[0];
 };

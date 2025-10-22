@@ -32,3 +32,20 @@ export const deactivateController = async (req, res) => {
 		res.status(error.statusCode || 500).json({ message: error.message });
 	}
 };
+
+export const resetPasswordController = async (req, res) => {
+	const { email, senha } = req.body;
+
+	if (!email || !senha) {
+		return res.status(404).json({
+			message: "Dados inválidos!",
+		});
+	}
+
+	try {
+		await userService.resetPassword(email, senha);
+		res.status(200).json({ message: "Senha alterada com sucesso!" });
+	} catch (error) {
+		res.status(error.statusCode || 500).json({ message: error.message });
+	}
+};
