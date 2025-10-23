@@ -3,30 +3,39 @@ import { Label } from "@/components/ui/label";
 import api from "@/lib/api";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 export function Esqueci() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordConfirmed, setPasswordConfirmed] = useState("");
 
-	const handleResetPassword = async (event: React.FormEvent) => {
-		try {
-			event.preventDefault();
-			if (password !== passwordConfirmed) {
-				alert("Senhas não conferem!");
-				return;
-			}
-			const response = await api.put("/users/resetPassword", {
-				email,
-				senha: password,
-			});
-			console.log("Login bem-sucedido:", response.data);
-			window.location.assign("/");
-		} catch (error) {
-			console.error("Erro ao fazer login:", error);
-		}
-	};
-
+const handleResetPassword = async (event: React.FormEvent) => {
+        try {
+            event.preventDefault();
+            if (password !== passwordConfirmed) {
+                toast.error("As senhas não coincidem", {
+                    description: "Tente novamente com as senhas iguais",
+                    duration: 4000,
+                }); return;
+            }
+            await api.put("/users/resetPassword", {
+                email,
+                senha: password,
+            });
+                toast.success("Sua senha foi alterada com sucesso", {
+                    description: "Faça o login novamente",
+                    duration: 4000,
+                });
+            window.location.assign("/");
+        } catch (error) {
+            console.error("Erro ao fazer login:", error);
+                toast.error("Erro ao fazer login!", {
+                    description: "Erro ao puxar dados",
+                    duration: 4000,
+                }); return;
+        }
+    };
 	return (
 		<section className="flex w-screen justify-between items-center ">
 			<div className="w-1/2 h-screen hidden sm:flex">

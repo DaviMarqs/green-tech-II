@@ -4,6 +4,8 @@ import { Label } from "@/components/ui/label";
 import api from "@/lib/api";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+
 
 export function Register() {
 	const [nome, setNome] = useState("");
@@ -24,10 +26,14 @@ export function Register() {
 				telefone: phoneNumber,
 				data_nasc: dataNasc,
 			});
-			console.log("Registro bem-sucedido:", response.data);
+                toast.success("Cadastro feito com sucesso!", {
+                    duration: 4000,
+                });
 			window.location.assign("/");
 		} catch (error) {
-			console.error("Erro ao registrar:", error);
+                toast.error("Erro ao fazer cadastro!", {
+                    duration: 4000,
+                }); return;
 		}
 	};
 
