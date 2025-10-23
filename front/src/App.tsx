@@ -1,4 +1,5 @@
 import "./App.css";
+import { Esqueci } from "./pages/Esqueci Senha";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 
@@ -11,7 +12,8 @@ function App() {
     <BrowserRouter>
         <Routes>
           <Route path="/register" element={<Register />}/>
-          <Route path="/" element={<Login />}/>   
+          <Route path="/" element={<Login />}/>  
+          <Route path="/forgot" element={<Esqueci />}/> 
         </Routes>
     </BrowserRouter>
     </>
