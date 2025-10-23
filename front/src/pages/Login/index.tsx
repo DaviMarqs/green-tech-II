@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import api from "@/lib/api";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 export function Login() {
 	const [email, setEmail] = useState("");
@@ -15,10 +16,15 @@ export function Login() {
 				email,
 				senha: password,
 			});
-			console.log("Login bem-sucedido:", response.data);
+                toast.success("Login realizado!", {
+                    duration: 4000,
+                });
 			window.location.assign("/dashboard");
 		} catch (error) {
-			console.error("Erro ao fazer login:", error);
+                toast.error("Erro ao fazer login!", {
+                    description: "Erro ao puxar dados",
+                    duration: 4000,
+                }); return;
 		}
 	};
 
