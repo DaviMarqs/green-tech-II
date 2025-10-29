@@ -12,7 +12,7 @@ export function Login() {
 	const handleLogin = async (event: React.FormEvent) => {
 		try {
 			event.preventDefault();
-			const response = await api.post("/auth/login", {
+			await api.post("/auth/login", {
 				email,
 				senha: password,
 			});
@@ -104,8 +104,7 @@ export function Login() {
 						<button
 							type="submit"
 							className="text-1xl bg-[#00C06B] text-white px-8 py-2 rounded-2xl w-full hover:cursor-pointer"
-							onClick={handleLogin}
-						>
+							onClick={handleLogin}>
 							Fazer login
 						</button>
 					</div>
