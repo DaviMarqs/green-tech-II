@@ -1,4 +1,5 @@
+import CreateProductCard from "@/components/CreateProductCard";
+
 export function Dashboard() {
-    return (
-        <h1>dashboard</h1>)
+  return <CreateProductCard />;
 }
