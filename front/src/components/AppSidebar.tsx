@@ -1,8 +1,9 @@
-import { ShoppingCart, Banknote, Archive, Wallet, CircleQuestionMark, Bolt } from "lucide-react"
+import { ShoppingCart, Banknote, Archive, Wallet, CircleQuestionMark, Bolt, LogOut } from "lucide-react"
 
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -45,17 +46,28 @@ const items = [
     },
 ]
 
+const footerItems = [
+    {
+        title: "Sair",
+        url: "#",
+        icon: LogOut
+    },
+]
+
 export function AppSidebar() {
     return (
         <Sidebar>
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel><img src="./public/logo-greentech.svg" alt="" /></SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu className="ml-2">
+                <SidebarGroup className="mt-2 px-2">
+                    <SidebarGroupLabel className="mt-4"><a href="/dashboard">
+                        <img src="./public/logo-greentech.svg" alt="Logo - Dashboard" />
+                    </a>
+                    </SidebarGroupLabel>
+                    <SidebarGroupContent className="mt-3">
+                        <SidebarMenu className="mt-2">
                             {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
+                                <SidebarMenuItem key={item.title} className="text-gray-600">
+                                    <SidebarMenuButton asChild className="hover:bg-green-100 transition-colors duration-100">
                                         <a href={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
@@ -66,6 +78,20 @@ export function AppSidebar() {
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
+                <SidebarFooter className="mt-auto px-2">
+                    <SidebarMenu>
+                        {footerItems.map((item) => (
+                            <SidebarMenuItem key={item.title} className="text-gray-600">
+                                <SidebarMenuButton asChild className="hover:bg-red-100 transition-colors duration-100">
+                                    <a href={item.url}>
+                                        <item.icon />
+                                        <span>{item.title}</span>
+                                    </a>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarFooter>
             </SidebarContent>
         </Sidebar>
     )

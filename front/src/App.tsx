@@ -35,14 +35,12 @@ const publicRoutes = [
 
 const privateRoutes = [
   { path: "/dashboard", element: <Dashboard /> },
-  // Adicione outras rotas autenticadas aqui
 ]
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rotas públicas */}
         {publicRoutes.map((route) => (
           <Route
             key={route.path}
@@ -51,7 +49,6 @@ function App() {
           />
         ))}
 
-        {/* Rotas autenticadas */}
         {privateRoutes.map((route) => (
           <Route
             key={route.path}
