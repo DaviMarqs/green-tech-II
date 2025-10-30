@@ -24,7 +24,7 @@ export default function CreateProductCard() {
 
       <div className="px-4">
         <img
-          src="public/placa-solar.jpg"
+          src="/placa-solar.jpg"
           alt="Imagem de produto"
           className="w-full h-40 object-cover border border-gray-200 rounded-md shadow-md"
         />
@@ -51,8 +51,8 @@ export default function CreateProductCard() {
             <Input id="preco" type="number" placeholder="Ex: 500" />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="estoque">Estoque</Label>
-            <Input id="estoque" type="number" placeholder="Ex: 20" />
+            <Label htmlFor="estoque">Cota (kWh)</Label>
+            <Input id="estoque" type="number" placeholder="Ex: 200kWh" />
           </div>
         </div>
 
