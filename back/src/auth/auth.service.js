@@ -33,7 +33,15 @@ export const register = async ({
     VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id_usuario, nome, email;
   `;
-	const values = [nome, cpf, email, passwordHash, telefone, cep, dataFormatada];
+	const values = [
+		nome,
+		cpf,
+		email,
+		passwordHash,
+		telefone,
+		"13510000",
+		dataFormatada,
+	];
 	const { rows } = await pool.query(sql, values);
 	return rows[0];
 };
