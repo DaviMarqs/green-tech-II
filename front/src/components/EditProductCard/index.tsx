@@ -24,7 +24,7 @@ export default function EditProductCard() {
           </CardDescription>
         </div>
         <button>
-          <X className="cursor-pointer"/>
+          <X className="cursor-pointer" />
         </button>
       </CardHeader>
 
@@ -64,14 +64,14 @@ export default function EditProductCard() {
 
         <div className="grid grid-cols-2 gap-3">
           <div className="w-full space-y-1">
-        <Button className="w-full bg-red-100 hover:bg-red-200 cursor-pointer text-red-900">
-          Excluir anúncio
-        </Button>
+            <Button className="w-full bg-red-100 hover:bg-red-200 cursor-pointer text-red-900">
+              Excluir anúncio
+            </Button>
           </div>
           <div className="w-full space-y-1">
-        <Button className="w-full bg-green-600 hover:bg-green-700 cursor-pointer text-white">
-          Salvar alterações
-        </Button>
+            <Button className="w-full bg-green-600 hover:bg-green-700 cursor-pointer text-white">
+              Salvar alterações
+            </Button>
           </div>
         </div>
       </CardContent>
