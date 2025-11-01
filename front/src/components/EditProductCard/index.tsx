@@ -9,17 +9,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { X } from "lucide-react";
 
 export default function EditProductCard() {
   return (
     <Card className="w-[380px] overflow-hidden shadow-lg border border-gray-200 rounded-xl">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold text-gray-800">
-          Editar Cota de Energia
-        </CardTitle>
-        <CardDescription className="text-xs text-gray-500">
-          Altere os dados do seu produto
-        </CardDescription>
+      <CardHeader className="flex justify-between items-top">
+        <div>
+          <CardTitle className="text-lg font-semibold text-gray-800">
+            Editar Cota de Energia
+          </CardTitle>
+          <CardDescription className="text-xs text-gray-500 pt-2">
+            Altere os dados do seu produto
+          </CardDescription>
+        </div>
+        <button>
+          <X className="cursor-pointer"/>
+        </button>
       </CardHeader>
 
       <div className="px-4">
@@ -58,13 +64,13 @@ export default function EditProductCard() {
 
         <div className="grid grid-cols-2 gap-3">
           <div className="w-full space-y-1">
-        <Button className="w-full bg-neutral-200 hover:bg-neutral-300 cursor-pointer text-neutral-800">
-          Cancelar edição
+        <Button className="w-full bg-red-100 hover:bg-red-200 cursor-pointer text-red-900">
+          Excluir anúncio
         </Button>
           </div>
           <div className="w-full space-y-1">
         <Button className="w-full bg-green-600 hover:bg-green-700 cursor-pointer text-white">
-          Cadastrar Produto
+          Salvar alterações
         </Button>
           </div>
         </div>
