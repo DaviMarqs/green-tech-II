@@ -1,18 +1,16 @@
-import "reflect-metadata";
-import AppDataSource from "./data-source";
 import express from "express";
+import "reflect-metadata";
+import "./database/data-source";
+import authRoutes from "./modules/auth/auth.routes";
+import userRoutes from "./modules/users/users.routes";
 
-AppDataSource.initialize()
-	.then(() => {
-		console.log("Data Source inicializado com sucesso!");
+const app = express();
+app.use(express.json());
 
-		const app = express();
+app.get("/", (_, res) => res.send("API is running 🚀"));
 
-		const PORT = process.env.PORT || 3000;
-		app.listen(PORT, () => {
-			console.log(`Servidor rodando na porta ${PORT}`);
-		});
-	})
-	.catch((err) => {
-		console.error("Erro durante a inicialização do Data Source:", err);
-	});
+app.get("/health", (req, res) => res.json({ status: "ok" }));
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+
+app.listen(3000, () => console.log("Server running on port 3000"));
