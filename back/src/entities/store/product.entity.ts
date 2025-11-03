@@ -6,10 +6,13 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { Avaliacao } from "./available.entity";
 import { PedidoProduto } from "../junctions/orderProduct.entity";
 import { ProdutoNotaFiscal } from "../junctions/productInvoice.entity";
+import { Usuario } from "../user/users.entity";
 
 @Entity("gt_produto")
 export class Produto {
@@ -28,15 +31,24 @@ export class Produto {
   @Column("integer", { name: "quantidade_estoque" })
   estoque: number;
 
+  @Column("integer", { name: "id_usuario" })
+  id_usuario: number;
+
+  @ManyToOne(() => Usuario, (usuario) => usuario.produtos, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn({ name: "id_usuario" })
+  usuario: Usuario;
+
   // Relações
-  @OneToMany(() => Avaliacao, (aval) => aval.produto)
-  avaliacoes: Avaliacao[];
+  // @OneToMany(() => Avaliacao, (aval) => aval.produto)
+  // avaliacoes: Avaliacao[];
 
-  @OneToMany(() => PedidoProduto, (pp) => pp.produto)
-  pedidos: PedidoProduto[];
+  // @OneToMany(() => PedidoProduto, (pp) => pp.produto)
+  // pedidos: PedidoProduto[];
 
-  @OneToMany(() => ProdutoNotaFiscal, (pnf) => pnf.produto)
-  notas_fiscais: ProdutoNotaFiscal[];
+  // @OneToMany(() => ProdutoNotaFiscal, (pnf) => pnf.produto)
+  // notas_fiscais: ProdutoNotaFiscal[];
 
   @CreateDateColumn({ name: "created_at" })
   created_at: Date;

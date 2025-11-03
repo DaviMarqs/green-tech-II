@@ -89,7 +89,7 @@ export class Main1761779458481 implements MigrationInterface {
       new Table({
         name: "gt_logradouro",
         columns: [
-          { name: "cep", type: "varchar", length: "8", isPrimary: true },
+          { name: "cep", type: "varchar", length: "14", isPrimary: true }, // mudei de 8 para 14
           { name: "logradouro", type: "varchar", length: "100" },
           { name: "id_bairro", type: "integer" },
           {
@@ -121,7 +121,7 @@ export class Main1761779458481 implements MigrationInterface {
           { name: "email", type: "varchar", length: "100" },
           { name: "senha", type: "varchar", length: "255" },
           { name: "telefone", type: "varchar", length: "20", isNullable: true },
-          { name: "cep", type: "varchar", length: "8" },
+          { name: "cep", type: "varchar", length: "14" }, // mudei de 8 para 14
           {
             name: "created_at",
             type: "timestamp",
@@ -161,6 +161,7 @@ export class Main1761779458481 implements MigrationInterface {
           },
           { name: "preco", type: "decimal", precision: 10, scale: 2 },
           { name: "quantidade_estoque", type: "integer" },
+          { name: "id_usuario", type: "integer" },
           {
             name: "created_at",
             type: "timestamp",
@@ -452,15 +453,16 @@ export class Main1761779458481 implements MigrationInterface {
       })
     );
 
-    await queryRunner.createForeignKey(
-      "gt_usuario",
-      new TableForeignKey({
-        name: "fk_usuario_logradouro",
-        columnNames: ["cep"],
-        referencedTableName: "gt_logradouro",
-        referencedColumnNames: ["cep"],
-      })
-    );
+    // Precisa voltar quando tiver a tabela de logradouro populada
+    // await queryRunner.createForeignKey(
+    //   "gt_usuario",
+    //   new TableForeignKey({
+    //     name: "fk_usuario_logradouro",
+    //     columnNames: ["cep"],
+    //     referencedTableName: "gt_logradouro",
+    //     referencedColumnNames: ["cep"],
+    //   })
+    // );
 
     await queryRunner.createForeignKey(
       "gt_pedido",
@@ -480,7 +482,6 @@ export class Main1761779458481 implements MigrationInterface {
         referencedColumnNames: ["id_usuario"],
       })
     );
-
     await queryRunner.createForeignKey(
       "gt_pedido_produto",
       new TableForeignKey({
@@ -528,6 +529,16 @@ export class Main1761779458481 implements MigrationInterface {
         columnNames: ["numero_nf"], // Corrigido
         referencedTableName: "gt_notafiscal",
         referencedColumnNames: ["nf_numero"], // Corrigido
+      })
+    );
+
+    await queryRunner.createForeignKey(
+      "gt_produto",
+      new TableForeignKey({
+        name: "fk_produto_usuario",
+        columnNames: ["id_usuario"],
+        referencedTableName: "gt_usuario",
+        referencedColumnNames: ["id_usuario"],
       })
     );
 
@@ -621,10 +632,11 @@ export class Main1761779458481 implements MigrationInterface {
     await queryRunner.dropForeignKey("gt_pedido_produto", "fk_pedprod_pedido");
     await queryRunner.dropForeignKey("gt_pedido", "fk_pedido_vendedor");
     await queryRunner.dropForeignKey("gt_pedido", "fk_pedido_comprador");
-    await queryRunner.dropForeignKey("gt_usuario", "fk_usuario_logradouro");
+    // await queryRunner.dropForeignKey("gt_usuario", "fk_usuario_logradouro");
     await queryRunner.dropForeignKey("gt_logradouro", "fk_logradouro_bairro");
     await queryRunner.dropForeignKey("gt_bairro", "fk_bairro_cidade");
     await queryRunner.dropForeignKey("gt_cidade", "fk_cidade_estado");
+    await queryRunner.dropForeignKey("gt_produto", "fk_produto_usuario");
 
     await queryRunner.dropTable("gt_usuario_categoria");
     await queryRunner.dropTable("gt_categorias");

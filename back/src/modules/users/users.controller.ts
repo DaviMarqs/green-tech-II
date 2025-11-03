@@ -1,5 +1,3 @@
-// src/users/users.controller.ts
-
 import type { Response } from "express";
 import * as userService from "./users.service";
 import type {

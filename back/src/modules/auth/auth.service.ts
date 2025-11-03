@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { IsNull } from "typeorm";
 import type {
   RegisterUserDTO,
   LoginDTO,
@@ -43,9 +42,10 @@ export const register = async (
     senha: passwordHash,
     telefone: dto.telefone,
     data_nasc: dataFormatada,
+    cep: dto.cep,
     // Aqui está a mágica do TypeORM:
     // Informamos a FK 'cep' através da relação 'logradouro'
-    logradouro: { cep: dto.cep },
+    // logradouro: { cep: dto.cep },
   });
 
   // 5. Salva no banco (valida a FK do CEP automaticamente)
@@ -57,6 +57,7 @@ export const register = async (
     //   // Código de erro de FK violation
     //   throw new AppError("O CEP informado não foi encontrado.", 404);
     // }
+    console.log("Error", error);
     throw new AppError("Erro ao salvar usuário.", 500);
   }
 
@@ -75,7 +76,7 @@ export const login = async (
   const user = await userRepository.findOne({
     where: {
       email: dto.email,
-      disabled_at: IsNull(), // 👈 Verifica se o usuário não está desativado
+      // disabled_at: IsNull(), // 👈 Verifica se o usuário não está desativado
     },
     // addSelect: ["senha"],
   });
