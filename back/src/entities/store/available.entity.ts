@@ -1,4 +1,3 @@
-// src/entities/sales/Avaliacao.entity.ts
 import {
 	Entity,
 	PrimaryGeneratedColumn,
@@ -9,9 +8,9 @@ import {
 	JoinColumn,
 	Check,
 } from "typeorm";
-import { Usuario } from "../user/users.entity.ts";
-import { Produto } from "./product.entity.ts";
-import { Pedido } from "./order.entity.ts";
+import { Usuario } from "../user/users.entity";
+import { Produto } from "./product.entity";
+import { Pedido } from "./order.entity";
 
 @Entity("gt_avaliacao")
 @Check(`"nota" >= 1 AND "nota" <= 5`)

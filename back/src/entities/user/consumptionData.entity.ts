@@ -1,4 +1,3 @@
-// src/entities/DadosConsumo.entity.ts
 import {
 	Entity,
 	PrimaryGeneratedColumn,
@@ -29,7 +28,6 @@ export class DadosConsumo {
 	@Column("varchar", { length: 100, nullable: true })
 	descricao: string;
 
-	// Relação: Muitos DadosDeConsumo pertencem a um Usuário
 	@ManyToOne(
 		() => Usuario,
 		(usuario) => usuario.dados_consumo,
