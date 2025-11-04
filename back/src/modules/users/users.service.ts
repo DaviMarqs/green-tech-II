@@ -1,6 +1,7 @@
 import type { UpdateUserDTO, UserResponse } from "./users.types";
 import { Usuario } from "../../entities/user/users.entity";
 import { AppError } from "../../errors/AppError";
+import bcrypt from "bcryptjs";
 import { AppDataSource } from "../../database/data-source";
 
 const userRepository = AppDataSource.getRepository(Usuario);
@@ -69,4 +70,27 @@ export const deactivateUser = async (
   }
 
   return { message: "Usuário desativado com sucesso." };
+};
+
+export const resetPassword = async (email: string, senha: string) => {
+  const userExists = await userRepository.query(
+    "SELECT * FROM gt_usuario WHERE email = $1 AND disabled_at IS NULL",
+    [email]
+  );
+
+  if (userExists.rowCount === 0) {
+    throw new AppError("Usuário não encontrado ou desativado.", 404);
+  }
+
+  const salt = 10;
+  const passwordHash = await bcrypt.hash(senha, salt);
+
+  const sql = `
+    UPDATE gt_usuario
+    SET senha='${passwordHash}'
+    WHERE email = '${email}'
+  `;
+
+  const { rows } = await userRepository.query(sql);
+  return rows[0];
 };
