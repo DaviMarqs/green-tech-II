@@ -1,50 +1,51 @@
 // src/entities/sales/NotaFiscal.entity.ts
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  OneToOne,
-  JoinColumn,
-  OneToMany,
+	Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	CreateDateColumn,
+	OneToOne,
+	JoinColumn,
+	OneToMany,
 } from "typeorm";
 import { Pedido } from "./order.entity";
 import { ProdutoNotaFiscal } from "../junctions/productInvoice.entity";
 
 @Entity("gt_notafiscal")
 export class NotaFiscal {
-  @PrimaryGeneratedColumn("increment", { name: "nf_numero" })
-  nf_numero: number;
+	@PrimaryGeneratedColumn("increment", { name: "nf_numero" })
+	nf_numero: number;
 
-  @Column("varchar", { name: "nome_destinatario", length: 100, nullable: true })
-  nome_destinatario: string;
+	@Column("varchar", { name: "nome_destinatario", length: 100, nullable: true })
+	nome_destinatario: string;
 
-  // ...outras colunas de destinatário e emitente...
-  @Column("varchar", {
-    name: "email_destinatario",
-    length: 100,
-    nullable: true,
-  })
-  email_destinatario: string;
+	@Column("varchar", {
+		name: "email_destinatario",
+		length: 100,
+		nullable: true,
+	})
+	email_destinatario: string;
 
-  @Column("varchar", {
-    name: "endereco_destinatario",
-    length: 200,
-    nullable: true,
-  })
-  endereco_destinatario: string;
+	@Column("varchar", {
+		name: "endereco_destinatario",
+		length: 200,
+		nullable: true,
+	})
+	endereco_destinatario: string;
 
-  // ...etc
+	@OneToOne(
+		() => Pedido,
+		(pedido) => pedido.nota_fiscal,
+	)
+	@JoinColumn({ name: "id_pedido" })
+	id_pedido: Pedido;
 
-  // Relação: Uma NotaFiscal pertence a um Pedido
-  @OneToOne(() => Pedido, (pedido) => pedido.nota_fiscal)
-  @JoinColumn({ name: "id_pedido" })
-  id_pedido: Pedido;
+	@OneToMany(
+		() => ProdutoNotaFiscal,
+		(pnf) => pnf.nota_fiscal,
+	)
+	produtos: ProdutoNotaFiscal[];
 
-  // Relação com a tabela de junção
-  @OneToMany(() => ProdutoNotaFiscal, (pnf) => pnf.nota_fiscal)
-  produtos: ProdutoNotaFiscal[];
-
-  @CreateDateColumn({ name: "created_at" })
-  created_at: Date;
+	@CreateDateColumn({ name: "created_at" })
+	created_at: Date;
 }

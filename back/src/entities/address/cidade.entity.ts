@@ -9,8 +9,8 @@ import {
 	OneToMany,
 	JoinColumn,
 } from "typeorm";
-import { Estado } from "./Estado.entity.ts";
-import { Bairro } from "./Bairro.entity.ts";
+import { Estado } from "./estado.entity";
+import { Bairro } from "./bairro.entity";
 
 @Entity("gt_cidade")
 export class Cidade {
@@ -31,7 +31,7 @@ export class Cidade {
 	// Relação: Uma Cidade tem muitos Bairros
 	@OneToMany(
 		() => Bairro,
-		(bairro) => bairro.cidade,
+		(bairro) => bairro.id_cidade,
 	)
 	bairros: Bairro[];
 
