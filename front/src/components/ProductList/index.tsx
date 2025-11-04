@@ -9,65 +9,64 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { CircleDollarSign, MapPinIcon } from "lucide-react";
 import { useState } from "react";
-
-interface Product {
-  id: number;
-  name: string;
-  city: string;
-  price: string;
-  image: string;
-}
-
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    name: "SolarNorte",
-    city: "Fortaleza - CE",
-    price: "R$ 6,00 / kWh",
-    image: "/placa-solar.jpg",
-  },
-  {
-    id: 2,
-    name: "GreenSun",
-    city: "Campinas - SP",
-    price: "R$ 5,50 / kWh",
-    image: "/placa-solar-2.png",
-  },
-  {
-    id: 3,
-    name: "EcoSol",
-    city: "Curitiba - PR",
-    price: "R$ 5,80 / kWh",
-    image: "/placa-solar.jpg",
-  },
-];
+import { useProducts } from "@/hooks/useProducts"; // ← import your hook
+import type { Product } from "@/services/product.service";
 
 export default function ProductList() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { addToCart } = useCart();
 
+  // Fetch products from your API
+  const { data: products, loading, error, refetch } = useProducts();
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center w-full py-10 text-gray-600">
+        Carregando produtos...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex flex-col items-center justify-center py-10 text-red-500">
+        <p>Erro ao carregar produtos 😢</p>
+        <Button variant="outline" onClick={refetch} className="mt-3">
+          Tentar novamente
+        </Button>
+      </div>
+    );
+
+  if (!products || products.length === 0)
+    return (
+      <div className="text-center text-gray-600 py-10">
+        Nenhum produto disponível no momento.
+      </div>
+    );
+
   return (
     <div className="flex flex-wrap gap-6">
-      {mockProducts.map((product) => (
+      {products.map((product) => (
         <Card
           key={product.id}
           className="w-[380px] p-4 border border-gray-200 shadow-md rounded-xl hover:shadow-lg transition cursor-pointer"
         >
           <img
-            src={product.image}
-            alt={product.name}
+            src={"/placa-solar.jpg"}
+            alt={product.nome}
             className="w-full h-[200px] object-cover rounded-lg border"
           />
           <CardTitle className="text-2xl font-semibold text-gray-800 mt-3">
-            {product.name}
+            {product.nome}
           </CardTitle>
           <div className="flex items-center gap-2 mt-1">
             <MapPinIcon className="size-5 text-gray-500" />
-            <span className="text-gray-700 text-sm">{product.city}</span>
+            <span className="text-gray-700 text-sm">{"Piracicaba"}</span>
           </div>
           <div className="flex items-center gap-2 mt-1">
             <CircleDollarSign className="size-5 text-gray-500" />
-            <span className="text-gray-700 text-sm">{product.price}</span>
+            <span className="text-gray-700 text-sm">
+              {product.preco ?? "—"}
+            </span>
           </div>
 
           <div className="grid grid-cols-2 gap-3 mt-4">
@@ -89,38 +88,25 @@ export default function ProductList() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-2xl font-semibold text-gray-800">
-              Comprar {selectedProduct?.name}
+              Comprar {selectedProduct?.nome}
             </DialogTitle>
           </DialogHeader>
 
           {selectedProduct && (
             <div className="space-y-4">
               <img
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
+                src={"/placa-solar.jpg"}
+                alt={selectedProduct.nome}
                 className="w-full h-[180px] object-cover rounded-lg border"
               />
 
               <div>
                 <p className="text-gray-700 text-sm">
-                  <strong>Local:</strong> {selectedProduct.city}
+                  <strong>Local:</strong> {"Piracicaba"}
                 </p>
                 <p className="text-gray-700 text-sm">
-                  <strong>Preço:</strong> {selectedProduct.price}
+                  <strong>Preço:</strong> {selectedProduct.preco}
                 </p>
-              </div>
-
-              <div className="flex items-center justify-between mt-3">
-                <span className="text-gray-700">Quantidade (kWh)</span>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    -
-                  </Button>
-                  <span className="text-gray-800 font-medium">10</span>
-                  <Button variant="outline" size="sm">
-                    +
-                  </Button>
-                </div>
               </div>
 
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
@@ -134,10 +120,9 @@ export default function ProductList() {
                 onClick={() => {
                   addToCart({
                     id: selectedProduct.id,
-                    name: selectedProduct.name,
-                    price: 350,
+                    name: selectedProduct.nome,
+                    price: Number(selectedProduct.preco) || 0,
                     quantity: 1,
-                    image: selectedProduct.image,
                   });
                   setSelectedProduct(null);
                 }}
