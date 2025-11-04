@@ -1,25 +1,24 @@
 import { http } from "./http";
 
 export type Product = {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  stock?: number;
-  images?: string[];
-  category?: string;
-  ownerId?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  id: number; // 17
+  nome: string; // "Painel Solar 550W"
+  descricao: string; // "Painel solar monocristalino de alta eficiência"
+  preco: string; // "1250.50"  ← string!
+  estoque: number; // 10
+  id_usuario: number; // 1
+  created_at: string; // "2025-11-04T02:13:04.448Z"
+  updated_at: string | null; // null
 };
 
 export type CreateProductDTO = {
-  name: string;
-  description?: string;
-  price: number;
-  stock?: number;
+  nome: string;
+  descricao?: string;
+  preco: number;
+  estoque?: number;
   images?: string[];
   category?: string;
+  id_usuario?: number;
 };
 
 export type UpdateProductDTO = Partial<CreateProductDTO>;
@@ -41,6 +40,8 @@ export type ProductFilters = {
   // Adicione o que seu /filtered aceitar
 };
 
+const path = "/products";
+
 function toQuery(params: Record<string, any>): string {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([k, v]) => {
@@ -53,11 +54,11 @@ function toQuery(params: Record<string, any>): string {
 
 export const productService = {
   create(data: CreateProductDTO, signal?: AbortSignal) {
-    return http<Product>("/product", { method: "POST", body: data, signal });
+    return http<Product>(path, { method: "POST", body: data, signal });
   },
 
   list(signal?: AbortSignal) {
-    return http<ListResponse | Product[]>("/product", {
+    return http<ListResponse | Product[]>(path, {
       method: "GET",
       signal,
     });
@@ -65,18 +66,19 @@ export const productService = {
 
   listFiltered(filters: ProductFilters = {}, signal?: AbortSignal) {
     const qs = toQuery(filters);
-    return http<ListResponse | Product[]>(`/product/filtered${qs}`, {
+    return http<ListResponse | Product[]>(`${path}/filtered${qs}`, {
       method: "GET",
       signal,
     });
   },
 
   getById(id: string, signal?: AbortSignal) {
-    return http<Product>(`/product/${id}`, { method: "GET", signal });
+    console.log("id", id, "signal", signal, "path", `${path}/${id}`);
+    return http<Product>(`${path}/${id}`, { method: "GET", signal });
   },
 
   update(id: string, data: UpdateProductDTO, signal?: AbortSignal) {
-    return http<Product>(`/product/${id}`, {
+    return http<Product>(`${path}/${id}`, {
       method: "PUT",
       body: data,
       signal,
@@ -84,6 +86,6 @@ export const productService = {
   },
 
   delete(id: string, signal?: AbortSignal) {
-    return http<void>(`/product/${id}`, { method: "DELETE", signal });
+    return http<void>(`${path}/${id}`, { method: "DELETE", signal });
   },
 };

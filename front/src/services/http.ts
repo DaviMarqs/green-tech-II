@@ -1,5 +1,6 @@
 // Pequeno wrapper de fetch com baseURL e Bearer token
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ?? "";
+// const BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ?? "localhost:3000";
+const BASE_URL = "http://localhost:3000/api";
 
 export function getAuthToken(): string | null {
   // Ajuste para onde você salva o token (cookie, localStorage, etc.)
@@ -20,7 +21,7 @@ export async function http<T>(
   { method = "GET", body, headers = {}, signal, auth = true }: HttpOptions = {}
 ): Promise<T> {
   const token = getAuthToken();
-
+  console.log("Base", BASE_URL);
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers: {

@@ -9,7 +9,12 @@ import productRoutes from "./modules/product/product.routes";
 
 const app = express();
 
-app.use(cors()); // permite requisições de origens diferentes
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true, // deixe true se for usar cookies/autenticação via browser
+  })
+);
 app.use(express.json());
 
 app.get("/", (_, res) => res.send("API is running 🚀"));

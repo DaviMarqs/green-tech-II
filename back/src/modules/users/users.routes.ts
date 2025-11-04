@@ -11,7 +11,7 @@ const userRoutes = Router();
 userRoutes.put("/resetPassword", resetPasswordController);
 
 //Torna as rotas privadas
-userRoutes.use(protect);
+// userRoutes.use(protect);
 
 //Rota para atualizar usuario
 userRoutes.put("/:id", () => updateController);
