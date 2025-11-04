@@ -102,13 +102,6 @@ export default function TopBar() {
             </div>
           </PopoverContent>
         </Popover>
-
-        <div className="flex items-center text-sm font-medium text-gray-800">
-          <span>Saldo na conta:</span>
-          <span className="ml-2 text-green-700 font-semibold">
-            R$ {total.toFixed(2)}
-          </span>
-        </div>
       </div>
     </div>
   );
