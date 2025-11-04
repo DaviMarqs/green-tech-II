@@ -6,6 +6,7 @@ import "./database/data-source";
 import authRoutes from "./modules/auth/auth.routes";
 import userRoutes from "./modules/users/users.routes";
 import productRoutes from "./modules/product/product.routes";
+import addressRoutes from "./modules/address/address.routes";
 
 const app = express();
 
@@ -18,9 +19,10 @@ app.get("/health", (_, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/create-address", addressRoutes);
 
 app.use((_, res) => {
-  res.status(404).json({ error: "Route not found" });
+	res.status(404).json({ error: "Route not found" });
 });
 
 const PORT = process.env.PORT || 3000;
