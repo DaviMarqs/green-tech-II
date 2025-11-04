@@ -13,8 +13,8 @@ type CartState = {
 type CartAction =
   | { type: "ADD_ITEM"; payload: CartItem }
   | { type: "REMOVE_ITEM"; payload: { id: number } }
-  | { type: "CLEAR_CART" };
-
+  | { type: "CLEAR_CART" }
+  | { type: "SET_CART"; payload: CartItem[] };
 export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
@@ -24,12 +24,22 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
           ...state,
           items: state.items.map((i) =>
             i.id === action.payload.id
-              ? { ...i, quantity: i.quantity + action.payload.quantity }
+              ? {
+                  ...i,
+                  quantity: Math.min(i.quantity + action.payload.quantity, 999),
+                }
               : i
           ),
         };
       }
-      return { ...state, items: [...state.items, action.payload] };
+
+      return {
+        ...state,
+        items: [
+          ...state.items,
+          { ...action.payload, quantity: Math.max(1, action.payload.quantity) },
+        ],
+      };
     }
 
     case "REMOVE_ITEM":
@@ -40,6 +50,9 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
 
     case "CLEAR_CART":
       return { items: [] };
+
+    case "SET_CART":
+      return { items: action.payload };
 
     default:
       return state;
