@@ -8,14 +8,15 @@ import userRoutes from "./modules/users/users.routes";
 import productRoutes from "./modules/product/product.routes";
 import addressRoutes from "./modules/address/address.routes";
 import orderRoutes from "./modules/orders/orders.routes";
+import paymentRoutes from "./modules/payments/payment.routes";
 
 const app = express();
 
 app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true, // deixe true se for usar cookies/autenticação via browser
-  })
+	cors({
+		origin: "http://localhost:5173",
+		credentials: true, // deixe true se for usar cookies/autenticação via browser
+	}),
 );
 app.use(express.json());
 
@@ -27,9 +28,10 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/create-address", addressRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payments", paymentRoutes);
 
 app.use((_, res) => {
-  res.status(404).json({ error: "Route not found" });
+	res.status(404).json({ error: "Route not found" });
 });
 
 const PORT = process.env.PORT || 3000;
