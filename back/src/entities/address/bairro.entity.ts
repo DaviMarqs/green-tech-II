@@ -9,8 +9,8 @@ import {
 	OneToMany,
 	JoinColumn,
 } from "typeorm";
-import { Cidade } from "./Cidade.entity.ts";
-import { Logradouro } from "./Logradouro.entity.ts";
+import { Cidade } from "./cidade.entity";
+import { Logradouro } from "./logradouro.entity";
 
 @Entity("gt_bairro")
 export class Bairro {
@@ -20,18 +20,16 @@ export class Bairro {
 	@Column("varchar", { name: "nome_bairro", length: 100 })
 	nome_bairro: string;
 
-	// Relação: Muitos Bairros pertencem a uma Cidade
 	@ManyToOne(
 		() => Cidade,
 		(cidade) => cidade.bairros,
 	)
-	@JoinColumn({ name: "id_cidade" }) // Chave estrangeira
+	@JoinColumn({ name: "id_cidade" })
 	id_cidade: Cidade;
 
-	// Relação: Um Bairro tem muitos Logradouros
 	@OneToMany(
 		() => Logradouro,
-		(logradouro) => logradouro.bairro,
+		(logradouro) => logradouro.id_bairro,
 	)
 	logradouros: Logradouro[];
 

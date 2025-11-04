@@ -7,7 +7,7 @@ import {
 	UpdateDateColumn,
 	OneToMany,
 } from "typeorm";
-import { Cidade } from "./Cidade.entity.ts"; // Importa a entidade "filha"
+import { Cidade } from "./cidade.entity";
 
 @Entity("gt_estado")
 export class Estado {
@@ -29,7 +29,7 @@ export class Estado {
 	// Relação: Um Estado tem muitas Cidades
 	@OneToMany(
 		() => Cidade,
-		(cidade) => cidade.estado,
+		(cidade) => cidade.id_estado,
 	)
 	cidades: Cidade[];
 }
