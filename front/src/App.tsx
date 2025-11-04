@@ -1,48 +1,44 @@
-import "./App.css"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
 
-// Páginas
-import { Esqueci } from "./pages/esqueciSenha"
-import { Login } from "./pages/Login"
-import { Register } from "./pages/Register"
-import { Dashboard } from "./pages/Dashboard"
+import { Dashboard } from "./pages/Dashboard";
+import { Esqueci } from "./pages/esqueciSenha";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
 
-// Componentes
-import { SidebarProvider } from "./components/ui/sidebar"
-import { AppSidebar } from "./components/AppSidebar"
+import { AppSidebar } from "./components/AppSidebar";
+import { SidebarProvider } from "./components/ui/sidebar";
+import { CartProvider } from "./contexts/CartContext";
 
-// Layouts
 function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
-      <div className="flex">
-        <AppSidebar />
-        <main className="flex-1">{children}</main>
-      </div>
-    </SidebarProvider>
-  )
+    <CartProvider>
+      <SidebarProvider>
+        <div className="flex">
+          <AppSidebar />
+          <main className="flex-1">{children}</main>
+        </div>
+      </SidebarProvider>
+    </CartProvider>
+  );
 }
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
-  return <main>{children}</main>
+  return <main>{children}</main>;
 }
 
 const publicRoutes = [
   { path: "/", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/forgot", element: <Esqueci /> },
-]
+];
 
-const privateRoutes = [
-  { path: "/dashboard", element: <Dashboard /> },
-  // Adicione outras rotas autenticadas aqui
-]
+const privateRoutes = [{ path: "/dashboard", element: <Dashboard /> }];
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rotas públicas */}
         {publicRoutes.map((route) => (
           <Route
             key={route.path}
@@ -51,7 +47,6 @@ function App() {
           />
         ))}
 
-        {/* Rotas autenticadas */}
         {privateRoutes.map((route) => (
           <Route
             key={route.path}
@@ -61,7 +56,7 @@ function App() {
         ))}
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
