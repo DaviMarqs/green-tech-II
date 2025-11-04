@@ -15,7 +15,7 @@ export function Dashboard() {
         <EditProductCard />
         <MyProductCard />
       </div>
-
+ 
       <div>
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           Produtos disponíveis
