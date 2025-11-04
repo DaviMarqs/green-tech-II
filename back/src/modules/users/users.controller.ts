@@ -1,10 +1,12 @@
-import type { Response } from "express";
+import type { RequestHandler, Response } from "express";
 import * as userService from "./users.service";
 import type {
   AuthRequest,
   UpdateUserDTO,
   UserResponse,
   ErrorResponse,
+  ResetPasswordDTO,
+  MessageResponse,
 } from "./users.types.js";
 import { AppError } from "../../errors/AppError";
 
@@ -56,5 +58,29 @@ export const deactivateController = async (
       return res.status(error.statusCode).json({ message: error.message });
     }
     return res.status(500).json({ message: "Erro desconhecido" });
+  }
+};
+
+export const resetPasswordController: RequestHandler<
+  {}, // Params
+  MessageResponse, // ResBody
+  ResetPasswordDTO // ReqBody
+> = async (req, res, next) => {
+  const { email, senha } = req.body;
+
+  if (!email || !senha) {
+    res.status(400).json({ message: "Dados inválidos!" });
+    return;
+  }
+
+  try {
+    await userService.resetPassword(email, senha);
+    res.status(200).json({ message: "Senha alterada com sucesso!" });
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Erro interno no servidor." });
+    }
   }
 };

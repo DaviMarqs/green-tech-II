@@ -1,13 +1,17 @@
 import { Router } from "express";
+import {
+  deactivateController,
+  resetPasswordController,
+  updateController,
+} from "./users.controller";
 import { protect } from "../../middleware/auth.middleware";
-import { deactivateController, updateController } from "./users.controller";
 
 const userRoutes = Router();
 // Rota para resetar a senha
 userRoutes.put("/resetPassword", resetPasswordController);
 
 //Torna as rotas privadas
-userRoutes.use(protect);
+// userRoutes.use(protect);
 
 //Rota para atualizar usuario
 userRoutes.put("/:id", () => updateController);

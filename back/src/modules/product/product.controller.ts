@@ -57,7 +57,6 @@ export const listController = async (
   _req: Request,
   res: Response
 ): Promise<void> => {
-  console.log("Listando Produtos");
   try {
     const products = await getAllProducts();
     res.status(200).json(products);
@@ -86,6 +85,7 @@ export const updateController = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("Update", Number(req.params.id), req.body);
     const updated = await updateProduct(Number(req.params.id), req.body);
     res.status(200).json(updated);
   } catch (error) {

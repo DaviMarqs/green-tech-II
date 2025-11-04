@@ -12,7 +12,7 @@ import {
 const productRoutes = Router();
 
 // Todas as rotas protegidas
-productRoutes.use(protect);
+// productRoutes.use(protect);
 
 // CRUD completo
 productRoutes.post("/", createController); // Criar produto

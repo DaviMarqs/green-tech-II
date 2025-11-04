@@ -1,28 +1,31 @@
 import type { Request } from "express";
 
 export interface UpdateUserDTO {
-	nome?: string;
-	telefone?: string;
-	cep?: string;
+  nome?: string;
+  telefone?: string;
+  cep?: string;
 }
 
 export interface UserResponse {
-	id_usuario: number;
-	nome: string;
-	email: string;
-	telefone: string;
-	cep: string;
+  id_usuario: number;
+  nome: string;
+  email: string;
+  telefone: string;
+  cep: string;
 }
 
 export interface AuthenticatedUser {
-	id: number;
+  id: number;
 }
 
 export interface ErrorResponse {
-	message: string;
+  message: string;
 }
 
+export type ResetPasswordDTO = { email: string; senha: string };
+export type MessageResponse = { message: string };
+
 export interface AuthRequest<TParams, TBody>
-	extends Request<TParams, unknown, TBody> {
-	user: AuthenticatedUser;
+  extends Request<TParams, unknown, TBody> {
+  user: AuthenticatedUser;
 }
