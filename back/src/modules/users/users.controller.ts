@@ -1,14 +1,14 @@
 import type { RequestHandler, Response } from "express";
+import { AppError } from "../../errors/AppError";
 import * as userService from "./users.service";
 import type {
   AuthRequest,
+  ErrorResponse,
+  MessageResponse,
+  ResetPasswordDTO,
   UpdateUserDTO,
   UserResponse,
-  ErrorResponse,
-  ResetPasswordDTO,
-  MessageResponse,
 } from "./users.types.js";
-import { AppError } from "../../errors/AppError";
 
 export const updateController = async (
   req: AuthRequest<{ id: string }, UpdateUserDTO>,

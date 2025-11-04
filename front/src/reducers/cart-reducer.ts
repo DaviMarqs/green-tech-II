@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 export interface CartItem {
   id: number;
   name: string;
@@ -32,6 +34,8 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
           ),
         };
       }
+
+      toast.success("Produto adicionado ao carrinho!");
 
       return {
         ...state,

@@ -8,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function AddressModal({
@@ -17,6 +18,8 @@ export default function AddressModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     rua: "",
     numero: "",
@@ -31,9 +34,24 @@ export default function AddressModal({
   };
 
   const handleSubmit = () => {
-    console.log("Endereço enviado:", formData);
+    if (
+      !formData.rua ||
+      !formData.numero ||
+      !formData.bairro ||
+      !formData.cep ||
+      !formData.estado ||
+      !formData.cidade
+    ) {
+      toast.error("Por favor, preencha todos os campos antes de continuar.");
+      return;
+    }
+
+    localStorage.setItem("userAddress", JSON.stringify(formData));
+
     toast.success("Endereço salvo com sucesso!");
     onClose();
+
+    navigate("/checkout");
   };
 
   return (

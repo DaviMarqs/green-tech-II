@@ -9,6 +9,7 @@ import { Register } from "./pages/Register";
 import { AppSidebar } from "./components/AppSidebar";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { CartProvider } from "./contexts/CartContext";
+import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
 
 function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -36,7 +37,8 @@ const publicRoutes = [
 
 const privateRoutes = [
   { path: "/dashboard", element: <Dashboard /> },
-  { path: "/my-orders", element: <MyOrders /> }
+  { path: "/my-orders", element: <MyOrders /> },
+  { path: "/checkout", element: <Checkout /> },
 ];
 
 function App() {
