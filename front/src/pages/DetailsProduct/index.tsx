@@ -11,10 +11,9 @@ export default function DetailsProduct() {
 
   return (
     <div className="w-[1280px]">
-
       <TopBar />
 
-      <section className="p-8 space-y-10 w-1/2">
+      <section className="p-8 space-y-10 w-1/2 mx-auto">
         <div className="p-4">
           <div className="flex flex-col gap-2">
             <h3 className="text-xl">Detalhes do produto</h3>
@@ -23,7 +22,8 @@ export default function DetailsProduct() {
           <img
             src="/placa-solar-2.png"
             alt="Imagem de produto"
-            className="w-full mt-4 h-[284px] object-cover border border-gray-200 rounded-2xl shadow-md" />
+            className="w-full mt-4 h-[284px] object-cover border border-gray-200 rounded-2xl shadow-md"
+          />
           <div className="my-4">
             <h3 className="text-2xl font-medium">Descrição do produto</h3>
             <h4 className="mt-1 text-md">{product?.descricao}</h4>
@@ -55,6 +55,6 @@ export default function DetailsProduct() {
           Adicionar ao carrinho
         </Button>
       </section>
-    </ div>
+    </div>
   );
 }

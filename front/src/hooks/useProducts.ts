@@ -7,6 +7,7 @@ import {
   type UpdateProductDTO,
 } from "@/services/product.service";
 import { useCallback, useEffect, useRef, useState } from "react";
+import useAuth from "./useAuth";
 
 type ListState =
   | { loading: true; error: null; data: null }
@@ -176,13 +177,17 @@ export function useCreateProduct() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  const { user } = useAuth();
+
+  console.log("useCreateProduct user", user);
+
   const mutate = useCallback(async (payload: CreateProductDTO) => {
     setLoading(true);
     setError(null);
     try {
       const created = await productService.create({
         ...payload,
-        id_usuario: 1,
+        id_usuario: user?.id_usuario,
       });
       return created;
     } catch (err) {

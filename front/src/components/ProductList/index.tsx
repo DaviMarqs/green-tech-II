@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useProducts } from "@/hooks/useProducts"; // ← import your hook
 import type { Product } from "@/services/product.service";
@@ -15,6 +16,7 @@ import { useState } from "react";
 export default function ProductList() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { addToCart } = useCart();
+  const { user } = useAuth();
 
   // Fetch products from your API
   const { data: products, loading, error, refetch } = useProducts();
@@ -74,12 +76,14 @@ export default function ProductList() {
               <Button variant="outline">Ver detalhes</Button>
             </a>
 
-            <Button
-              className="bg-green-600 hover:bg-green-700 text-white"
-              onClick={() => setSelectedProduct(product)}
-            >
-              Comprar
-            </Button>
+            {product.id_usuario !== user?.id_usuario && (
+              <Button
+                className="bg-green-600 hover:bg-green-700 text-white"
+                onClick={() => setSelectedProduct(product)}
+              >
+                Comprar
+              </Button>
+            )}
           </div>
         </Card>
       ))}

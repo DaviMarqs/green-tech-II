@@ -62,7 +62,7 @@ export default function Checkout() {
         toast.success("Pedido criado com sucesso!");
         clearCart();
         localStorage.removeItem("userAddress");
-        navigate("/dashboard");
+        navigate("/my-orders");
       } else {
         toast.error("Erro ao criar o pedido. Tente novamente.");
       }
