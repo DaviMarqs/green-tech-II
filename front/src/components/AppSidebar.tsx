@@ -5,7 +5,6 @@ import {
   CircleQuestionMark,
   LogOut,
   ShoppingCart,
-  Wallet,
 } from "lucide-react";
 
 import {
@@ -28,23 +27,18 @@ export function AppSidebar() {
   const items = [
     {
       title: "Comprar",
-      url: "#",
+      url: "/dashboard",
       icon: ShoppingCart,
     },
     {
       title: "Vender",
-      url: "#",
+      url: "/sell",
       icon: Banknote,
     },
     {
       title: "Meus pedidos",
       url: "/my-orders",
       icon: Archive,
-    },
-    {
-      title: "Carteira",
-      url: "#",
-      icon: Wallet,
     },
     {
       title: "Suporte",
