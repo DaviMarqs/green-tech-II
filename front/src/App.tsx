@@ -10,14 +10,15 @@ import { AppSidebar } from "./components/AppSidebar";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { CartProvider } from "./contexts/CartContext";
 import Checkout from "./pages/Checkout";
-import MyOrders from "./pages/MyOrders";
 import DetailsProduct from "./pages/DetailsProduct";
+import MyOrders from "./pages/MyOrders";
+import { Sell } from "./pages/Sell";
 
 function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
       <SidebarProvider>
-        <div className="flex">
+        <div className="flex w-full min-h-screen">
           <AppSidebar />
           <main className="flex-1">{children}</main>
         </div>
@@ -39,6 +40,7 @@ const publicRoutes = [
 const privateRoutes = [
   { path: "/dashboard", element: <Dashboard /> },
   { path: "/details-product/:id", element: <DetailsProduct /> },
+  { path: "/sell", element: <Sell /> },
   { path: "/my-orders", element: <MyOrders /> },
   { path: "/checkout", element: <Checkout /> },
 ];
