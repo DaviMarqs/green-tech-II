@@ -1,14 +1,14 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import type {
-  RegisterUserDTO,
-  LoginDTO,
-  UserAuthResponse,
-  AuthResponse,
-} from "./auth.types.ts";
+import jwt from "jsonwebtoken";
+import { AppDataSource } from "../../database/data-source";
 import { Usuario } from "../../entities/user/users.entity";
 import { AppError } from "../../errors/AppError";
-import { AppDataSource } from "../../database/data-source";
+import type {
+  AuthResponse,
+  LoginDTO,
+  RegisterUserDTO,
+  UserAuthResponse,
+} from "./auth.types.ts";
 
 // Obtém o repositório do Usuário
 const userRepository = AppDataSource.getRepository(Usuario);
@@ -42,7 +42,7 @@ export const register = async (
     senha: passwordHash,
     telefone: dto.telefone,
     data_nasc: dataFormatada,
-    cep: dto.cep,
+    cep: "13000000",
     // Aqui está a mágica do TypeORM:
     // Informamos a FK 'cep' através da relação 'logradouro'
     // logradouro: { cep: dto.cep },
