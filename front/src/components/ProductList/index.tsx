@@ -7,10 +7,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useCart } from "@/contexts/CartContext";
-import { CircleDollarSign, MapPinIcon } from "lucide-react";
-import { useState } from "react";
 import { useProducts } from "@/hooks/useProducts"; // ← import your hook
 import type { Product } from "@/services/product.service";
+import { CircleDollarSign, MapPinIcon } from "lucide-react";
+import { useState } from "react";
 
 export default function ProductList() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -123,6 +123,7 @@ export default function ProductList() {
                     name: selectedProduct.nome,
                     price: Number(selectedProduct.preco) || 0,
                     quantity: 1,
+                    id_usuario: selectedProduct.id_usuario,
                   });
                   setSelectedProduct(null);
                 }}

@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import api from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -15,8 +17,10 @@ interface AddressData {
 
 export default function Checkout() {
   const { items, total, clearCart } = useCart();
+  const { user } = useAuth();
   const [payment, setPayment] = useState("pix");
   const [address, setAddress] = useState<AddressData | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,11 +29,52 @@ export default function Checkout() {
     else navigate("/dashboard");
   }, [navigate]);
 
-  const handleFinish = () => {
-    toast.success("Compra finalizada com sucesso!");
-    clearCart();
-    localStorage.removeItem("userAddress");
-    navigate("/dashboard");
+  const handleFinish = async () => {
+    if (items.length === 0) {
+      toast.error("Seu carrinho está vazio.");
+      return;
+    }
+
+    if (!user) {
+      toast.error("Você precisa estar logado para finalizar a compra.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const compradorId = user.id_usuario;
+
+      const payload = {
+        compradorId,
+        id_usuario: user.id_usuario,
+        formaPagamento: payment,
+        produtos: items.map((i) => ({
+          idProduto: i.id,
+          quantidade: i.quantity,
+        })),
+      };
+
+      const response = await api.post("/orders", payload);
+
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Pedido criado com sucesso!");
+        clearCart();
+        localStorage.removeItem("userAddress");
+        navigate("/dashboard");
+      } else {
+        toast.error("Erro ao criar o pedido. Tente novamente.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error(
+        err.response?.data?.message ||
+          "Não foi possível concluir a compra. Tente novamente."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -105,10 +150,15 @@ export default function Checkout() {
               Voltar
             </Button>
             <Button
+              disabled={loading}
               onClick={handleFinish}
-              className="w-3/6 h-11 bg-green-600 hover:bg-green-700 text-white font-semibold"
+              className={`w-3/6 h-11 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700"
+              } text-white font-semibold`}
             >
-              Finalizar compra →
+              {loading ? "Processando..." : "Finalizar compra →"}
             </Button>
           </div>
         </div>
@@ -139,27 +189,6 @@ export default function Checkout() {
           <div className="flex justify-between text-lg font-semibold text-gray-800 border-t pt-4">
             <span>Total:</span>
             <span>R$ {total.toFixed(2)}</span>
-          </div>
-
-          <div className="mt-8 bg-green-50 border border-green-200 rounded-lg p-4">
-            {payment === "pix" && (
-              <p className="text-sm text-green-800">
-                💡 Pagando com <strong>Pix</strong> você garante confirmação
-                instantânea do pagamento e começa a receber energia mais rápido!
-              </p>
-            )}
-            {payment === "card" && (
-              <p className="text-sm text-green-800">
-                💳 Pagamento com <strong>Cartão</strong> permite parcelar sua
-                compra em até 12x sem juros.
-              </p>
-            )}
-            {payment === "boleto" && (
-              <p className="text-sm text-green-800">
-                🧾 Pague via <strong>Boleto</strong> e sua compra será
-                confirmada após compensação bancária.
-              </p>
-            )}
           </div>
         </div>
       </div>

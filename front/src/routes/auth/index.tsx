@@ -1,6 +1,6 @@
-import { AuthContext } from "@/contexts/AuthContest";
+import { AuthContext } from "@/contexts/AuthContext";
 import { useContext } from "react";
 
 export function AuthGuard() {
-    const { signedIn } = useContext(AuthContext);
+  const { signedIn } = useContext(AuthContext);
 }

@@ -19,49 +19,52 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
-const items = [
-  {
-    title: "Comprar",
-    url: "#",
-    icon: ShoppingCart,
-  },
-  {
-    title: "Vender",
-    url: "#",
-    icon: Banknote,
-  },
-  {
-    title: "Meus pedidos",
-    url: "#",
-    icon: Archive,
-  },
-  {
-    title: "Carteira",
-    url: "#",
-    icon: Wallet,
-  },
-  {
-    title: "Suporte",
-    url: "#",
-    icon: CircleQuestionMark,
-  },
-  {
-    title: "Configurações",
-    url: "#",
-    icon: Bolt,
-  },
-];
-
-const footerItems = [
-  {
-    title: "Sair",
-    url: "#",
-    icon: LogOut,
-  },
-];
+import { useAuth } from "@/contexts/AuthContext";
 
 export function AppSidebar() {
+  const { logout } = useAuth();
+  const items = [
+    {
+      title: "Comprar",
+      url: "#",
+      icon: ShoppingCart,
+    },
+    {
+      title: "Vender",
+      url: "#",
+      icon: Banknote,
+    },
+    {
+      title: "Meus pedidos",
+      url: "#",
+      icon: Archive,
+    },
+    {
+      title: "Carteira",
+      url: "#",
+      icon: Wallet,
+    },
+    {
+      title: "Suporte",
+      url: "#",
+      icon: CircleQuestionMark,
+    },
+    {
+      title: "Configurações",
+      url: "#",
+      icon: Bolt,
+    },
+  ];
+
+  const footerItems = [
+    {
+      title: "Sair",
+      url: "#",
+      icon: LogOut,
+      onClick: () => logout(),
+    },
+  ];
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -96,6 +99,7 @@ export function AppSidebar() {
                 <SidebarMenuButton
                   asChild
                   className="hover:bg-red-100 transition-colors duration-100"
+                  onClick={item.onClick}
                 >
                   <a href={item.url}>
                     <item.icon />
