@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/contexts/AuthContext";
 
+import logoSrc from '/logo-greentech.svg';
+
 export function AppSidebar() {
   const { logout } = useAuth();
   const items = [
@@ -71,7 +73,7 @@ export function AppSidebar() {
         <SidebarGroup className="mt-2 px-2">
           <SidebarGroupLabel className="mt-4">
             <a href="/dashboard">
-              <img src="./logo-greentech.svg" alt="Logo - Dashboard" />
+              <img src={logoSrc} alt="Logo - Dashboard" />
             </a>
           </SidebarGroupLabel>
           <SidebarGroupContent className="mt-3">
