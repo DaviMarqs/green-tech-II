@@ -11,7 +11,7 @@ export default function TopBar() {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex justify-between items-center px-8 py-4 border-b bg-white">
+    <div className="flex justify-between items-center px-8 py-4 border-b bg-white w-full">
       <h1 className="text-xl font-semibold text-gray-800">Comprar</h1>
 
       <div className="flex items-center gap-3 w-[50%]">
