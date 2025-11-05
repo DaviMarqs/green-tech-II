@@ -36,7 +36,7 @@ export function AppSidebar() {
     },
     {
       title: "Meus pedidos",
-      url: "#",
+      url: "/my-orders",
       icon: Archive,
     },
     {

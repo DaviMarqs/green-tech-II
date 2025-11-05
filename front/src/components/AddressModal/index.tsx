@@ -58,7 +58,18 @@ export default function AddressModal({
     try {
       setLoading(true);
 
-      const { data } = await api.post("/address", formData);
+      // const { data } = await api.post("/address", formData);
+
+      const data = {
+        endereco: {
+          rua: "Avenida Paulista",
+          numero: "1578",
+          bairro: "Bela Vista",
+          cep: "01310-200",
+          estado: "SP",
+          cidade: "São Paulo",
+        },
+      };
 
       if (data?.endereco) {
         localStorage.setItem("userAddress", JSON.stringify(data.endereco));
