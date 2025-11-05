@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { Bell, ShoppingCart, User } from "lucide-react";
 import { useState } from "react";
 import CartSummary from "../CartSummary";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function TopBar() {
   const { items } = useCart();
   const [search, setSearch] = useState("");
+  const { user } = useAuth();
 
   return (
     <div className="flex justify-between items-center px-8 py-4 border-b bg-white w-full">
@@ -31,7 +34,17 @@ export default function TopBar() {
       </div>
 
       <div className="flex items-center gap-6">
-        <User className="size-5 text-gray-700 cursor-pointer" />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button>
+              <User className="size-5 text-gray-700 cursor-pointer" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" align="center">
+            {user ? `Olá, ${user.nome}` : "Faça login"}
+          </TooltipContent>
+        </Tooltip>
+
         <Bell className="size-5 text-gray-700 cursor-pointer" />
 
         <Popover>
