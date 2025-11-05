@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/AuthContext";
+import api from "@/lib/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -19,23 +21,25 @@ export default function AddressModal({
   onClose: () => void;
 }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    rua: "",
+    logradouro: "",
     numero: "",
     bairro: "",
     cep: "",
     estado: "",
     cidade: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
-      !formData.rua ||
+      !formData.logradouro ||
       !formData.numero ||
       !formData.bairro ||
       !formData.cep ||
@@ -46,12 +50,33 @@ export default function AddressModal({
       return;
     }
 
-    localStorage.setItem("userAddress", JSON.stringify(formData));
+    if (!user) {
+      toast.error("Você precisa estar logado para cadastrar o endereço.");
+      return;
+    }
 
-    toast.success("Endereço salvo com sucesso!");
-    onClose();
+    try {
+      setLoading(true);
 
-    navigate("/checkout");
+      const { data } = await api.post("/address", formData);
+
+      if (data?.endereco) {
+        localStorage.setItem("userAddress", JSON.stringify(data.endereco));
+        toast.success("Endereço salvo com sucesso!");
+        onClose();
+        navigate("/checkout");
+      } else {
+        toast.error("Erro ao salvar o endereço. Tente novamente.");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message ||
+          "Erro ao cadastrar o endereço. Tente novamente."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -69,11 +94,11 @@ export default function AddressModal({
 
         <form className="space-y-4 mt-2">
           <div className="space-y-1">
-            <Label htmlFor="rua">Rua / Avenida</Label>
+            <Label htmlFor="logradouro">Rua / Avenida</Label>
             <Input
-              id="rua"
+              id="logradouro"
               placeholder="Av. Dr. Maximiliano Baruto"
-              value={formData.rua}
+              value={formData.logradouro}
               onChange={handleChange}
             />
           </div>
@@ -139,10 +164,15 @@ export default function AddressModal({
             </Button>
             <Button
               type="button"
+              disabled={loading}
               onClick={handleSubmit}
-              className="w-1/2 bg-green-600 hover:bg-green-700 text-white"
+              className={`w-1/2 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700"
+              } text-white`}
             >
-              Próxima etapa →
+              {loading ? "Salvando..." : "Próxima etapa →"}
             </Button>
           </div>
         </form>
