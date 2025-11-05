@@ -1,13 +1,12 @@
-// src/entities/sales/Produto.entity.ts
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-  ManyToOne,
-  JoinColumn,
+	Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	CreateDateColumn,
+	UpdateDateColumn,
+	OneToMany,
+	ManyToOne,
+	JoinColumn,
 } from "typeorm";
 import { Avaliacao } from "./available.entity";
 import { PedidoProduto } from "../junctions/orderProduct.entity";
@@ -16,43 +15,56 @@ import { Usuario } from "../user/users.entity";
 
 @Entity("gt_produto")
 export class Produto {
-  @PrimaryGeneratedColumn("increment", { name: "id_produto" })
-  id: number;
+	@PrimaryGeneratedColumn("increment", { name: "id_produto" })
+	id: number;
 
-  @Column("varchar", { name: "nome_produto", length: 100 })
-  nome: string;
+	@Column("varchar", { name: "nome_produto", length: 100 })
+	nome: string;
 
-  @Column("varchar", { length: 255, nullable: true })
-  descricao: string;
+	@Column("varchar", { length: 255, nullable: true })
+	descricao: string;
 
-  @Column("decimal", { precision: 10, scale: 2 })
-  preco: number;
+	@Column("decimal", { precision: 10, scale: 2 })
+	preco: number;
 
-  @Column("integer", { name: "quantidade_estoque" })
-  estoque: number;
+	@Column("integer", { name: "quantidade_estoque" })
+	estoque: number;
 
-  @Column("integer", { name: "id_usuario" })
-  id_usuario: number;
+	@Column("integer", { name: "id_usuario" })
+	id_usuario: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.produtos, {
-    onDelete: "CASCADE",
-  })
-  @JoinColumn({ name: "id_usuario" })
-  usuario: Usuario;
+	@ManyToOne(
+		() => Usuario,
+		(usuario) => usuario.produtos,
+		{
+			onDelete: "CASCADE",
+		},
+	)
 
-  // Relações
-  // @OneToMany(() => Avaliacao, (aval) => aval.produto)
-  // avaliacoes: Avaliacao[];
+	@JoinColumn({ name: "id_usuario" })
+	usuario: Usuario;
 
-  // @OneToMany(() => PedidoProduto, (pp) => pp.produto)
-  // pedidos: PedidoProduto[];
+	@OneToMany(
+		() => Avaliacao,
+		(aval) => aval.id_produto,
+	)
+	avaliacoes: Avaliacao[];
 
-  // @OneToMany(() => ProdutoNotaFiscal, (pnf) => pnf.produto)
-  // notas_fiscais: ProdutoNotaFiscal[];
+	@OneToMany(
+		() => PedidoProduto,
+		(pp) => pp.produto,
+	)
+	pedidos: PedidoProduto[];
 
-  @CreateDateColumn({ name: "created_at" })
-  created_at: Date;
+	@OneToMany(
+		() => ProdutoNotaFiscal,
+		(pnf) => pnf.produto,
+	)
+	notas_fiscais: ProdutoNotaFiscal[];
 
-  @UpdateDateColumn({ name: "updated_at", nullable: true })
-  updated_at: Date;
+	@CreateDateColumn({ name: "created_at" })
+	created_at: Date;
+
+	@UpdateDateColumn({ name: "updated_at", nullable: true })
+	updated_at: Date;
 }

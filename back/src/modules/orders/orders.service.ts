@@ -1,131 +1,144 @@
 import { AppDataSource } from "../../database/data-source";
 import { AppError } from "../../errors/AppError";
 import type { CreateOrderDTO, OrderResponse } from "./orders.types";
+import { In, type EntityManager } from "typeorm";
+import { Pedido, PedidoStatus } from "../../entities/store/order.entity";
+import { Produto } from "../../entities/store/product.entity";
+import { Usuario } from "../../entities/user/users.entity";
+import { PedidoProduto } from "../../entities/junctions/orderProduct.entity";
+
+const pedidoRepository = AppDataSource.getRepository(Pedido);
+const produtoRepository = AppDataSource.getRepository(Produto);
+const usuarioRepository = AppDataSource.getRepository(Usuario);
 
 export const createOrder = async (
-  data: CreateOrderDTO
+	data: CreateOrderDTO,
 ): Promise<OrderResponse> => {
-  const queryRunner = AppDataSource.createQueryRunner();
-  await queryRunner.connect();
-  await queryRunner.startTransaction();
+	const { compradorId, vendedorId, formaPagamento, produtos } = data;
 
-  try {
-    const { compradorId, vendedorId, formaPagamento, produtos } = data;
+	const comprador = await usuarioRepository.findOneBy({
+		id_usuario: compradorId,
+	});
+	if (!comprador) throw new AppError("Comprador não encontrado", 404);
 
-    // 1️⃣ Busca os produtos
-    const produtosDb = await queryRunner.query(
-      `SELECT id_produto, preco, quantidade_estoque FROM gt_produto WHERE id_produto = ANY($1::int[])`,
-      [produtos.map((p) => p.idProduto)]
-    );
+	const vendedor = await usuarioRepository.findOneBy({
+		id_usuario: vendedorId,
+	});
+	if (!vendedor) throw new AppError("Vendedor não encontrado", 404);
 
-    if (produtosDb.length === 0)
-      throw new AppError("Nenhum produto encontrado", 404);
+	const idsProdutos = produtos.map((p) => p.idProduto);
+	const produtosDb = await produtoRepository.findBy({
+		id: In(idsProdutos),
+	});
 
-    // 2️⃣ Calcula valor total
-    let valorTotal = 0;
-    for (const item of produtos) {
-      const produto = produtosDb.find(
-        (p: any) => p.id_produto === item.idProduto
-      );
-      if (!produto)
-        throw new AppError(`Produto ${item.idProduto} não encontrado`, 404);
-      if (produto.quantidade_estoque < item.quantidade)
-        throw new AppError(
-          `Estoque insuficiente para o produto ${item.idProduto}`,
-          400
-        );
+	let valorTotal = 0;
+	const itensParaSalvar: { produto: Produto; quantidade: number }[] = [];
 
-      valorTotal += Number(produto.preco) * item.quantidade;
-    }
+	for (const item of produtos) {
+		const produtoDb = produtosDb.find((p) => p.id === item.idProduto);
+		if (!produtoDb)
+			throw new AppError(`Produto ${item.idProduto} não encontrado`, 404);
+		if (produtoDb.estoque < item.quantidade)
+			// Usando 'estoque'
+			throw new AppError(
+				`Estoque insuficiente para o produto ${produtoDb.nome}`,
+				400,
+			);
 
-    // 3️⃣ Cria o pedido
-    const pedido = await queryRunner.query(
-      `INSERT INTO gt_pedido (valor, data_pedido, forma_pagamento, status, id_usuario_comprador, id_usuario_vendedor, created_at)
-       VALUES ($1, NOW(), $2, 'AGUARDANDO_PAGAMENTO', $3, $4, NOW())
-       RETURNING *`,
-      [valorTotal, formaPagamento, compradorId, vendedorId]
-    );
+		valorTotal += Number(produtoDb.preco) * item.quantidade;
+		itensParaSalvar.push({ produto: produtoDb, quantidade: item.quantidade });
+	}
 
-    const pedidoId = pedido[0].id_pedido;
+	return AppDataSource.manager.transaction(
+		async (transactionalEntityManager) => {
+			const novoPedido = transactionalEntityManager.create(Pedido, {
+				valor: valorTotal,
+				forma_pagamento: formaPagamento,
+				status: PedidoStatus.AGUARDANDO_PAGAMENTO,
+				data_pedido: new Date(),
+				id_usuario_comprador: comprador,
+				id_usuario_vendedor: vendedor,
+			});
 
-    // 4️⃣ Vincula produtos e atualiza estoque
-    for (const item of produtos) {
-      await queryRunner.query(
-        `INSERT INTO gt_pedido_produto (id_pedido, id_produto, quantidade)
-         VALUES ($1, $2, $3)`,
-        [pedidoId, item.idProduto, item.quantidade]
-      );
+			await transactionalEntityManager.save(novoPedido);
 
-      await queryRunner.query(
-        `UPDATE gt_produto
-         SET quantidade_estoque = quantidade_estoque - $1
-         WHERE id_produto = $2`,
-        [item.quantidade, item.idProduto]
-      );
-    }
+			for (const item of itensParaSalvar) {
+				const novoItemPedido = transactionalEntityManager.create(
+					PedidoProduto,
+					{
+						id_pedido: novoPedido.id_pedido,
+						id_produto: item.produto.id,
+						quantidade: item.quantidade,
+						pedido: novoPedido,
+						produto: item.produto,
+					},
+				);
 
-    // ✅ Finaliza a transação
-    await queryRunner.commitTransaction();
+				await transactionalEntityManager.save(novoItemPedido);
 
-    return {
-      id_pedido: pedidoId,
-      valor: valorTotal,
-      status: "AGUARDANDO_PAGAMENTO",
-      forma_pagamento: formaPagamento,
-      data_pedido: new Date().toISOString(),
-    };
-  } catch (error) {
-    await queryRunner.rollbackTransaction();
-    throw error;
-  } finally {
-    await queryRunner.release();
-  }
+				const novoEstoque = item.produto.estoque - item.quantidade;
+				await transactionalEntityManager.update(Produto, item.produto.id, {
+					estoque: novoEstoque,
+				});
+			}
+
+			return {
+				id_pedido: novoPedido.id_pedido,
+				valor: novoPedido.valor,
+				forma_pagamento: novoPedido.forma_pagamento,
+				status: novoPedido.status,
+				data_pedido: novoPedido.data_pedido.toISOString(),
+			};
+		},
+	);
 };
 
-export const listOrdersByUser = async (userId: number) => {
-  const pedidos = await AppDataSource.query(
-    `SELECT * FROM gt_pedido WHERE id_usuario_comprador = $1 OR id_usuario_vendedor = $1 ORDER BY data_pedido DESC`,
-    [userId]
-  );
-  return pedidos;
+export const listOrdersByUser = async (userId: number): Promise<Pedido[]> => {
+	return pedidoRepository.find({
+		where: [
+			{ id_usuario_comprador: { id_usuario: userId } },
+			{ id_usuario_vendedor: { id_usuario: userId } },
+		],
+		order: { data_pedido: "DESC" },
+		relations: ["id_usuario_comprador", "id_usuario_vendedor"],
+	});
 };
 
-export const getOrderById = async (id: number) => {
-  const pedido = await AppDataSource.query(
-    `SELECT * FROM gt_pedido WHERE id_pedido = $1`,
-    [id]
-  );
-  if (pedido.length === 0) return null;
+export const getOrderById = async (id: number): Promise<Pedido | null> => {
+	const pedido = await pedidoRepository.findOne({
+		where: { id_pedido: id },
+		relations: [
+			"id_usuario_comprador",
+			"id_usuario_vendedor",
+			"produtos",
+			"produtos.produto",
+		],
+	});
 
-  const produtos = await AppDataSource.query(
-    `SELECT p.*, pp.quantidade
-     FROM gt_pedido_produto pp
-     JOIN gt_produto p ON p.id_produto = pp.id_produto
-     WHERE pp.id_pedido = $1`,
-    [id]
-  );
-
-  return { ...pedido[0], produtos };
+	return pedido;
 };
 
-export const updateOrderStatus = async (id: number, status: string) => {
-  const validStatuses = [
-    "AGUARDANDO_PAGAMENTO",
-    "PAGO",
-    "EM_TRANSPORTE",
-    "ENTREGUE",
-    "CANCELADO",
-  ];
-  if (!validStatuses.includes(status)) {
-    throw new AppError("Status inválido.", 400);
-  }
+export const updateOrderStatus = async (
+	id: number,
+	status: PedidoStatus,
+	manager?: EntityManager,
+): Promise<Pedido> => {
+	if (!Object.values(PedidoStatus).includes(status)) {
+		throw new AppError("Status inválido.", 400);
+	}
 
-  const updated = await AppDataSource.query(
-    `UPDATE gt_pedido SET status = $1, updated_at = NOW() WHERE id_pedido = $2 RETURNING *`,
-    [status, id]
-  );
+	const repository = manager ? manager.getRepository(Pedido) : pedidoRepository;
 
-  if (updated.length === 0) throw new AppError("Pedido não encontrado.", 404);
+	const pedido = await repository.findOneBy({ id_pedido: id });
+	if (!pedido) {
+		throw new AppError("Pedido não encontrado.", 404);
+	}
 
-  return updated[0];
+	await repository.update(id, {
+		status: status,
+		updated_at: new Date(),
+	});
+
+	pedido.status = status;
+	return pedido;
 };

@@ -7,8 +7,8 @@ import {
 	PrimaryColumn,
 	CreateDateColumn,
 } from "typeorm";
-import { Produto } from "../store/product.entity.ts";
-import { NotaFiscal } from "../store/invoice.entity.ts";
+import { Produto } from "../store/product.entity";
+import { NotaFiscal } from "../store/invoice.entity";
 
 @Entity("gt_produto_notafiscal")
 export class ProdutoNotaFiscal {
@@ -21,7 +21,6 @@ export class ProdutoNotaFiscal {
 	@Column("integer")
 	quantidade: number;
 
-	// Relações
 	@ManyToOne(
 		() => Produto,
 		(produto) => produto.notas_fiscais,
@@ -33,7 +32,7 @@ export class ProdutoNotaFiscal {
 		() => NotaFiscal,
 		(nf) => nf.produtos,
 	)
-	@JoinColumn({ name: "numero_nf", referencedColumnName: "numero" })
+	@JoinColumn({ name: "numero_nf" })
 	nota_fiscal: NotaFiscal;
 
 	@CreateDateColumn({ name: "created_at" })
