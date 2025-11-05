@@ -70,7 +70,10 @@ export default function ProductList() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 mt-4">
-            <Button variant="outline">Ver detalhes</Button>
+            <a href={`/details-product/${product.id}`}>
+              <Button variant="outline">Ver detalhes</Button>
+            </a>
+
             <Button
               className="bg-green-600 hover:bg-green-700 text-white"
               onClick={() => setSelectedProduct(product)}
@@ -122,6 +125,7 @@ export default function ProductList() {
                     id: selectedProduct.id,
                     name: selectedProduct.nome,
                     price: Number(selectedProduct.preco) || 0,
+                    image: "",
                     quantity: 1,
                     id_usuario: selectedProduct.id_usuario,
                   });

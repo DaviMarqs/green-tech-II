@@ -1,4 +1,4 @@
-import { cartReducer } from "@/reducers/cart-reducer";
+import { cartReducer, type CartItem } from "@/reducers/cart-reducer";
 import { createContext, useContext, useEffect, useReducer } from "react";
 
 interface CartContextType {

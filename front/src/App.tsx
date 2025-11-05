@@ -11,6 +11,7 @@ import { SidebarProvider } from "./components/ui/sidebar";
 import { CartProvider } from "./contexts/CartContext";
 import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
+import DetailsProduct from "./pages/DetailsProduct";
 
 function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -37,6 +38,7 @@ const publicRoutes = [
 
 const privateRoutes = [
   { path: "/dashboard", element: <Dashboard /> },
+  { path: "/details-product/:id", element: <DetailsProduct /> },
   { path: "/my-orders", element: <MyOrders /> },
   { path: "/checkout", element: <Checkout /> },
 ];
