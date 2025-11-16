@@ -10,10 +10,24 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useProducts } from "@/hooks/useProducts";
 import type { Product } from "@/services/product.service";
-import { CircleDollarSign, MapPinIcon } from "lucide-react";
+import { CircleDollarSign, MapPinIcon, Package, Calendar, Zap } from "lucide-react";
 import { useState } from "react";
 
-export default function ProductList() {
+// 🎨 MOCK TEMPORÁRIO PARA ESTILIZAÇÃO
+const MOCK_PRODUCTS: Product[] = [
+  {
+    id: 1,
+    nome: "Painel Solar 330W",
+    descricao: "Painel solar monocristalino de alta eficiência",
+    preco: "450.00",
+    id_usuario: 2,
+    local: "Rio Claro - SP",
+    created_at: "2024-06-01",
+    estoque: 10,
+  },
+];
+
+export default function Teste() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { addToCart } = useCart();
   const { user } = useAuth();
@@ -21,14 +35,18 @@ export default function ProductList() {
   // Fetch products from your API
   const { data: products, loading, error, refetch } = useProducts();
 
-  if (loading)
+  // 🎨 USAR MOCK ENQUANTO ESTILIZA (remova depois)
+  const USE_MOCK = true; // Mude para false quando quiser usar dados reais
+  const displayProducts = USE_MOCK ? MOCK_PRODUCTS : products;
+
+  if (!USE_MOCK && loading)
     return (
       <div className="flex justify-center items-center w-full py-10 text-gray-600">
         Carregando produtos...
       </div>
     );
 
-  if (error)
+  if (!USE_MOCK && error)
     return (
       <div className="flex flex-col items-center justify-center py-10 text-red-500">
         <p>Erro ao carregar produtos 😢</p>
@@ -38,37 +56,73 @@ export default function ProductList() {
       </div>
     );
 
-  if (!products || products.length === 0)
+  if (!displayProducts || displayProducts.length === 0)
     return (
       <div className="text-center text-gray-600 py-10">
         Nenhum produto disponível no momento.
       </div>
     );
 
+
+
   return (
-    <div className="flex flex-wrap gap-6">
-      {products.map((product) => (
+    <div className="flex flex-col gap-6 p-6">
+      {displayProducts.map((product) => (
         <Card
           key={product.id}
-          className="w-[380px] p-4 border border-gray-200 shadow-md rounded-xl hover:shadow-lg transition cursor-pointer"
+          className="flex flex-col gap-4 w-full p-4 border border-gray-200 shadow-md rounded-xl hover:shadow-lg transition cursor-pointer"
         >
-          <img
-            src={"/placa-solar.jpg"}
-            alt={product.nome}
-            className="w-full h-[200px] object-cover rounded-lg border"
-          />
-          <CardTitle className="text-2xl font-semibold text-gray-800 mt-3">
-            {product.nome}
-          </CardTitle>
-          <div className="flex items-center gap-2 mt-1">
-            <MapPinIcon className="size-5 text-gray-500" />
-            <span className="text-gray-700 text-sm">{"Piracicaba"}</span>
+          {/* Estilizando o título do card */}
+          <div className="flex items-center justify-between"> 
+            <div className="flex items-center gap-2" id="titulo-card">
+              <Zap className="size-6 text-green-500" />
+              <CardTitle className="text-2xl font-semibold text-gray-800">
+                {product.nome}
+              </CardTitle>
+            </div>
           </div>
-          <div className="flex items-center gap-2 mt-1">
-            <CircleDollarSign className="size-5 text-gray-500" />
-            <span className="text-gray-700 text-sm">
-              {product.preco ?? "—"}
-            </span>
+          <div>
+            <p className="text-gray-700 text-sm">{product.descricao}</p>
+          </div>
+          <div className="flex justify-between">  
+            <div className="flex flex-col gap-1" id="categoria">
+            <div className="flex items-center gap-1 mt-1">
+              <MapPinIcon className="size-5 text-gray-500" />
+              <span className="text-gray-500 text-sm">Localização</span>
+            </div>
+            <div>
+              <span className="text-gray-700 text-sm">{product.local}</span>
+            </div>
+          </div>
+
+            <div className="flex flex-col gap-1" id="categoria">
+            <div className="flex items-center gap-1 mt-1">
+              <CircleDollarSign className="size-5 text-gray-500" />
+              <span className="text-gray-500 text-sm">Preço</span>
+            </div>
+            <div>
+              <span className="text-gray-700 text-sm">R${product.preco ?? "—"}</span>
+            </div>
+          </div>
+
+            <div className="flex flex-col gap-1" id="categoria">
+            <div className="flex items-center gap-1 mt-1">
+              <Package className="size-5 text-gray-500" />
+              <span className="text-gray-500 text-sm">Estoque</span>
+            </div>
+            <div>
+              <span className="text-gray-700 text-sm">{product.estoque ?? "—"}</span>
+            </div>
+          </div>
+
+            <div className="flex flex-col gap-1" id="categoria">
+            <div className="flex items-center gap-1 mt-1">
+              <Calendar className="size-5 text-gray-500" />
+              <span className="text-gray-500 text-sm">Publicado em</span>
+            </div>
+            <div>
+              <span className="text-gray-700 text-sm">{product.created_at ?? "—"}</span>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3 mt-4">
@@ -84,6 +138,8 @@ export default function ProductList() {
                 Comprar
               </Button>
             )}
+          </div>
+
           </div>
         </Card>
       ))}
@@ -101,15 +157,9 @@ export default function ProductList() {
 
           {selectedProduct && (
             <div className="space-y-4">
-              <img
-                src={"/placa-solar.jpg"}
-                alt={selectedProduct.nome}
-                className="w-full h-[180px] object-cover rounded-lg border"
-              />
-
               <div>
                 <p className="text-gray-700 text-sm">
-                  <strong>Local:</strong> {"Piracicaba"}
+                  <strong>Local:</strong> {selectedProduct?.local}
                 </p>
                 <p className="text-gray-700 text-sm">
                   <strong>Preço:</strong> {selectedProduct.preco}

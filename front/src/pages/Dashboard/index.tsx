@@ -12,6 +12,8 @@ export function Dashboard() {
           Produtos disponíveis
         </h2>
         <ProductList />
+        <>
+        </>
       </div>
     </section>
   );
