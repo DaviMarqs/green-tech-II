@@ -6,24 +6,18 @@ import { useParams } from "react-router-dom";
 
 export default function DetailsProduct() {
   const { id } = useParams<{ id: string }>();
-  const { data: product, loading, error } = useProduct(id);
+  const { data: product } = useProduct(id);
   const { addToCart } = useCart();
 
   return (
     <div className="w-[1280px]">
       <TopBar />
-
       <section className="p-8 space-y-10 w-1/2 mx-auto">
         <div className="p-4">
           <div className="flex flex-col gap-2">
             <h3 className="text-xl">Detalhes do produto</h3>
             <h2 className="text-4xl font-semibold">{product?.nome}</h2>
-          </div>
-          <img
-            src="/placa-solar-2.png"
-            alt="Imagem de produto"
-            className="w-full mt-4 h-[284px] object-cover border border-gray-200 rounded-2xl shadow-md"
-          />
+          </div>  
           <div className="my-4">
             <h3 className="text-2xl font-medium">Descrição do produto</h3>
             <h4 className="mt-1 text-md">{product?.descricao}</h4>

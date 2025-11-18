@@ -5,6 +5,7 @@ import api from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { SuccessModal } from "@/components/SuccessModal";
 
 interface AddressData {
   rua: string;
@@ -18,6 +19,7 @@ interface AddressData {
 export default function Checkout() {
   const { items, total, clearCart } = useCart();
   const { user } = useAuth();
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [payment, setPayment] = useState("pix");
   const [address, setAddress] = useState<AddressData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -59,10 +61,9 @@ export default function Checkout() {
       const response = await api.post("/orders", payload);
 
       if (response.status === 200 || response.status === 201) {
-        toast.success("Pedido criado com sucesso!");
         clearCart();
+        setIsSuccessOpen(true);
         localStorage.removeItem("userAddress");
-        navigate("/my-orders");
       } else {
         toast.error("Erro ao criar o pedido. Tente novamente.");
       }
@@ -192,6 +193,11 @@ export default function Checkout() {
           </div>
         </div>
       </div>
+      <SuccessModal 
+          open={isSuccessOpen} 
+          onOpenChange={setIsSuccessOpen} 
+          paymentMethod={payment}
+       />
     </div>
   );
 }

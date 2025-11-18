@@ -116,7 +116,7 @@ export default function EditProductCard() {
   };
 
   return (
-    <Card className="w-[380px] overflow-hidden shadow-lg border border-gray-200 rounded-xl">
+    <Card className="w-[380px] h-full overflow-hidden shadow-lg border border-gray-200 rounded-xl">
       <CardHeader className="flex justify-between items-top">
         <div>
           <CardTitle className="text-lg font-semibold text-gray-800">
@@ -131,15 +131,7 @@ export default function EditProductCard() {
         </button>
       </CardHeader>
 
-      <div className="px-4">
-        <img
-          src="/placa-solar.jpg"
-          alt="Imagem de produto"
-          className="w-full h-40 object-cover border border-gray-200 rounded-md shadow-md"
-        />
-      </div>
-
-      <CardContent className="pt-4 space-y-4">
+      <CardContent className="space-y-4">
         {/* SELECT DE PRODUTO */}
         <div className="space-y-1">
           <Label>Selecionar produto</Label>

@@ -68,8 +68,8 @@ export default function CreateProductCard() {
   };
 
   return (
-    <Card className="w-[380px] overflow-hidden shadow-lg border border-gray-200 rounded-xl">
-      <CardHeader className="pb-2">
+    <Card className="w-[380px] h-full overflow-hidden shadow-lg border border-gray-200 rounded-xl">
+      <CardHeader>
         <CardTitle className="text-lg font-semibold text-gray-800">
           Cadastrar Cota de Energia
         </CardTitle>
@@ -78,15 +78,7 @@ export default function CreateProductCard() {
         </CardDescription>
       </CardHeader>
 
-      <div className="px-4">
-        <img
-          src="/placa-solar.jpg"
-          alt="Imagem de produto"
-          className="w-full h-40 object-cover border border-gray-200 rounded-md shadow-md"
-        />
-      </div>
-
-      <CardContent className="pt-4 space-y-4">
+      <CardContent className="pt-2 space-y-4">
         {/* mensagens */}
         {formError && <p className="text-xs text-red-600">{formError}</p>}
         {error && (

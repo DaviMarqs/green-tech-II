@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useProducts } from "@/hooks/useProducts";
 import type { Product } from "@/services/product.service";
-import { Calendar, CircleDollarSign, MapPinIcon, Package, Zap } from "lucide-react";
+import { Calendar, CircleDollarSign, User, Package, Zap } from "lucide-react";
 import { useState } from "react";
 
 export default function ProductList() {
@@ -46,7 +46,7 @@ export default function ProductList() {
     );
 
   return (
-        <div className="flex flex-col gap-6 p-6">
+        <div className="flex flex-col gap-6 pt-4">
       {products.map((product) => (
         <Card
           key={product.id}
@@ -67,11 +67,11 @@ export default function ProductList() {
           <div className="flex justify-between">  
             <div className="flex flex-col gap-1" id="categoria">
             <div className="flex items-center gap-1 mt-1">
-              <MapPinIcon className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">Localização</span>
+              <User className="size-5 text-gray-500" />
+              <span className="text-gray-500 text-sm">ID do vendedor: </span>
             </div>
             <div>
-              <span className="text-gray-700 text-sm">{product.local}</span>
+              <span className="text-gray-700 text-sm">{product.id_usuario}</span>
             </div>
           </div>
 
@@ -139,7 +139,7 @@ export default function ProductList() {
             <div className="space-y-4">
               <div>
                 <p className="text-gray-700 text-sm">
-                  <strong>Local:</strong> {selectedProduct?.local}
+                  <strong>Vendedor:</strong> {selectedProduct?.id_usuario}
                 </p>
                 <p className="text-gray-700 text-sm">
                   <strong>Preço:</strong> {selectedProduct.preco}
