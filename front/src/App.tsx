@@ -5,7 +5,6 @@ import { Dashboard } from "./pages/Dashboard";
 import { Esqueci } from "./pages/esqueciSenha";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
-import Teste from "./pages/Teste";
 
 import { AppSidebar } from "./components/AppSidebar";
 import { SidebarProvider } from "./components/ui/sidebar";
@@ -44,7 +43,6 @@ const privateRoutes = [
   { path: "/sell", element: <Sell /> },
   { path: "/my-orders", element: <MyOrders /> },
   { path: "/checkout", element: <Checkout /> },
-  { path: "teste", element: <Teste /> },
 ];
 
 function App() {
