@@ -1,86 +1,81 @@
-import type { RequestHandler, Response } from "express";
+import type { Request, Response } from "express";
 import { AppError } from "../../errors/AppError";
 import * as userService from "./users.service";
-import type {
-  AuthRequest,
-  ErrorResponse,
-  MessageResponse,
-  ResetPasswordDTO,
-  UpdateUserDTO,
-  UserResponse,
-} from "./users.types.js";
 
-export const updateController = async (
-  req: AuthRequest<{ id: string }, UpdateUserDTO>,
-  res: Response<UserResponse | ErrorResponse>
-) => {
-  const id = Number(req.params.id);
-  const userData = req.body;
+// Buscar dados do perfil
+export const getProfileController = async (req: Request, res: Response) => {
+	const userId = req.user?.id;
 
-  if (Number(id) !== req.user.id) {
-    return res.status(403).json({
-      message: "Acesso negado. Você só pode alterar seus próprios dados.",
-    });
-  }
+	if (!userId) {
+		return res.status(401).json({ message: "Não autenticado." });
+	}
 
-  try {
-    const update = await userService.updateUser(id, userData);
-
-    // O TS agora sabe que 'update' é UserResponse
-    return res.status(200).json(update);
-  } catch (error) {
-    // ... (lógica de tratamento de erro)
-    if (error instanceof AppError) {
-      // O TS sabe que { message: ... } bate com ErrorResponse
-      return res.status(error.statusCode).json({ message: error.message });
-    }
-    // ...
-    return res.status(500).json({ message: "Erro desconhecido" });
-  }
+	try {
+		const userProfile = await userService.getUserProfile(userId);
+		return res.status(200).json(userProfile);
+	} catch (error) {
+		if (error instanceof AppError)
+			return res.status(error.statusCode).json({ message: error.message });
+		return res.status(500).json({ message: "Erro interno." });
+	}
 };
 
-export const deactivateController = async (
-  req: AuthRequest<{ id: string }, unknown>,
-  res: Response<undefined | ErrorResponse>
-) => {
-  const id = Number(req.params.id);
+// Atualizar Usuário
+export const updateController = async (req: Request, res: Response) => {
+	const id = Number(req.params.id);
+	const userIdFromToken = req.user?.id;
+	const userData = req.body;
 
-  if (Number(id) !== req.user.id) {
-    return res.status(403).json({ message: "Acesso negado" });
-  }
+	if (!userIdFromToken || id !== userIdFromToken) {
+		return res.status(403).json({
+			message: "Acesso negado. Você só pode alterar seus próprios dados.",
+		});
+	}
 
-  try {
-    await userService.deactivateUser(id);
-
-    return res.status(204).send();
-  } catch (error) {
-    if (error instanceof AppError) {
-      return res.status(error.statusCode).json({ message: error.message });
-    }
-    return res.status(500).json({ message: "Erro desconhecido" });
-  }
+	try {
+		const update = await userService.updateUser(id, userData);
+		return res.status(200).json(update);
+	} catch (error) {
+		if (error instanceof AppError) {
+			return res.status(error.statusCode).json({ message: error.message });
+		}
+		return res.status(500).json({ message: "Erro desconhecido" });
+	}
 };
 
-export const resetPasswordController: RequestHandler<
-  {}, // Params
-  MessageResponse, // ResBody
-  ResetPasswordDTO // ReqBody
-> = async (req, res, next) => {
-  const { email, senha } = req.body;
+export const deactivateController = async (req: Request, res: Response) => {
+	const id = Number(req.params.id);
+	const userIdFromToken = req.user?.id;
 
-  if (!email || !senha) {
-    res.status(400).json({ message: "Dados inválidos!" });
-    return;
-  }
+	if (!userIdFromToken || id !== userIdFromToken) {
+		return res.status(403).json({ message: "Acesso negado" });
+	}
 
-  try {
-    await userService.resetPassword(email, senha);
-    res.status(200).json({ message: "Senha alterada com sucesso!" });
-  } catch (error) {
-    if (error instanceof AppError) {
-      res.status(error.statusCode).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Erro interno no servidor." });
-    }
-  }
+	try {
+		await userService.deactivateUser(id);
+		return res.status(204).send();
+	} catch (error) {
+		if (error instanceof AppError) {
+			return res.status(error.statusCode).json({ message: error.message });
+		}
+		return res.status(500).json({ message: "Erro desconhecido" });
+	}
+};
+
+export const resetPasswordController = async (req: Request, res: Response) => {
+	const { email, senha } = req.body;
+
+	if (!email || !senha) {
+		return res.status(400).json({ message: "Dados inválidos!" });
+	}
+
+	try {
+		await userService.resetPassword(email, senha);
+		return res.status(200).json({ message: "Senha alterada com sucesso!" });
+	} catch (error) {
+		if (error instanceof AppError) {
+			return res.status(error.statusCode).json({ message: error.message });
+		}
+		return res.status(500).json({ message: "Erro interno no servidor." });
+	}
 };

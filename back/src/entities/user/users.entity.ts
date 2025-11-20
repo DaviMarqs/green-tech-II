@@ -1,4 +1,3 @@
-// src/entities/Usuario.entity.ts
 import {
 	Entity,
 	PrimaryGeneratedColumn,
@@ -41,6 +40,9 @@ export class Usuario {
 	@Column("varchar", { length: 8, nullable: false })
 	cep: string;
 
+	@Column("varchar", { length: 20, nullable: true })
+	numero: string;
+
 	@Column("varchar", { length: 255 })
 	senha: string;
 
@@ -52,9 +54,6 @@ export class Usuario {
 		(produto) => produto.usuario,
 	)
 	produtos: Produto[];
-
-	// @Column("timestamp", { name: "disabled_at", nullable: true })
-	// disabled_at: Date;
 
 	@ManyToOne(
 		() => Logradouro,
