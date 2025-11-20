@@ -11,6 +11,7 @@ import {
 interface Pedido {
   id: number;
   status: string;
+  statusColor: string;
   valor: number;
   forma: string;
 }
@@ -35,7 +36,11 @@ export default function MyProducts({ dados }: MyProductsProps) {
             {dados.map((pedido) => (
               <TableRow key={pedido.id}>
                 <TableCell className="font-medium">{pedido.id}</TableCell>
-                <TableCell>{pedido.status}</TableCell>
+                <TableCell>
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${pedido.statusColor}`}>
+                {pedido.status}
+              </span>
+            </TableCell>
                 <TableCell>{pedido.forma}</TableCell>
                 <TableCell className="text-right">R${pedido.valor}</TableCell>
               </TableRow>

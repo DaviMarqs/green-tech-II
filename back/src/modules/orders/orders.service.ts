@@ -6,16 +6,42 @@ import { Pedido, PedidoStatus } from "../../entities/store/order.entity";
 import { Produto } from "../../entities/store/product.entity";
 import { Usuario } from "../../entities/user/users.entity";
 import { PedidoProduto } from "../../entities/junctions/orderProduct.entity";
+import { FormaPagamento } from "../../entities/store/paymentMethod.entity";
 
 const pedidoRepository = AppDataSource.getRepository(Pedido);
 const produtoRepository = AppDataSource.getRepository(Produto);
 const usuarioRepository = AppDataSource.getRepository(Usuario);
+const formaPagamentoRepository = AppDataSource.getRepository(FormaPagamento);
 
 export const createOrder = async (
 	data: CreateOrderDTO,
 ): Promise<OrderResponse> => {
-	const { compradorId, vendedorId, formaPagamento, produtos } = data;
+	const { compradorId, vendedorId, formaPagamento, parcelas, produtos } = data;
 
+	// 1. Validação da Forma de Pagamento
+	const metodoPagamentoConfig = await formaPagamentoRepository.findOneBy({
+		forma_pagamento: formaPagamento,
+		ativo: true,
+	});
+
+	if (!metodoPagamentoConfig) {
+		throw new AppError(
+			`A forma de pagamento '${formaPagamento}' não está disponível.`,
+			400,
+		);
+	}
+
+	// 2. Validação das Parcelas
+	const parcelasSolicitadas = parcelas || 1; // Se não enviar, assume 1 (à vista)
+
+	if (parcelasSolicitadas > metodoPagamentoConfig.parcelamento) {
+		throw new AppError(
+			`O parcelamento máximo para ${formaPagamento} é de ${metodoPagamentoConfig.parcelamento}x.`,
+			400,
+		);
+	}
+
+	// 3. Buscas de Usuários e Produtos (Lógica existente)
 	const comprador = await usuarioRepository.findOneBy({
 		id_usuario: compradorId,
 	});
@@ -38,8 +64,8 @@ export const createOrder = async (
 		const produtoDb = produtosDb.find((p) => p.id === item.idProduto);
 		if (!produtoDb)
 			throw new AppError(`Produto ${item.idProduto} não encontrado`, 404);
+
 		if (produtoDb.estoque < item.quantidade)
-			// Usando 'estoque'
 			throw new AppError(
 				`Estoque insuficiente para o produto ${produtoDb.nome}`,
 				400,
@@ -49,11 +75,13 @@ export const createOrder = async (
 		itensParaSalvar.push({ produto: produtoDb, quantidade: item.quantidade });
 	}
 
+	// 4. Transação para Salvar
 	return AppDataSource.manager.transaction(
 		async (transactionalEntityManager) => {
 			const novoPedido = transactionalEntityManager.create(Pedido, {
 				valor: valorTotal,
 				forma_pagamento: formaPagamento,
+				parcelas: parcelasSolicitadas,
 				status: PedidoStatus.AGUARDANDO_PAGAMENTO,
 				data_pedido: new Date(),
 				id_usuario_comprador: comprador,
@@ -86,6 +114,7 @@ export const createOrder = async (
 				id_pedido: novoPedido.id_pedido,
 				valor: novoPedido.valor,
 				forma_pagamento: novoPedido.forma_pagamento,
+				parcelas: novoPedido.parcelas,
 				status: novoPedido.status,
 				data_pedido: novoPedido.data_pedido.toISOString(),
 			};

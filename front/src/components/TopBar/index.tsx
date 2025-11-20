@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
-import { Bell, ShoppingCart, User } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
 import { useState } from "react";
 import CartSummary from "../CartSummary";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -15,8 +15,6 @@ export default function TopBar() {
 
   return (
     <div className="flex justify-between items-center px-8 py-4 border-b bg-white w-full">
-      <h1 className="text-xl font-semibold text-gray-800">Comprar</h1>
-
       <div className="flex items-center gap-3 w-[50%]">
         <Input
           placeholder="🔍 Pesquisar..."
@@ -44,8 +42,6 @@ export default function TopBar() {
             {user ? `Olá, ${user.nome}` : "Faça login"}
           </TooltipContent>
         </Tooltip>
-
-        <Bell className="size-5 text-gray-700 cursor-pointer" />
 
         <Popover>
           <PopoverTrigger asChild>
