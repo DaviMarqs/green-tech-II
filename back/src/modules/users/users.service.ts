@@ -6,91 +6,107 @@ import { AppDataSource } from "../../database/data-source";
 
 const userRepository = AppDataSource.getRepository(Usuario);
 
+// Buscar dados para o Perfil
+export const getUserProfile = async (id: number): Promise<UserResponse> => {
+	const user = await userRepository.findOne({
+		where: { id_usuario: id },
+	});
+
+	if (!user) {
+		throw new AppError("Usuário não encontrado.", 404);
+	}
+
+	return {
+		id_usuario: user.id_usuario,
+		nome: user.nome,
+		email: user.email,
+		telefone: user.telefone,
+		cep: user.cep,
+		// ✅ AGORA RETORNA OS DADOS QUE FALTAVAM
+		cpfCnpj: user.cpfCnpj,
+		data_nasc: user.data_nasc,
+		numero: user.numero,
+	};
+};
+
+// Atualizar dados
 export const updateUser = async (
-  id: number,
-  userData: UpdateUserDTO
+	id: number,
+	userData: UpdateUserDTO,
 ): Promise<UserResponse> => {
-  const userToUpdate = {};
-  // const userToUpdate = await userRepository.findOne({
-  //   where: {
-  //     id: id,
-  //     disabled_at: IsNull(),
-  //   },
-  // });
+	const userToUpdate = await userRepository.findOne({
+		where: { id_usuario: id },
+	});
 
-  if (!userToUpdate) {
-    throw new AppError("Usuário não encontrado ou desativado.", 404);
-  }
+	if (!userToUpdate) {
+		throw new AppError("Usuário não encontrado.", 404);
+	}
 
-  // 2. Verificar se há dados para atualizar
-  const { nome, telefone, cep } = userData;
-  if (!nome && !telefone && !cep) {
-    throw new AppError("Nenhum campo fornecido para atualização.", 400);
-  }
+	// Validação de E-mail duplicado
+	if (userData.email && userData.email !== userToUpdate.email) {
+		const emailExists = await userRepository.findOne({
+			where: { email: userData.email },
+		});
+		if (emailExists) {
+			throw new AppError("Este e-mail já está em uso.", 409);
+		}
+	}
 
-  // 3. Mesclar os dados novos (userData) na entidade existente (userToUpdate)
-  // O merge é inteligente e só atualiza os campos definidos em userData
-  userRepository.merge(userToUpdate as any, userData);
+	// Criptografar senha
+	if (userData.senha) {
+		const hashedPassword = await bcrypt.hash(userData.senha, 10);
+		userToUpdate.senha = hashedPassword;
+	}
 
-  // 4. Salvar o usuário atualizado no banco
-  const savedUser = await userRepository.save(userToUpdate);
+	// ✅ ATUALIZAÇÃO DOS CAMPOS
+	if (userData.nome) userToUpdate.nome = userData.nome;
+	if (userData.telefone) userToUpdate.telefone = userData.telefone;
+	if (userData.cep) userToUpdate.cep = userData.cep;
+	if (userData.email) userToUpdate.email = userData.email;
 
-  // 5. Construir a resposta segura (sem senha ou dados sensíveis)
-  // Conforme a interface UserResponse
-  const response: any = {};
-  // const response: UserResponse = {
-  //   id_usuario: savedUser.id, // Mapeia o 'id' da entidade para 'id_usuario' da resposta
-  //   nome: savedUser.nome,
-  //   email: savedUser.email,
-  //   telefone: savedUser.telefone,
-  //   cep: savedUser.cep,
-  // };
+	// Campos novos
+	if (userData.numero) userToUpdate.numero = userData.numero;
+	if (userData.data_nasc) {
+		// Garante que venha como Date
+		userToUpdate.data_nasc = new Date(userData.data_nasc);
+	}
 
-  return response;
+	try {
+		const savedUser = await userRepository.save(userToUpdate);
+
+		return {
+			id_usuario: savedUser.id_usuario,
+			nome: savedUser.nome,
+			email: savedUser.email,
+			telefone: savedUser.telefone,
+			cep: savedUser.cep,
+			cpfCnpj: savedUser.cpfCnpj,
+			data_nasc: savedUser.data_nasc,
+			numero: savedUser.numero,
+		};
+	} catch (error) {
+		console.error(error);
+		throw new AppError("Erro ao atualizar dados. Verifique os campos.", 500);
+	}
 };
 
 export const deactivateUser = async (
-  id: number
+	id: number,
 ): Promise<{ message: string }> => {
-  // 1. Usamos o .update() para uma operação mais direta e eficiente
-  // Apenas atualiza usuários que batem com o 'id' E que não estão desativados
-  const result: any = [];
-  // const result = await userRepository.update(
-  //   {
-  //     id: id,
-  //     disabled_at: IsNull(),
-  //   },
-  //   {
-  //     disabled_at: new Date(),
-  //   }
-  // );
-
-  if (result.affected === 0) {
-    throw new AppError("Usuário não encontrado ou já desativado.", 404);
-  }
-
-  return { message: "Usuário desativado com sucesso." };
+	const result = await userRepository.delete(id);
+	if (result.affected === 0) {
+		throw new AppError("Usuário não encontrado.", 404);
+	}
+	return { message: "Usuário removido com sucesso." };
 };
 
 export const resetPassword = async (email: string, senha: string) => {
-  const userExists = await userRepository.query(
-    "SELECT * FROM gt_usuario WHERE email = $1 AND disabled_at IS NULL",
-    [email]
-  );
-
-  if (userExists.rowCount === 0) {
-    throw new AppError("Usuário não encontrado ou desativado.", 404);
-  }
-
-  const salt = 10;
-  const passwordHash = await bcrypt.hash(senha, salt);
-
-  const sql = `
-    UPDATE gt_usuario
-    SET senha='${passwordHash}'
-    WHERE email = '${email}'
-  `;
-
-  const { rows } = await userRepository.query(sql);
-  return rows[0];
+	const user = await userRepository.findOne({ where: { email } });
+	if (!user) {
+		throw new AppError("Usuário não encontrado.", 404);
+	}
+	const passwordHash = await bcrypt.hash(senha, 10);
+	user.senha = passwordHash;
+	await userRepository.save(user);
+	return { message: "Senha redefinida." };
 };
