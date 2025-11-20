@@ -53,7 +53,6 @@ const formatDateBr = (dateValue: string | Date | undefined | null) => {
 	}
 };
 
-// --- Schemas de Validação ---
 const profileSchema = z.object({
 	nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
 	email: z.string().email("E-mail inválido"),

@@ -22,7 +22,6 @@ export const getUserProfile = async (id: number): Promise<UserResponse> => {
 		email: user.email,
 		telefone: user.telefone,
 		cep: user.cep,
-		// ✅ AGORA RETORNA OS DADOS QUE FALTAVAM
 		cpfCnpj: user.cpfCnpj,
 		data_nasc: user.data_nasc,
 		numero: user.numero,
@@ -58,16 +57,12 @@ export const updateUser = async (
 		userToUpdate.senha = hashedPassword;
 	}
 
-	// ✅ ATUALIZAÇÃO DOS CAMPOS
 	if (userData.nome) userToUpdate.nome = userData.nome;
 	if (userData.telefone) userToUpdate.telefone = userData.telefone;
 	if (userData.cep) userToUpdate.cep = userData.cep;
 	if (userData.email) userToUpdate.email = userData.email;
-
-	// Campos novos
 	if (userData.numero) userToUpdate.numero = userData.numero;
 	if (userData.data_nasc) {
-		// Garante que venha como Date
 		userToUpdate.data_nasc = new Date(userData.data_nasc);
 	}
 

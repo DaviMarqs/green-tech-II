@@ -11,7 +11,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 
-// Schema
 const loginSchema = z.object({
 	email: z.string().min(1, "E-mail é obrigatório").email("E-mail inválido"),
 	password: z.string().min(1, "Senha é obrigatória"),
@@ -30,7 +29,7 @@ export function Login() {
 		formState: { errors },
 	} = useForm<LoginFormValues>({
 		resolver: zodResolver(loginSchema),
-		mode: "all", // ✅ Valida ao digitar e ao sair do campo (blur)
+		mode: "all",
 	});
 
 	const handleLogin = async (data: LoginFormValues) => {
@@ -101,7 +100,6 @@ export function Login() {
 							</Label>
 							<Input
 								id="email"
-								// ✅ Lógica da borda vermelha
 								className={`rounded-md border w-full bg-white ${
 									errors.email
 										? "border-red-500 focus-visible:ring-red-500"
