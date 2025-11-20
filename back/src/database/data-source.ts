@@ -1,13 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
-import { Usuario } from "../entities/user/users.entity";
-import { Produto } from "../entities/store/product.entity";
-import { Avaliacao } from "../entities/store/available.entity";
-import { Pedido } from "../entities/store/order.entity";
-import { PedidoProduto } from "../entities/junctions/orderProduct.entity";
-import { NotaFiscal } from "../entities/store/invoice.entity";
-import { ProdutoNotaFiscal } from "../entities/junctions/productInvoice.entity";
 
 dotenv.config();
 

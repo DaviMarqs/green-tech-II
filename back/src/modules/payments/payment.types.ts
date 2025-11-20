@@ -16,6 +16,12 @@ export interface PaymentResponse {
 	status: PagamentoStatus;
 	valor: number;
 	metodo: string;
+	metadata?: {
+		mensagem: string;
+		codigo_pix?: string; // Pix Copia e Cola
+		linha_digitavel?: string; // Boleto
+		nsu?: string; // Número Sequencial Único (Comprovante Cartão)
+	};
 }
 
 export interface ErrorResponse {
