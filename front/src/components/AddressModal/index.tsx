@@ -9,9 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/lib/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { EnderecoSelect } from "../EnderecoSelect/EnderecoSelect";
 
 export default function AddressModal({
   open,
@@ -23,6 +24,11 @@ export default function AddressModal({
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  const [addressId, setAddressId] = useState<number | null>(null);
+
+  const [estadoId, setEstadoId] = useState<number | null>(null);
+  const [cidadeId, setCidadeId] = useState<number | null>(null);
+
   const [formData, setFormData] = useState({
     logradouro: "",
     numero: "",
@@ -31,60 +37,103 @@ export default function AddressModal({
     estado: "",
     cidade: "",
   });
+
   const [loading, setLoading] = useState(false);
 
+  /* -------------------- LOAD USER ADDRESS IF EXISTS -------------------- */
+  useEffect(() => {
+    if (!open || !user) return;
+
+    async function loadUserAddress() {
+      try {
+        const { data } = await api.get(`/address/user/${user?.id_usuario}`);
+
+        if (data && data.length > 0) {
+          console.log("data", data);
+          const addr = data[0]; // pega o primeiro endereço
+
+          setAddressId(addr.id_endereco);
+
+          setCidadeId(addr.cidade?.id_cidade || null);
+          setEstadoId(addr.estado?.id_estado || null);
+
+          setFormData({
+            logradouro: addr.logradouro || "",
+            numero: addr.numero?.toString() || "",
+            bairro: addr.bairro || "",
+            cep: addr.cep || "",
+            estado: addr.estado?.nome_estado || "",
+            cidade: addr.cidade?.nome_cidade || "",
+          });
+        }
+      } catch (error) {
+        console.log("Usuário sem endereço ainda.");
+      }
+    }
+
+    loadUserAddress();
+  }, [open, user]);
+
+  /* -------------------------- FORM CHANGE -------------------------- */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  /* -------------------------- CREATE OR UPDATE -------------------------- */
   const handleSubmit = async () => {
     if (
       !formData.logradouro ||
       !formData.numero ||
       !formData.bairro ||
       !formData.cep ||
-      !formData.estado ||
-      !formData.cidade
+      !estadoId ||
+      !cidadeId
     ) {
-      toast.error("Por favor, preencha todos os campos antes de continuar.");
+      toast.error("Por favor, preencha todos os campos.");
       return;
     }
 
-    if (!user) {
-      toast.error("Você precisa estar logado para cadastrar o endereço.");
-      return;
-    }
+    setLoading(true);
 
     try {
-      setLoading(true);
+      if (user == null) {
+        toast.error("Usuário não autenticado.");
+        setLoading(false);
+        return;
+      }
 
-      // const { data } = await api.post("/address", formData);
-
-      const data = {
-        endereco: {
-          rua: "Avenida Paulista",
-          numero: "1578",
-          bairro: "Bela Vista",
-          cep: "01310-200",
-          estado: "SP",
-          cidade: "São Paulo",
-        },
+      const payload = {
+        logradouro: formData.logradouro,
+        numero: formData.numero,
+        bairro: formData.bairro,
+        cep: formData.cep,
+        id_estado: estadoId,
+        id_cidade: cidadeId,
+        user_id: user.id_usuario,
       };
 
-      if (data?.endereco) {
-        localStorage.setItem("userAddress", JSON.stringify(data.endereco));
-        toast.success("Endereço salvo com sucesso!");
-        onClose();
-        navigate("/checkout");
+      let response;
+
+      if (addressId) {
+        response = await api.put(`/address/${addressId}`, payload);
+        toast.success("Endereço atualizado!");
       } else {
-        toast.error("Erro ao salvar o endereço. Tente novamente.");
+        response = await api.post("/address", payload);
+        toast.success("Endereço cadastrado!");
       }
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error.response?.data?.message ||
-          "Erro ao cadastrar o endereço. Tente novamente."
+
+      localStorage.setItem(
+        "userAddress",
+        JSON.stringify({
+          ...payload,
+          cidade: formData.cidade,
+          estado: formData.estado,
+        })
       );
+      onClose();
+      navigate("/checkout");
+    } catch (error) {
+      toast.error("Erro ao salvar endereço.");
     } finally {
       setLoading(false);
     }
@@ -145,24 +194,12 @@ export default function AddressModal({
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label htmlFor="estado">Estado</Label>
-              <Input
-                id="estado"
-                placeholder="São Paulo"
-                value={formData.estado}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label htmlFor="cidade">Cidade</Label>
-              <Input
-                id="cidade"
-                placeholder="Araras"
-                value={formData.cidade}
-                onChange={handleChange}
-              />
-            </div>
+            <EnderecoSelect
+              estadoSelecionado={estadoId}
+              cidadeSelecionada={cidadeId}
+              onEstadoChange={setEstadoId}
+              onCidadeChange={setCidadeId}
+            />
           </div>
 
           <div className="flex justify-between mt-6">
@@ -183,7 +220,11 @@ export default function AddressModal({
                   : "bg-green-600 hover:bg-green-700"
               } text-white`}
             >
-              {loading ? "Salvando..." : "Próxima etapa →"}
+              {loading
+                ? "Salvando..."
+                : addressId
+                ? "Atualizar →"
+                : "Próxima etapa →"}
             </Button>
           </div>
         </form>

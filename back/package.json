@@ -7,6 +7,7 @@
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "seed": "ts-node src/database/seeds/runAllSeeds.ts",
     "migration:create": "npx typeorm migration:create ./src/database/migrations/$npm_config_name",
     "migration:up": "npx ts-node ./node_modules/typeorm/cli.js migration:run -d ./src/database/data-source.ts",
     "migration:down": "npx ts-node ./node_modules/typeorm/cli.js migration:revert -d ./src/database/data-source.ts"
@@ -16,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
+    "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -6,7 +7,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { api } from "@/services/api";
+import { toast } from "sonner";
 
 interface Pedido {
   id: number;
@@ -18,34 +22,95 @@ interface Pedido {
 
 interface MyProductsProps {
   dados: Pedido[];
+  reloadOrders?: () => void; // opcional, caso precise recarregar pedidos
 }
 
-export default function MyProducts({ dados }: MyProductsProps) {
-    return (
-        <Table>
-          <TableCaption>Fim da lista de pedidos</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[160px]">ID Do pedido</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Método de pagamento</TableHead>
-              <TableHead className="text-right">Valor (R$)</TableHead>
+export default function MyProducts({ dados, reloadOrders }: MyProductsProps) {
+  const [loadingId, setLoadingId] = useState<number | null>(null);
+
+  const handleInformarPagamento = async (pedidoId: number) => {
+    setLoadingId(pedidoId);
+
+    try {
+      const response = await api.patch(`/orders/${pedidoId}/status`, {
+        status: "PAGO",
+      });
+
+      toast.success(`Pagamento confirmado para o pedido #${pedidoId}`);
+
+      // Se quiser atualizar a lista após pagar:
+      if (reloadOrders) reloadOrders();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Erro ao atualizar status");
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
+  return (
+    <Table>
+      <TableCaption>Fim da lista de pedidos</TableCaption>
+
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[160px]">ID do pedido</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Método de pagamento</TableHead>
+          <TableHead className="text-right">Valor (R$)</TableHead>
+          <TableHead className="text-right">Ações</TableHead>
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {dados.map((pedido) => {
+          const isPaid = pedido.status.toLowerCase() === "pago";
+
+          return (
+            <TableRow key={pedido.id}>
+              <TableCell className="font-medium">{pedido.id}</TableCell>
+
+              <TableCell>
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${pedido.statusColor}`}
+                >
+                  {pedido.status}
+                </span>
+              </TableCell>
+
+              <TableCell>{pedido.forma}</TableCell>
+
+              <TableCell className="text-right">
+                R$ {pedido.valor.toFixed(2)}
+              </TableCell>
+
+              {/* AÇÕES */}
+              <TableCell className="text-right">
+                {!isPaid ? (
+                  <Button
+                    size="sm"
+                    onClick={() => handleInformarPagamento(pedido.id)}
+                    disabled={loadingId === pedido.id}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {loadingId === pedido.id
+                      ? "Processando..."
+                      : "Informar pagamento"}
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-green-600 text-green-700 hover:bg-green-50"
+                    onClick={() => alert("Tela de detalhes aqui")}
+                  >
+                    Ver detalhes
+                  </Button>
+                )}
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {dados.map((pedido) => (
-              <TableRow key={pedido.id}>
-                <TableCell className="font-medium">{pedido.id}</TableCell>
-                <TableCell>
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${pedido.statusColor}`}>
-                {pedido.status}
-              </span>
-            </TableCell>
-                <TableCell>{pedido.forma}</TableCell>
-                <TableCell className="text-right">R${pedido.valor}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-    )
+          );
+        })}
+      </TableBody>
+    </Table>
+  );
 }

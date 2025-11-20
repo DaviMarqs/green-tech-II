@@ -1,25 +1,17 @@
 import type { Endereco } from "../../entities/address/endereco.entity";
 
 export interface RegisterEnderecoDTO {
-	numero: string;
-	complemento?: string;
-	logradouro: {
-		cep: string;
-		logradouro: string;
-	};
-	bairro: {
-		nome: string;
-	};
-	cidade: {
-		nome: string;
-	};
-	estado: {
-		nome: string;
-		sigla: string;
-	};
+  numero: string;
+  complemento: string;
+  cep: string;
+  logradouro: string;
+  bairro: string;
+  user_id: number;
+  cidade_id: number;
+  estado_id: number;
 }
 
 export interface RegisterEnderecoResponse {
-	message: string;
-	endereco: Endereco;
+  message: string;
+  endereco: Endereco;
 }

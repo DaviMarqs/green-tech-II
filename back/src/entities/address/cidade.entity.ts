@@ -1,43 +1,37 @@
-// src/entities/Cidade.entity.ts
 import {
-	Entity,
-	PrimaryGeneratedColumn,
-	Column,
-	CreateDateColumn,
-	UpdateDateColumn,
-	ManyToOne,
-	OneToMany,
-	JoinColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  JoinColumn,
+  OneToMany,
 } from "typeorm";
 import { Estado } from "./estado.entity";
-import { Bairro } from "./bairro.entity";
+import { Endereco } from "./endereco.entity";
 
 @Entity("gt_cidade")
 export class Cidade {
-	@PrimaryGeneratedColumn("increment", { name: "id_cidade" })
-	id_cidade: number;
+  @PrimaryGeneratedColumn()
+  id_cidade: number;
 
-	@Column("varchar", { name: "nome_cidade", length: 100 })
-	nome_cidade: string;
+  @Column({ length: 100 })
+  nome_cidade: string;
 
-	// Relação: Muitas Cidades pertencem a um Estado
-	@ManyToOne(
-		() => Estado,
-		(estado) => estado.cidades,
-	)
-	@JoinColumn({ name: "id_estado" }) // Chave estrangeira
-	id_estado: Estado;
+  @Column()
+  id_estado: number;
 
-	// Relação: Uma Cidade tem muitos Bairros
-	@OneToMany(
-		() => Bairro,
-		(bairro) => bairro.id_cidade,
-	)
-	bairros: Bairro[];
+  @ManyToOne(() => Estado, (estado) => estado.cidades)
+  @JoinColumn({ name: "id_estado" })
+  estado: Estado;
 
-	@CreateDateColumn({ name: "created_at" })
-	created_at: Date;
+  @CreateDateColumn({ type: "timestamp" })
+  created_at: Date;
 
-	@UpdateDateColumn({ name: "updated_at", nullable: true })
-	updated_at: Date;
+  @UpdateDateColumn({ type: "timestamp" })
+  updated_at: Date;
+
+  @OneToMany(() => Endereco, (endereco) => endereco.cidade)
+  enderecos: Endereco[];
 }

@@ -19,7 +19,7 @@ export const register = async (
   // 1. Verifica se o usuário já existe usando TypeORM
   // O 'where' em array age como um OR
   const userExists = await userRepository.findOne({
-    where: [{ email: dto.email }, { cpfCnpj: dto.cpf }],
+    where: [{ email: dto.email }, { cpf_cnpj: dto.cpf }],
   });
 
   if (userExists) {
@@ -37,12 +37,11 @@ export const register = async (
   // 4. Cria a nova entidade Usuário
   const newUser = userRepository.create({
     nome: dto.nome,
-    cpfCnpj: dto.cpf,
+    cpf_cnpj: dto.cpf,
     email: dto.email,
     senha: passwordHash,
     telefone: dto.telefone,
     data_nasc: dataFormatada,
-    cep: "13000000",
     // Aqui está a mágica do TypeORM:
     // Informamos a FK 'cep' através da relação 'logradouro'
     // logradouro: { cep: dto.cep },
@@ -81,14 +80,20 @@ export const login = async (
     // addSelect: ["senha"],
   });
 
+  console.log("aqui");
+
   if (!user) {
     throw new AppError("Credenciais inválidas.", 401);
   }
-
   // 2. Compara a senha
-  const passwordCorrect = await bcrypt.compare(dto.senha, user.senha);
-  if (!passwordCorrect) {
-    throw new AppError("Credenciais inválidas.", 401);
+  if (dto.senha == user.senha) {
+    // deve ser excluisivo para ambiente de testes
+  } else {
+    const passwordCorrect = await bcrypt.compare(dto.senha, user.senha);
+
+    if (!passwordCorrect) {
+      throw new AppError("Credenciais inválidas.", 401);
+    }
   }
 
   // 3. Verifica a chave secreta do JWT

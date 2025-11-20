@@ -1,35 +1,35 @@
-// src/entities/Estado.entity.ts
 import {
-	Entity,
-	PrimaryGeneratedColumn,
-	Column,
-	CreateDateColumn,
-	UpdateDateColumn,
-	OneToMany,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { Cidade } from "./cidade.entity";
+import { Endereco } from "./endereco.entity";
 
 @Entity("gt_estado")
 export class Estado {
-	@PrimaryGeneratedColumn("increment", { name: "id_estado" })
-	id: number;
+  @PrimaryGeneratedColumn()
+  id_estado: number;
 
-	@Column("varchar", { name: "nome_estado", length: 100 })
-	nome: string;
+  @Column({ length: 100 })
+  nome_estado: string;
 
-	@Column("varchar", { length: 2 })
-	sigla: string;
+  @Column({ length: 2 })
+  sigla: string;
 
-	@CreateDateColumn({ name: "created_at" })
-	created_at: Date;
+  @CreateDateColumn({ type: "timestamp" })
+  created_at: Date;
 
-	@UpdateDateColumn({ name: "updated_at", nullable: true })
-	updated_at: Date;
+  @UpdateDateColumn({ type: "timestamp" })
+  updated_at: Date;
 
-	// Relação: Um Estado tem muitas Cidades
-	@OneToMany(
-		() => Cidade,
-		(cidade) => cidade.id_estado,
-	)
-	cidades: Cidade[];
+  // Relações
+  @OneToMany(() => Cidade, (cidade) => cidade.estado)
+  cidades: Cidade[];
+
+  @OneToMany(() => Endereco, (endereco) => endereco.estado)
+  enderecos: Endereco[];
 }

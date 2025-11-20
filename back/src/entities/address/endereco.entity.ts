@@ -1,36 +1,54 @@
-// src/entities/endereco.entity.ts
 import {
-	Entity,
-	PrimaryGeneratedColumn,
-	Column,
-	ManyToOne,
-	JoinColumn,
-	CreateDateColumn,
-	UpdateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
-import { Logradouro } from "./logradouro.entity";
+import { Estado } from "./estado.entity";
+import { Cidade } from "./cidade.entity";
+import { Usuario } from "../user/users.entity";
 
 @Entity("gt_endereco")
 export class Endereco {
-	@PrimaryGeneratedColumn("increment", { name: "id_endereco" })
-	id_endereco: number;
+  @PrimaryGeneratedColumn()
+  id_endereco: number;
 
-	@Column("varchar", { length: 10 })
-	numero: string;
+  @Column({ length: 120 })
+  logradouro: string;
 
-	@Column("varchar", { length: 100, nullable: true })
-	complemento: string;
+  @Column({ type: "integer", nullable: true })
+  numero?: number;
 
-	@ManyToOne(
-		() => Logradouro,
-		(logradouro) => logradouro.enderecos,
-	)
-	@JoinColumn({ name: "cep" })
-	cep: Logradouro;
+  @Column({ length: 100 })
+  bairro: string;
 
-	@CreateDateColumn({ name: "created_at" })
-	created_at: Date;
+  @Column()
+  id_estado: number;
 
-	@UpdateDateColumn({ name: "updated_at", nullable: true })
-	updated_at: Date;
+  @ManyToOne(() => Estado, (estado) => estado.enderecos)
+  @JoinColumn({ name: "id_estado" })
+  estado: Estado;
+
+  @Column()
+  id_cidade: number;
+
+  @ManyToOne(() => Cidade, (cidade) => cidade.enderecos)
+  @JoinColumn({ name: "id_cidade" })
+  cidade: Cidade;
+
+  @Column()
+  user_id: number;
+
+  @ManyToOne(() => Usuario, (user) => user.endereco)
+  @JoinColumn({ name: "user_id" })
+  usuario: Usuario;
+
+  @CreateDateColumn({ type: "timestamp" })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: "timestamp" })
+  updated_at: Date;
 }
