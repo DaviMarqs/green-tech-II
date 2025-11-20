@@ -14,7 +14,7 @@ import {
 import { Usuario } from "../user/users.entity";
 import { NotaFiscal } from "./invoice.entity";
 import { PedidoProduto } from "../junctions/orderProduct.entity";
-import { Avaliacao } from "./available.entity";
+import { Avaliacao } from "./review.entity";
 
 export enum PedidoStatus {
 	AGUARDANDO_PAGAMENTO = "AGUARDANDO_PAGAMENTO",
@@ -71,11 +71,11 @@ export class Pedido {
 	)
 	nota_fiscal: NotaFiscal;
 
-	@OneToMany(
-		() => Avaliacao,
-		(aval) => aval.id_pedido,
-	)
-	avaliacoes: Avaliacao[];
+	// @OneToMany(
+	// 	() => Avaliacao,
+	// 	(aval) => aval.id_pedido,
+	// )
+	// avaliacoes: Avaliacao[];
 
 	@OneToMany(
 		() => PedidoProduto,

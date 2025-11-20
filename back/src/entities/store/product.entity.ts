@@ -8,7 +8,7 @@ import {
 	ManyToOne,
 	JoinColumn,
 } from "typeorm";
-import { Avaliacao } from "./available.entity";
+import { Avaliacao } from "./review.entity";
 import { PedidoProduto } from "../junctions/orderProduct.entity";
 import { ProdutoNotaFiscal } from "../junctions/productInvoice.entity";
 import { Usuario } from "../user/users.entity";
@@ -46,7 +46,7 @@ export class Produto {
 
 	@OneToMany(
 		() => Avaliacao,
-		(aval) => aval.id_produto,
+		(aval) => aval.produto,
 	)
 	avaliacoes: Avaliacao[];
 

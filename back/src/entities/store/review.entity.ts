@@ -9,16 +9,15 @@ import {
 	Check,
 } from "typeorm";
 import { Usuario } from "../user/users.entity";
-import { Produto } from "./product.entity";
-import { Pedido } from "./order.entity";
+import { Produto } from "../store/product.entity";
 
 @Entity("gt_avaliacao")
-@Check(`"nota" >= 1 AND "nota" <= 5`)
+@Check(`"nota" >= 0 AND "nota" <= 5`)
 export class Avaliacao {
 	@PrimaryGeneratedColumn("increment", { name: "id_avaliacao" })
 	id_avaliacao: number;
 
-	@Column("integer", { nullable: true })
+	@Column("integer")
 	nota: number;
 
 	@Column("varchar", { length: 200, nullable: true })
@@ -30,21 +29,25 @@ export class Avaliacao {
 		(usuario) => usuario.avaliacoes,
 	)
 	@JoinColumn({ name: "id_usuario" })
-	id_usuario: Usuario;
+	usuario: Usuario;
+
+	@Column({ name: "id_usuario" })
+	id_usuario: number;
 
 	@ManyToOne(
 		() => Produto,
 		(produto) => produto.avaliacoes,
 	)
 	@JoinColumn({ name: "id_produto" })
-	id_produto: Produto;
+	produto: Produto;
 
-	@ManyToOne(
-		() => Pedido,
-		(pedido) => pedido.avaliacoes,
-	)
-	@JoinColumn({ name: "id_pedido" })
-	id_pedido: Pedido;
+	@Column({ name: "id_produto" })
+	id_produto: number;
+
+	//Ver com o time se faz sentido ter avaliacao do pedido
+	// @ManyToOne(() => Pedido, (pedido) => pedido.avaliacoes, { nullable: true })
+	// @JoinColumn({ name: "id_pedido" })
+	// pedido: Pedido;
 
 	@CreateDateColumn({ name: "created_at" })
 	created_at: Date;
