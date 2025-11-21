@@ -69,8 +69,13 @@ export const isValidDate = (dateString: string) => {
 		return false;
 	}
 
-	// Não permite futuro nem anos muito antigos
 	if (date > now || y < 1900) return false;
 
 	return true;
+};
+export const normalizeCep = (value: string) => {
+  if (!value) return "";
+  let clean = value.replace(/\D/g, "");
+  if (clean.length > 8) clean = clean.slice(0, 8);
+  return clean.replace(/(\d{5})(\d)/, "$1-$2");
 };

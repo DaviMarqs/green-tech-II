@@ -14,6 +14,7 @@ import DetailsProduct from "./pages/DetailsProduct";
 import MyOrders from "./pages/MyOrders";
 import { Sell } from "./pages/Sell";
 import Profile from "./pages/Profile";
+import NotaFiscalF from "./pages/NotaFiscalF";
 
 function AuthLayout({ children }: { children: React.ReactNode }) {
 	return (
@@ -45,6 +46,8 @@ const privateRoutes = [
 	{ path: "/my-orders", element: <MyOrders /> },
 	{ path: "/checkout", element: <Checkout /> },
 	{ path: "/my-profile", element: <Profile /> },
+	{ path: "/nota-fiscal", element: <NotaFiscalF /> }
+
 ];
 
 function App() {

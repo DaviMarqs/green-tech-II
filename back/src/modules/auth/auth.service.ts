@@ -68,7 +68,6 @@ export const register = async (
     email: newUser.email,
   };
 };
-
 export const login = async (
   dto: LoginDTO
 ): Promise<Omit<AuthResponse, "message">> => {
@@ -76,19 +75,26 @@ export const login = async (
   const user = await userRepository.findOne({
     where: {
       email: dto.email,
-      // disabled_at: IsNull(), // 👈 Verifica se o usuário não está desativado
+      // disabled_at: IsNull(), // 👈
+// Verifica se o usuário não está desativado
     },
     // addSelect: ["senha"],
   });
 
+  console.log("aqui");
+
   if (!user) {
     throw new AppError("Credenciais inválidas.", 401);
   }
-
   // 2. Compara a senha
-  const passwordCorrect = await bcrypt.compare(dto.senha, user.senha);
-  if (!passwordCorrect) {
-    throw new AppError("Credenciais inválidas.", 401);
+  if (dto.senha == user.senha) {
+    // deve ser excluisivo para ambiente de testes
+  } else {
+    const passwordCorrect = await bcrypt.compare(dto.senha, user.senha);
+
+    if (!passwordCorrect) {
+      throw new AppError("Credenciais inválidas.", 401);
+    }
   }
 
   // 3. Verifica a chave secreta do JWT

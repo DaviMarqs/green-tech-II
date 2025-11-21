@@ -12,6 +12,9 @@ import api from "@/lib/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import {
+  normalizeCep
+} from "@/lib/masks";
 
 export default function AddressModal({
   open,
@@ -118,11 +121,16 @@ export default function AddressModal({
             <div>
               <Label htmlFor="cep">CEP</Label>
               <Input
-                id="cep"
-                placeholder="13607-339"
-                value={formData.cep}
-                onChange={handleChange}
-              />
+              id="cep"
+              placeholder="13607-339"
+              value={formData.cep}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  cep: normalizeCep(e.target.value),
+                })
+              }
+            />
             </div>
             <div>
               <Label htmlFor="numero">Número</Label>
