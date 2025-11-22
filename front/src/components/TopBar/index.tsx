@@ -22,11 +22,44 @@ export default function TopBar() {
 					value={search}
 					onChange={(e) => setSearch(e.target.value)}
 					className="w-full rounded-lg"
-				/>
-
+						/>
+		<Popover>
+			<PopoverTrigger asChild>
 				<Button variant="outline" className="text-gray-700 border-gray-300">
 					Ordenar por ▾
 				</Button>
+				</PopoverTrigger>
+
+		<PopoverContent
+			align="start"
+			sideOffset={8}
+			className="w-[130px] p-0 border border-gray-200 shadow-lg rounded-lg"
+		>
+			<div className="flex flex-col">
+				<button
+					onClick={() => console.log("Ordenar por relevância")}
+					className="px-3 py-2 text-left hover:bg-gray-100"
+				>
+					Relevância
+				</button>
+
+				<button
+					onClick={() => console.log("Ordenar por maior preço")}
+					className="px-3 py-2 text-left hover:bg-gray-100"
+				>
+					Maior preço
+				</button>
+
+				<button
+					onClick={() => console.log("Ordenar por menor preço")}
+					className="px-3 py-2 text-left hover:bg-gray-100"
+				>
+					Menor preço
+				</button>
+			</div>
+		</PopoverContent>
+	</Popover>
+
 				<Button variant="outline" className="text-gray-700 border-gray-300">
 					Filtrar ⚙️
 				</Button>
