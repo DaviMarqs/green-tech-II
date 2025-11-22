@@ -12,10 +12,12 @@ export default function NotaFiscalF() {
         email_emitente: "contato@greentech.com",
         id_pedido: "987654",
         created_at: "2024-08-18 14:32",
+        valor_total: "R$ 1.234,56",
+        descricao_pedido: "Painel solar 550W",
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col">
+        <div className="min-h-screen bg-white flex flex-col">
 
             <TopBar />
 
@@ -43,12 +45,14 @@ export default function NotaFiscalF() {
                     <section className="mb-8">
                         <h2 className="text-xl font-semibold mb-2">Dados do Pedido</h2>
                         <p><strong>ID do Pedido:</strong> {nf.id_pedido}</p>
+                        <p><strong>Descrição do Pedido:</strong> {nf.descricao_pedido}</p>
                         <p><strong>Data de Emissão:</strong> {nf.created_at}</p>
+                        <p><strong>Valor do Pedido:</strong> {nf.valor_total}</p>
                     </section>
 
                     <button
                         onClick={() => alert("Baixar PDF!")}
-                        className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                        className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
                     >
                         Download PDF
                     </button>
