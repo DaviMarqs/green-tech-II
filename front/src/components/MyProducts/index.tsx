@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 👈 add this
 import {
   Table,
   TableBody,
@@ -22,29 +23,33 @@ interface Pedido {
 
 interface MyProductsProps {
   dados: Pedido[];
-  reloadOrders?: () => void; // opcional, caso precise recarregar pedidos
+  reloadOrders?: () => void;
 }
 
 export default function MyProducts({ dados, reloadOrders }: MyProductsProps) {
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const navigate = useNavigate(); // 👈 hook de navegação
 
   const handleInformarPagamento = async (pedidoId: number) => {
     setLoadingId(pedidoId);
 
     try {
-      const response = await api.patch(`/orders/${pedidoId}/status`, {
+      await api.patch(`/orders/${pedidoId}/status`, {
         status: "PAGO",
       });
 
       toast.success(`Pagamento confirmado para o pedido #${pedidoId}`);
 
-      // Se quiser atualizar a lista após pagar:
       if (reloadOrders) reloadOrders();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Erro ao atualizar status");
     } finally {
       setLoadingId(null);
     }
+  };
+
+  const handleVerDetalhes = (pedidoId: number) => {
+    navigate(`/my-orders/${pedidoId}`); // 👈 redireciona para /my-orders/:id
   };
 
   return (
@@ -83,7 +88,6 @@ export default function MyProducts({ dados, reloadOrders }: MyProductsProps) {
                 R$ {pedido.valor.toFixed(2)}
               </TableCell>
 
-              {/* AÇÕES */}
               <TableCell className="text-right">
                 {!isPaid ? (
                   <Button
@@ -101,7 +105,7 @@ export default function MyProducts({ dados, reloadOrders }: MyProductsProps) {
                     size="sm"
                     variant="outline"
                     className="border-green-600 text-green-700 hover:bg-green-50"
-                    onClick={() => alert("Tela de detalhes aqui")}
+                    onClick={() => handleVerDetalhes(pedido.id)} // 👈 aqui
                   >
                     Ver detalhes
                   </Button>
