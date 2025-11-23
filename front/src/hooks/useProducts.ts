@@ -167,8 +167,6 @@ export function useProduct(id?: string) {
     return () => abortRef.current?.abort();
   }, [id, refetch]);
 
-  console.log("UseProduct", data);
-
   return { loading, error, data, refetch };
 }
 
@@ -178,8 +176,6 @@ export function useCreateProduct() {
   const [error, setError] = useState<Error | null>(null);
 
   const { user } = useAuth();
-
-  console.log("useCreateProduct user", user);
 
   const mutate = useCallback(async (payload: CreateProductDTO) => {
     setLoading(true);

@@ -106,7 +106,6 @@ export const getEstadosController = async (
 ) => {
   try {
     const estados = await listEstados();
-    console.log("estados", estados);
 
     res.json(estados);
   } catch (err) {

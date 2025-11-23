@@ -70,7 +70,6 @@ export const updateProduct = async (
 
   productRepository.merge(product, data);
   const updated = await productRepository.save(product);
-  console.log(updated, product, data);
   return updated;
 };
 

@@ -85,7 +85,6 @@ export const updateController = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("Update", Number(req.params.id), req.body);
     const updated = await updateProduct(Number(req.params.id), req.body);
     res.status(200).json(updated);
   } catch (error) {

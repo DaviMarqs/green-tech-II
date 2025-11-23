@@ -26,7 +26,7 @@ export const getNotaFiscalById = async (
   nf_numero: number
 ): Promise<NotaFiscal> => {
   const nota = await repo.findOne({
-    where: { nf_numero },
+    where: { id_pedido: nf_numero },
     relations: ["pedido"],
   });
 

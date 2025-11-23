@@ -49,7 +49,6 @@ export default function AddressModal({
         const { data } = await api.get(`/address/user/${user?.id_usuario}`);
 
         if (data && data.length > 0) {
-          console.log("data", data);
           const addr = data[0]; // pega o primeiro endereço
 
           setAddressId(addr.id_endereco);

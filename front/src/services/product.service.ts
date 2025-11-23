@@ -73,7 +73,6 @@ export const productService = {
   },
 
   getById(id: string, signal?: AbortSignal) {
-    console.log("id", id, "signal", signal, "path", `${path}/${id}`);
     return http<Product>(`${path}/${id}`, { method: "GET", signal });
   },
 

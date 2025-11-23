@@ -4,7 +4,6 @@ import { Card, CardDescription, CardTitle } from "../ui/card";
 
 export default function MyProductCard() {
   const { data: product, loading, error } = useProduct("17");
-  console.log("Product: ", product);
 
   return (
     <Card className="w-[536px] overflow-hidden shadow-lg border border-gray-200 rounded-xl p-6">

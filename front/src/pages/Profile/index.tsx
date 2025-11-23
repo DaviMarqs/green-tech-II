@@ -125,61 +125,62 @@ export default function Profile() {
   const cepValue = watch("cep");
 
   // 1. Carregar dados do perfil
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const data = await userService.getProfile();
-        console.log("Dados do perfil carregados:", data);
+  // useEffect(() => {
+  //   const loadProfile = async () => {
+  //     try {
+  //       const data = await userService.getProfile();
+  //       console.log("Dados do perfil carregados:", data);
 
-        if (!data) throw new Error("Dados vazios");
+  //       if (!data) throw new Error("Dados vazios");
 
-        reset({
-          nome: data.nome || "",
-          email: data.email || "",
-          telefone: data.telefone || "",
-          cep: data.cep || "",
-          cpfCnpj: data.cpfCnpj || "Não informado",
-          data_nasc: formatDateBr(data.data_nasc),
-          numero: data.numero || "",
-        });
+  //       reset({
+  //         nome: data.nome || "",
+  //         email: data.email || "",
+  //         telefone: data.telefone || "",
+  //         cep: data.cep || "",
+  //         cpfCnpj: data.cpfCnpj || "Não informado",
+  //         data_nasc: formatDateBr(data.data_nasc),
+  //         numero: data.numero || "",
+  //       });
 
-        if (data.cep) {
-          const address = await addressService.getAddressByCep(data.cep);
-          if (address) {
-            setValue("rua", address.logradouro);
-            setValue("bairro", address.bairro);
-            setValue("cidade", address.localidade);
-            setValue("estado", address.uf);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("Erro ao carregar perfil");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       if (data.cep) {
+  //         const address = await addressService.getAddressByCep(data.cep);
+  //         if (address) {
+  //           setValue("rua", address.logradouro);
+  //           setValue("bairro", address.bairro);
+  //           setValue("cidade", address.localidade);
+  //           setValue("estado", address.uf);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       toast.error("Erro ao carregar perfil");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    loadProfile();
-  }, [reset, setValue]);
+  //   loadProfile();
+  // }, [reset, setValue]);
 
   // 2. Efeito para atualizar endereço
-  useEffect(() => {
-    const fetchAddress = async () => {
-      if (isEditing && cepValue && cepValue.length >= 8) {
-        const address = await addressService.getAddressByCep(cepValue);
-        if (address) {
-          setValue("rua", address.logradouro);
-          setValue("bairro", address.bairro);
-          setValue("cidade", address.localidade);
-          setValue("estado", address.uf);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const fetchAddress = async () => {
+  //     if (isEditing && cepValue && cepValue.length >= 8) {
+  //       const address = await addressService.getAddressByCep(cepValue);
+  //       if (address) {
+  //         setValue("rua", address.logradouro);
+  //         setValue("bairro", address.bairro);
+  //         setValue("cidade", address.localidade);
+  //         setValue("estado", address.uf);
+  //         setValue("cep", address.cep);
+  //       }
+  //     }
+  //   };
 
-    const timer = setTimeout(fetchAddress, 1000);
-    return () => clearTimeout(timer);
-  }, [cepValue, isEditing, setValue]);
+  //   const timer = setTimeout(fetchAddress, 1000);
+  //   return () => clearTimeout(timer);
+  // }, [cepValue, isEditing, setValue]);
 
   useEffect(() => {
     if (!user) return;
@@ -190,7 +191,6 @@ export default function Profile() {
         const { data } = await api.get(`/address/user/${user.id_usuario}`);
 
         if (data && data.length > 0) {
-          console.log("data", data);
           const addr = data[0]; // pega o primeiro endereço
 
           setAddressId(addr.id_endereco);
@@ -223,6 +223,8 @@ export default function Profile() {
           setValue("estado", estado);
           setValue("cidade", cidade);
         }
+
+        setIsLoading(false);
       } catch (error) {
         console.log("Usuário sem endereço ainda.");
       }

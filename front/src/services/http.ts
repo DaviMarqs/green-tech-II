@@ -21,7 +21,6 @@ export async function http<T>(
   { method = "GET", body, headers = {}, signal, auth = true }: HttpOptions = {}
 ): Promise<T> {
   const token = getAuthToken();
-  console.log("Base", BASE_URL);
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers: {

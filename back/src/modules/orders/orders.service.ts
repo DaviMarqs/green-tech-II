@@ -167,8 +167,6 @@ export const updateOrderStatus = async (
     relations: ["comprador"],
   });
 
-  console.log("Pedido encontrado:", pedido);
-
   if (!pedido) {
     throw new AppError("Pedido não encontrado.", 404);
   }

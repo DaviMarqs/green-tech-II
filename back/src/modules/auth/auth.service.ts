@@ -56,7 +56,6 @@ export const register = async (
     //   // Código de erro de FK violation
     //   throw new AppError("O CEP informado não foi encontrado.", 404);
     // }
-    console.log("Error", error);
     throw new AppError("Erro ao salvar usuário.", 500);
   }
 
@@ -79,8 +78,6 @@ export const login = async (
     },
     // addSelect: ["senha"],
   });
-
-  console.log("aqui");
 
   if (!user) {
     throw new AppError("Credenciais inválidas.", 401);
