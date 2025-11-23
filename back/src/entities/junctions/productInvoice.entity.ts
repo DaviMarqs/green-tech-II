@@ -25,10 +25,6 @@ export class ProdutoNotaFiscal {
   @JoinColumn({ name: "id_produto" })
   produto: Produto;
 
-  @ManyToOne(() => NotaFiscal, (nf) => nf.produtos)
-  @JoinColumn({ name: "numero_nf" })
-  nota_fiscal: NotaFiscal;
-
   @CreateDateColumn({ name: "created_at" })
   created_at: Date;
 }

@@ -11,7 +11,7 @@ import type { RegisterEnderecoDTO } from "./address.types";
 
 /* ---------------------- FIND OR CREATE ESTADO ---------------------- */
 
-const findOrCreateEstado = async (
+export const findOrCreateEstado = async (
   data: { nome: string; sigla: string },
   manager: EntityManager
 ) => {
@@ -35,7 +35,7 @@ const findOrCreateEstado = async (
 
 /* ---------------------- FIND OR CREATE CIDADE ---------------------- */
 
-const findOrCreateCidade = async (
+export const findOrCreateCidade = async (
   data: { nome: string },
   estado: Estado,
   manager: EntityManager
@@ -67,6 +67,7 @@ export const createCompleto = async (body: RegisterEnderecoDTO) => {
       const novoEndereco = manager.create(Endereco, {
         bairro: body.bairro || "",
         logradouro: body.logradouro,
+        cep: body.cep,
         numero:
           body.numero !== undefined && body.numero !== null
             ? parseInt(body.numero, 10)
@@ -116,14 +117,10 @@ export const updateEndereco = async (
   id: number,
   data: Partial<RegisterEnderecoDTO>
 ) => {
-  console.log("data", data);
   const repo = AppDataSource.getRepository(Endereco);
   const endereco = await repo.findOne({ where: { id_endereco: id } });
-  console.log("aqui");
   if (!endereco) throw new AppError("Endereço não encontrado.", 404);
-  console.log("aqui");
   Object.assign(endereco, data);
-  console.log("aqui", endereco);
   return repo.save(endereco);
 };
 

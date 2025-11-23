@@ -39,6 +39,9 @@ export class Endereco {
   @JoinColumn({ name: "id_cidade" })
   cidade: Cidade;
 
+  @Column({ length: 14, nullable: true })
+  cep: string;
+
   @Column()
   user_id: number;
 
