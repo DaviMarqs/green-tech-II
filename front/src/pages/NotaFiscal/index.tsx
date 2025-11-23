@@ -239,8 +239,9 @@ export default function NotaFiscal() {
 
           <div className="mt-8 flex justify-end">
             <a
-              href="/nota-fiscal-exemplo.pdf"
-              download
+              href={`http://localhost:3000/api/notafiscal/${nf.id_pedido}/pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
             >
               Baixar PDF
