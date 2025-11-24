@@ -56,9 +56,9 @@ export default function ProductList() {
           <div className="w-full h-2 bg-green-600 rounded-t-xl absolute top-0 left-0 right-0" />
 
           {/* Título do card */}
-          <div className="flex items-center justify-between mt-2">
+          <div className="flex items-center justify-between mt-2"> 
             <div className="flex items-center gap-2" id="titulo-card">
-              <Zap className="size-5 sm:size-6 text-green-500 -shrink-0" />
+              <Zap className="size-5 sm:size-6 text-green-500 flex-shrink-0" />
               <CardTitle className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800 line-clamp-2">
                 {product.nome}
               </CardTitle>
@@ -73,11 +73,11 @@ export default function ProductList() {
           </div>
 
           {/* Grid de informações - Responsivo */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">  
             {/* ID do vendedor */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <User className="size-4 sm:size-5 text-gray-500 shrink-0" />
+                <User className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">ID vendedor</span>
               </div>
               <div>
@@ -90,7 +90,7 @@ export default function ProductList() {
             {/* Preço */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <CircleDollarSign className="size-4 sm:size-5 text-gray-500 -shrink-0" />
+                <CircleDollarSign className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">Preço</span>
               </div>
               <div>
@@ -103,7 +103,7 @@ export default function ProductList() {
             {/* Estoque */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <Package className="size-4 sm:size-5 text-gray-500 shrink-0" />
+                <Package className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">Estoque</span>
               </div>
               <div>
@@ -116,14 +116,12 @@ export default function ProductList() {
             {/* Data de publicação */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <Calendar className="size-4 sm:size-5 text-gray-500 shrink-0" />
+                <Calendar className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">Publicado</span>
               </div>
               <div>
                 <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block">
-                  {product.created_at
-                    ? new Date(product.created_at).toLocaleDateString("pt-BR")
-                    : "—"}
+                  {product.created_at && new Date(product.created_at).toLocaleDateString("pt-BR")}
                 </span>
               </div>
             </div>
