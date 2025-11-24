@@ -48,6 +48,7 @@ const findOrCreateCidade = async (
   return cidade;
 };
 
+<<<<<<< Updated upstream
 const findOrCreateBairro = async (
   data: { nome: string },
   cidade: Cidade,
@@ -57,6 +58,87 @@ const findOrCreateBairro = async (
     where: {
       nome_bairro: data.nome,
       id_cidade: cidade.id_cidade,
+=======
+/* ---------------------- CREATE ENDEREÇO COMPLETO ---------------------- */
+
+export const createCompleto = async (body: RegisterEnderecoDTO) => {
+  return AppDataSource.transaction(async (manager) => {
+    try {
+      const novoEndereco = manager.create(Endereco, {
+        bairro: body.bairro || "",
+        logradouro: body.logradouro,
+        cep: body.cep,
+        numero:
+          body.numero !== undefined && body.numero !== null
+            ? parseInt(body.numero, 10)
+            : undefined,
+        id_estado: body.id_estado,
+        id_cidade: body.id_cidade,
+        user_id: body.user_id,
+      });
+
+      await manager.save(novoEndereco);
+
+      return novoEndereco;
+    } catch (error) {
+      if (error instanceof QueryFailedError) {
+        const code = (error as any)?.driverError?.code;
+
+        if (code === "23503") {
+          throw new AppError("Referência inválida.", 404);
+        }
+
+        if (code === "23505") {
+          throw new AppError("Valor duplicado encontrado.", 409);
+        }
+      }
+      console.log(error)
+      throw new AppError("Erro interno ao criar endereço.", 500);
+    }
+  });
+};
+
+/* ---------------------- CRUD EXTRA ---------------------- */
+
+export const getAllEnderecos = async () => {
+  return AppDataSource.getRepository(Endereco).find({
+    relations: ["estado", "cidade", "usuario"],
+  });
+};
+
+export const getEnderecoById = async (id: number) => {
+  return AppDataSource.getRepository(Endereco).findOne({
+    where: { id_endereco: id },
+    relations: ["estado", "cidade", "usuario"],
+  });
+};
+
+export const updateEndereco = async (
+  id: number,
+  data: Partial<RegisterEnderecoDTO>
+) => {
+  const repo = AppDataSource.getRepository(Endereco);
+  const endereco = await repo.findOne({ where: { id_endereco: id } });
+  if (!endereco) throw new AppError("Endereço não encontrado.", 404);
+  Object.assign(endereco, data);
+  return repo.save(endereco);
+};
+
+export const deleteEndereco = async (id: number) => {
+  const repo = AppDataSource.getRepository(Endereco);
+
+  const exists = await repo.findOne({ where: { id_endereco: id } });
+  if (!exists) throw new AppError("Endereço não encontrado.", 404);
+
+  await repo.delete(id);
+};
+
+export const listEstados = async () => {
+  const repo = AppDataSource.getRepository(Estado);
+  return repo.find({
+    order: {
+      nome_estado: "ASC",
+>>>>>>> Stashed changes
     },
   });
   if (!bairro) {
