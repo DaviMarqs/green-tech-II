@@ -46,14 +46,18 @@ export default function ProductList() {
     );
 
   return (
-        <div className="flex flex-col gap-6 pt-4">
+    <div className="flex flex-col gap-6 pt-4 ">
+
       {products.map((product) => (
+
         <Card
           key={product.id}
-          className="flex flex-col gap-4 w-full p-4 border border-gray-200 shadow-md rounded-xl hover:shadow-lg transition cursor-pointer"
+          className="flex flex-col gap-4 w-full p-4 border border-gray-200 shadow-md rounded-l hover:shadow-lg transition cursor-pointer relative"
         >
+          {/* Barra verde no topo */}
+          <div className="w-full h-2 bg-green-600 rounded-t-xl absolute top-0 left-0 -mb-1 z-10" />
           {/* Estilizando o título do card */}
-          <div className="flex items-center justify-between"> 
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2" id="titulo-card">
               <Zap className="size-6 text-green-500" />
               <CardTitle className="text-2xl font-semibold text-gray-800">
@@ -64,61 +68,61 @@ export default function ProductList() {
           <div>
             <p className="text-gray-700 text-sm">{product.descricao}</p>
           </div>
-          <div className="flex justify-between">  
+          <div className="flex justify-between">
             <div className="flex flex-col gap-1" id="categoria">
-            <div className="flex items-center gap-1 mt-1">
-              <User className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">ID do vendedor: </span>
+              <div className="flex items-center gap-1 mt-1">
+                <User className="size-5 text-gray-500" />
+                <span className="text-gray-500 text-sm">ID do vendedor: </span>
+              </div>
+              <div>
+                <span className="text-gray-700 text-sm">{product.id_usuario}</span>
+              </div>
             </div>
-            <div>
-              <span className="text-gray-700 text-sm">{product.id_usuario}</span>
-            </div>
-          </div>
-
-            <div className="flex flex-col gap-1" id="categoria">
-            <div className="flex items-center gap-1 mt-1">
-              <CircleDollarSign className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">Preço</span>
-            </div>
-            <div>
-              <span className="text-gray-700 text-sm">R${product.preco ?? "—"}</span>
-            </div>
-          </div>
 
             <div className="flex flex-col gap-1" id="categoria">
-            <div className="flex items-center gap-1 mt-1">
-              <Package className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">Estoque</span>
+              <div className="flex items-center gap-1 mt-1">
+                <CircleDollarSign className="size-5 text-gray-500" />
+                <span className="text-gray-500 text-sm">Preço</span>
+              </div>
+              <div>
+                <span className="text-gray-700 text-sm">R${product.preco ?? "—"}</span>
+              </div>
             </div>
-            <div>
-              <span className="text-gray-700 text-sm">{product.estoque ?? "—"}</span>
-            </div>
-          </div>
 
             <div className="flex flex-col gap-1" id="categoria">
-            <div className="flex items-center gap-1 mt-1">
-              <Calendar className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">Publicado em</span>
+              <div className="flex items-center gap-1 mt-1">
+                <Package className="size-5 text-gray-500" />
+                <span className="text-gray-500 text-sm">Estoque</span>
+              </div>
+              <div>
+                <span className="text-gray-700 text-sm">{product.estoque ?? "—"}</span>
+              </div>
             </div>
-            <div>
-              <span className="text-gray-700 text-sm">{product.created_at ?? "—"}</span>
+
+            <div className="flex flex-col gap-1" id="categoria">
+              <div className="flex items-center gap-1 mt-1">
+                <Calendar className="size-5 text-gray-500" />
+                <span className="text-gray-500 text-sm">Publicado em</span>
+              </div>
+              <div>
+                <span className="text-gray-700 text-sm">{product.created_at ?? "—"}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            <a href={`/details-product/${product.id}`}>
-              <Button variant="outline">Ver detalhes</Button>
-            </a>
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <a href={`/details-product/${product.id}`}>
+                <Button variant="outline">Ver detalhes</Button>
+              </a>
 
-            {product.id_usuario !== user?.id_usuario && (
-              <Button
-                className="bg-green-600 hover:bg-green-700 text-white"
-                onClick={() => setSelectedProduct(product)}
-              >
-                Comprar
-              </Button>
-            )}
-          </div>
+              {product.id_usuario !== user?.id_usuario && (
+                <Button
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  onClick={() => setSelectedProduct(product)}
+                >
+                  Comprar
+                </Button>
+              )}
+            </div>
 
           </div>
         </Card>
