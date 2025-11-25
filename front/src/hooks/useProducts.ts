@@ -175,15 +175,12 @@ export function useCreateProduct() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const { user } = useAuth();
-
   const mutate = useCallback(async (payload: CreateProductDTO) => {
     setLoading(true);
     setError(null);
     try {
       const created = await productService.create({
         ...payload,
-        id_usuario: user?.id_usuario,
       });
       return created;
     } catch (err) {
