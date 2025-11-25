@@ -46,114 +46,140 @@ export default function ProductList() {
     );
 
   return (
-        <div className="flex flex-col gap-6 pt-4">
+    <div className="flex flex-col gap-4 md:gap-6 pt-4 px-2 sm:px-4">
       {products.map((product) => (
         <Card
           key={product.id}
-          className="flex flex-col gap-4 w-full p-4 border border-gray-200 shadow-md rounded-xl hover:shadow-lg transition cursor-pointer"
+          className="flex flex-col gap-3 md:gap-4 w-full p-3 sm:p-4 md:p-6 border border-gray-200 shadow-md rounded-xl hover:shadow-lg transition relative overflow-hidden"
         >
-          {/* Estilizando o título do card */}
-          <div className="flex items-center justify-between"> 
+          {/* Barra verde no topo */}
+          <div className="w-full h-2 bg-green-600 rounded-t-xl absolute top-0 left-0 right-0" />
+
+          {/* Título do card */}
+          <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-2" id="titulo-card">
-              <Zap className="size-6 text-green-500" />
-              <CardTitle className="text-2xl font-semibold text-gray-800">
+              <Zap className="size-5 sm:size-6 text-green-500 -shrink-0" />
+              <CardTitle className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800 line-clamp-2">
                 {product.nome}
               </CardTitle>
             </div>
           </div>
+
+          {/* Descrição */}
           <div>
-            <p className="text-gray-700 text-sm">{product.descricao}</p>
+            <p className="text-gray-700 text-xs sm:text-sm line-clamp-3 md:line-clamp-none">
+              {product.descricao}
+            </p>
           </div>
-          <div className="flex justify-between">  
-            <div className="flex flex-col gap-1" id="categoria">
-            <div className="flex items-center gap-1 mt-1">
-              <User className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">ID do vendedor: </span>
+
+          {/* Grid de informações - Responsivo */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {/* ID do vendedor */}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1">
+                <User className="size-4 sm:size-5 text-gray-500 shrink-0" />
+                <span className="text-gray-500 text-xs sm:text-sm">ID vendedor</span>
+              </div>
+              <div>
+                <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block">
+                  {product.id_usuario}
+                </span>
+              </div>
             </div>
-            <div>
-              <span className="text-gray-700 text-sm">{product.id_usuario}</span>
+
+            {/* Preço */}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1">
+                <CircleDollarSign className="size-4 sm:size-5 text-gray-500 -shrink-0" />
+                <span className="text-gray-500 text-xs sm:text-sm">Preço</span>
+              </div>
+              <div>
+                <span className="text-gray-700 text-xs sm:text-sm font-medium">
+                  R${product.preco ?? "—"}
+                </span>
+              </div>
+            </div>
+
+            {/* Estoque */}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1">
+                <Package className="size-4 sm:size-5 text-gray-500 shrink-0" />
+                <span className="text-gray-500 text-xs sm:text-sm">Estoque</span>
+              </div>
+              <div>
+                <span className="text-gray-700 text-xs sm:text-sm font-medium">
+                  {product.estoque ?? "—"}
+                </span>
+              </div>
+            </div>
+
+            {/* Data de publicação */}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1">
+                <Calendar className="size-4 sm:size-5 text-gray-500 shrink-0" />
+                <span className="text-gray-500 text-xs sm:text-sm">Publicado</span>
+              </div>
+              <div>
+                <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block">
+                  {product.created_at
+                    ? new Date(product.created_at).toLocaleDateString("pt-BR")
+                    : "—"}
+                </span>
+              </div>
             </div>
           </div>
 
-            <div className="flex flex-col gap-1" id="categoria">
-            <div className="flex items-center gap-1 mt-1">
-              <CircleDollarSign className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">Preço</span>
-            </div>
-            <div>
-              <span className="text-gray-700 text-sm">R${product.preco ?? "—"}</span>
-            </div>
-          </div>
-
-            <div className="flex flex-col gap-1" id="categoria">
-            <div className="flex items-center gap-1 mt-1">
-              <Package className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">Estoque</span>
-            </div>
-            <div>
-              <span className="text-gray-700 text-sm">{product.estoque ?? "—"}</span>
-            </div>
-          </div>
-
-            <div className="flex flex-col gap-1" id="categoria">
-            <div className="flex items-center gap-1 mt-1">
-              <Calendar className="size-5 text-gray-500" />
-              <span className="text-gray-500 text-sm">Publicado em</span>
-            </div>
-            <div>
-              <span className="text-gray-700 text-sm">{product.created_at ?? "—"}</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            <a href={`/details-product/${product.id}`}>
-              <Button variant="outline">Ver detalhes</Button>
+          {/* Botões de ação */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-2 md:mt-4">
+            <a href={`/details-product/${product.id}`} className="w-full">
+              <Button variant="outline" className="w-full text-xs sm:text-sm">
+                Ver detalhes
+              </Button>
             </a>
 
             {product.id_usuario !== user?.id_usuario && (
               <Button
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="bg-green-600 hover:bg-green-700 text-white w-full text-xs sm:text-sm"
                 onClick={() => setSelectedProduct(product)}
               >
                 Comprar
               </Button>
             )}
           </div>
-
-          </div>
         </Card>
       ))}
 
+      {/* Dialog de compra - Responsivo */}
       <Dialog
         open={!!selectedProduct}
         onOpenChange={() => setSelectedProduct(null)}
       >
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md mx-4">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold text-gray-800">
+            <DialogTitle className="text-xl sm:text-2xl font-semibold text-gray-800">
               Comprar {selectedProduct?.nome}
             </DialogTitle>
           </DialogHeader>
 
           {selectedProduct && (
-            <div className="space-y-4">
-              <div>
-                <p className="text-gray-700 text-sm">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-1">
+                <p className="text-gray-700 text-xs sm:text-sm">
                   <strong>Vendedor:</strong> {selectedProduct?.id_usuario}
                 </p>
-                <p className="text-gray-700 text-sm">
-                  <strong>Preço:</strong> {selectedProduct.preco}
+                <p className="text-gray-700 text-xs sm:text-sm">
+                  <strong>Preço:</strong> R${selectedProduct.preco}
                 </p>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <p className="text-yellow-700 text-sm font-medium">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 sm:p-3">
+                <p className="text-yellow-700 text-xs sm:text-sm font-medium">
                   Economia estimada: <strong>R$ 150,00/mês</strong>
                 </p>
               </div>
 
               <Button
-                className="w-full bg-green-600 hover:bg-green-700 text-white mt-2"
+                className="w-full bg-green-600 hover:bg-green-700 text-white mt-2 text-xs sm:text-sm"
                 onClick={() => {
                   addToCart({
                     id: selectedProduct.id,
