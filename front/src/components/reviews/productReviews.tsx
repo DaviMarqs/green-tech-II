@@ -119,27 +119,31 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 	};
 
 	return (
-		<div className="space-y-8 mt-10 border-t pt-8" id="reviews-section">
-			<h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
-				<MessageSquare className="size-6" /> Avaliações
+		<div className="space-y-6 sm:space-y-8 mt-8 sm:mt-10 border-t pt-6 sm:pt-8" id="reviews-section">
+			{/* Título da seção */}
+			<h2 className="text-xl sm:text-2xl font-semibold text-gray-800 flex items-center gap-2">
+				<MessageSquare className="size-5 sm:size-6" /> Avaliações
 			</h2>
 
-			<div className="flex items-center gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
+			{/* Card de média geral */}
+			<div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-100">
 				<div className="text-center">
-					<span className="text-5xl font-bold text-gray-800">
+					<span className="text-4xl sm:text-5xl font-bold text-gray-800">
 						{mediaGeral.toFixed(1)}
 					</span>
-					<div className="text-sm text-gray-500 mt-1">de 5.0</div>
+					<div className="text-xs sm:text-sm text-gray-500 mt-1">de 5.0</div>
 				</div>
-				<div className="h-12 w-px bg-gray-300 mx-2 hidden sm:flex" />
-				<div className="flex flex-col gap-1">
-					<StarRating rating={Math.round(mediaGeral)} size={24} />
-					<span className="text-sm text-gray-600 font-medium">
+				<div className="h-px w-full sm:h-12 sm:w-px bg-gray-300 sm:mx-2" />
+				<div className="flex flex-col gap-1 items-center sm:items-start">
+					<StarRating rating={Math.round(mediaGeral)} size={20} className="sm:hidden" />
+					<StarRating rating={Math.round(mediaGeral)} size={24} className="hidden sm:flex" />
+					<span className="text-xs sm:text-sm text-gray-600 font-medium">
 						{total} {total === 1 ? "opinião" : "opiniões"}
 					</span>
 				</div>
 			</div>
 
+			{/* Formulário de avaliação */}
 			{user ? (
 				<Card
 					id="review-form"
@@ -149,8 +153,8 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 							: "border-gray-200 bg-gray-50/50"
 					}`}
 				>
-					<CardHeader className="flex flex-row items-center justify-between">
-						<CardTitle className="text-lg">
+					<CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-4 sm:p-6">
+						<CardTitle className="text-base sm:text-lg">
 							{editingId ? "Editar sua avaliação" : "Deixe sua avaliação"}
 						</CardTitle>
 						{editingId && (
@@ -158,21 +162,28 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 								variant="ghost"
 								size="sm"
 								onClick={handleCancelEdit}
-								className="text-gray-500 hover:text-red-500"
+								className="text-gray-500 hover:text-red-500 text-xs sm:text-sm"
 							>
-								<X className="size-4 mr-2" /> Cancelar edição
+								<X className="size-3 sm:size-4 mr-1 sm:mr-2" /> Cancelar edição
 							</Button>
 						)}
 					</CardHeader>
-					<CardContent className="space-y-4">
+					<CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0">
 						<div className="space-y-2">
-							<span className="text-sm font-medium text-gray-700">
+							<span className="text-xs sm:text-sm font-medium text-gray-700">
 								Sua nota:
 							</span>
 							<StarRating
 								rating={newRating}
 								onRatingChange={setNewRating}
+								size={24}
+								className="sm:hidden"
+							/>
+							<StarRating
+								rating={newRating}
+								onRatingChange={setNewRating}
 								size={28}
+								className="hidden sm:flex"
 							/>
 						</div>
 						<Textarea
@@ -180,14 +191,14 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 							value={comment}
 							onChange={(e) => setComment(e.target.value)}
 							rows={3}
-							className="bg-white"
+							className="bg-white text-sm sm:text-base"
 						/>
-						{formError && <p className="text-red-500 text-sm">{formError}</p>}
+						{formError && <p className="text-red-500 text-xs sm:text-sm">{formError}</p>}
 						<div className="flex justify-end">
 							<Button
 								onClick={handleSubmit}
 								disabled={submitting || newRating === 0}
-								className="bg-green-600 hover:bg-green-700 text-white min-w-[150px]"
+								className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto sm:min-w-[150px] text-xs sm:text-sm py-2 sm:py-2.5"
 							>
 								{submitting
 									? editingId
@@ -201,16 +212,17 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 					</CardContent>
 				</Card>
 			) : (
-				<div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-sm text-center border border-blue-100">
+				<div className="bg-blue-50 text-blue-800 p-3 sm:p-4 rounded-lg text-xs sm:text-sm text-center border border-blue-100">
 					Faça login para avaliar este produto.
 				</div>
 			)}
 
-			<div className="space-y-4">
+			{/* Lista de avaliações */}
+			<div className="space-y-3 sm:space-y-4">
 				{loading ? (
-					<p className="text-gray-500">Carregando avaliações...</p>
+					<p className="text-gray-500 text-sm sm:text-base">Carregando avaliações...</p>
 				) : reviews.length === 0 ? (
-					<p className="text-gray-500 italic">
+					<p className="text-gray-500 italic text-sm sm:text-base">
 						Este produto ainda não possui avaliações.
 					</p>
 				) : (
@@ -225,46 +237,53 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 										: ""
 								}`}
 							>
-								<CardContent className="p-6">
-									<div className="flex justify-between items-start mb-2">
-										<div className="flex items-center gap-3">
-											<div className="bg-gray-100 p-2 rounded-full">
-												<User className="size-5 text-gray-500" />
+								<CardContent className="p-4 sm:p-6">
+									<div className="flex flex-col sm:flex-row justify-between sm:items-start gap-3 sm:gap-0 mb-2">
+										{/* Informações do usuário */}
+										<div className="flex items-center gap-2 sm:gap-3">
+											<div className="bg-gray-100 p-1.5 sm:p-2 rounded-full flex-shrink-0">
+												<User className="size-4 sm:size-5 text-gray-500" />
 											</div>
 											<div>
-												<p className="text-sm font-semibold text-gray-900">
+												<p className="text-xs sm:text-sm font-semibold text-gray-900">
 													{review.usuario_nome}
 												</p>
-												<p className="text-xs text-gray-500">
+												<p className="text-[10px] sm:text-xs text-gray-500">
 													{new Date(review.data).toLocaleDateString("pt-BR")}
 												</p>
 											</div>
 										</div>
-										<div className="flex items-center gap-3">
-											<StarRating rating={review.nota} size={16} />
+										
+										{/* Avaliação e ações */}
+										<div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3">
+											<StarRating rating={review.nota} size={14} className="sm:hidden" />
+											<StarRating rating={review.nota} size={16} className="hidden sm:flex" />
+											
 											{isOwner && !deleting && (
-												<div className="flex items-center border-l pl-3 gap-1 ml-2">
+												<div className="flex items-center border-l pl-2 sm:pl-3 gap-0.5 sm:gap-1 ml-2">
 													<Button
 														variant="ghost"
 														size="icon"
-														className="h-8 w-8 text-gray-400 hover:text-blue-600"
+														className="h-7 w-7 sm:h-8 sm:w-8 text-gray-400 hover:text-blue-600"
 														onClick={() => handleEditClick(review)}
 													>
-														<Pencil className="size-4" />
+														<Pencil className="size-3 sm:size-4" />
 													</Button>
 													<Button
 														variant="ghost"
 														size="icon"
-														className="h-8 w-8 text-gray-400 hover:text-red-600"
+														className="h-7 w-7 sm:h-8 sm:w-8 text-gray-400 hover:text-red-600"
 														onClick={() => openDeleteModal(review.id_avaliacao)}
 													>
-														<Trash2 className="size-4" />
+														<Trash2 className="size-3 sm:size-4" />
 													</Button>
 												</div>
 											)}
 										</div>
 									</div>
-									<p className="text-gray-700 text-sm mt-3 leading-relaxed pl-[52px]">
+									
+									{/* Comentário */}
+									<p className="text-gray-700 text-xs sm:text-sm mt-2 sm:mt-3 leading-relaxed pl-0 sm:pl-[52px]">
 										{review.descricao || (
 											<span className="italic text-gray-400">
 												Sem comentário.
@@ -278,27 +297,29 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 				)}
 			</div>
 
-			{/* 👇 MODAL USANDO SEU COMPONENTE DIALOG EXISTENTE */}
+			{/* Modal de confirmação de exclusão */}
 			<Dialog
 				open={!!reviewToDelete}
 				onOpenChange={(open) => !open && setReviewToDelete(null)}
 			>
-				<DialogContent>
+				<DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md mx-4">
 					<DialogHeader>
-						<DialogTitle>Tem certeza?</DialogTitle>
-						<DialogDescription>
+						<DialogTitle className="text-base sm:text-lg">Tem certeza?</DialogTitle>
+						<DialogDescription className="text-xs sm:text-sm">
 							Essa ação não pode ser desfeita. Isso excluirá permanentemente sua
 							avaliação deste produto.
 						</DialogDescription>
 					</DialogHeader>
-					<DialogFooter>
-						{/* Botão de Cancelar */}
-						<Button variant="outline" onClick={() => setReviewToDelete(null)}>
+					<DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
+						<Button 
+							variant="outline" 
+							onClick={() => setReviewToDelete(null)}
+							className="w-full sm:w-auto text-xs sm:text-sm"
+						>
 							Cancelar
 						</Button>
-						{/* Botão de Excluir (Vermelho) */}
 						<Button
-							className="bg-red-600 hover:bg-red-700 text-white"
+							className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto text-xs sm:text-sm"
 							onClick={handleConfirmDelete}
 							disabled={deleting}
 						>

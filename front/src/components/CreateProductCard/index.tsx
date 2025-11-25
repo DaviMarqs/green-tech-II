@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { useCreateProduct } from "@/hooks/useProducts";
 import type { CreateProductDTO } from "@/services/product.service";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function CreateProductCard() {
   const { loading, error, createProduct } = useCreateProduct();
@@ -22,6 +23,8 @@ export default function CreateProductCard() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(""); // string no input, converte no submit
   const [stock, setStock] = useState("");
+  const { user } = useAuth();
+
 
   // UI feedback
   const [formError, setFormError] = useState<string | null>(null);
@@ -54,7 +57,7 @@ export default function CreateProductCard() {
       descricao: description.trim(),
       preco: priceNum,
       estoque: stock ? stockNum : undefined,
-      // adicione outros campos do seu DTO se houver (category, images, etc.)
+      id_usuario: user?.id_usuario,
     };
 
     try {
