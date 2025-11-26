@@ -15,7 +15,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 
-// Schema
+
+
 const registerSchema = z
 	.object({
 		nome: z
@@ -33,6 +34,10 @@ const registerSchema = z
 			.string()
 			.min(10, { message: "Data incompleta" })
 			.refine(isValidDate, { message: "Data inexistente ou inválida" }),
+		// ADICIONE ESTA LINHA AQUI ↓
+		aceitarTermos: z.boolean().refine((val) => val === true, {
+			message: "Você precisa aceitar os termos de uso",
+		}),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: "As senhas não coincidem",
@@ -49,11 +54,18 @@ export function Register() {
 		register,
 		handleSubmit,
 		setValue,
-		formState: { errors },
+		watch, // ADICIONE ESTA LINHA
+		formState: { errors, isValid }, // ADICIONE isValid AQUI
 	} = useForm<RegisterFormValues>({
 		resolver: zodResolver(registerSchema),
 		mode: "all",
+		// ADICIONE ESTE BLOCO ↓
+		defaultValues: {
+			aceitarTermos: false,
+		},
 	});
+
+	const aceitarTermos = watch("aceitarTermos");
 
 	const handleRegister = async (data: RegisterFormValues) => {
 		setLoading(true);
@@ -276,25 +288,38 @@ export function Register() {
 							</div>
 						</div>
 
-						<div className="flex items-center gap-2 my-2">
-							<Checkbox
-								id="lembrarSenha"
-								className="w-4 h-4 cursor-pointer border-gray-400"
-							/>
-							<Label
-								htmlFor="lembrarSenha"
-								className="text-sm font-normal text-gray-600 cursor-pointer"
-							>
-								Concordo com os{" "}
-								<span className="text-[#00C06B] underline">Termos de Uso</span>
-							</Label>
+						<div className="space-y-1">
+							<div className="flex items-center gap-2 my-2">
+								<Checkbox
+									id="aceitarTermos"
+									checked={aceitarTermos}
+									onCheckedChange={(checked) => {
+										setValue("aceitarTermos", checked === true, {
+											shouldValidate: true,
+										});
+									}}
+									className={`w-4 h-4 cursor-pointer ${errors.aceitarTermos ? "border-red-500" : "border-gray-400"}`}
+								/>
+								<Label
+									htmlFor="aceitarTermos"
+									className={`text-sm font-normal cursor-pointer ${errors.aceitarTermos ? "text-red-500" : "text-gray-600"}`}
+								>
+									Concordo com os{" "}
+									<span className="text-[#00C06B] underline">Termos de Uso</span>
+								</Label>
+							</div>
+							{errors.aceitarTermos && (
+								<span className="text-xs text-red-500 font-medium">
+									{errors.aceitarTermos.message}
+								</span>
+							)}
 						</div>
 
 						<div className="pt-2">
 							<button
 								type="submit"
-								disabled={loading}
-								className="text-base font-medium bg-[#00C06B] hover:bg-green-700 transition text-white px-8 py-3 rounded-xl w-full cursor-pointer disabled:opacity-70"
+								disabled={loading || !isValid}
+								className="text-base font-medium bg-[#00C06B] hover:bg-green-700 transition text-white px-8 py-3 rounded-xl w-full cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
 							>
 								{loading ? "Cadastrando..." : "Fazer cadastro"}
 							</button>
