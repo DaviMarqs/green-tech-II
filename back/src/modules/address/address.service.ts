@@ -62,6 +62,19 @@ export const findOrCreateCidade = async (
 /* ---------------------- CREATE ENDEREÇO COMPLETO ---------------------- */
 
 export const createCompleto = async (body: RegisterEnderecoDTO) => {
+  console.log("body no service", body);
+  console.log("asdasd", {
+    bairro: body.bairro || "",
+    logradouro: body.logradouro,
+    cep: body.cep,
+    numero:
+      body.numero !== undefined && body.numero !== null
+        ? parseInt(body.numero, 10)
+        : undefined,
+    id_estado: body.id_estado,
+    id_cidade: body.id_cidade,
+    user_id: body.user_id,
+  });
   return AppDataSource.transaction(async (manager) => {
     try {
       const novoEndereco = manager.create(Endereco, {
@@ -72,8 +85,8 @@ export const createCompleto = async (body: RegisterEnderecoDTO) => {
           body.numero !== undefined && body.numero !== null
             ? parseInt(body.numero, 10)
             : undefined,
-        id_estado: body.estado_id,
-        id_cidade: body.cidade_id,
+        id_estado: body.id_estado,
+        id_cidade: body.id_cidade,
         user_id: body.user_id,
       });
 
@@ -81,6 +94,7 @@ export const createCompleto = async (body: RegisterEnderecoDTO) => {
 
       return novoEndereco;
     } catch (error) {
+      console.log("erro no create completo", error);
       if (error instanceof QueryFailedError) {
         const code = (error as any)?.driverError?.code;
 

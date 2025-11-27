@@ -7,8 +7,8 @@ export interface RegisterEnderecoDTO {
   logradouro: string;
   bairro: string;
   user_id: number;
-  cidade_id: number;
-  estado_id: number;
+  id_estado: number;
+  id_cidade: number;
 }
 
 export interface RegisterEnderecoResponse {

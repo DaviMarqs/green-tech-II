@@ -109,9 +109,7 @@ export const login = async (
 
   // 5. Prepara a resposta
   const userResponse: UserAuthResponse = {
-    id_usuario: user.id_usuario,
-    nome: user.nome,
-    email: user.email,
+    ...user,
   };
 
   return { user: userResponse, token };
