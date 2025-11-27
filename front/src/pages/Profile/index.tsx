@@ -34,25 +34,8 @@ import {
 } from "@/components/ui/dialog";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { addressService, userService } from "@/services/user.service";
+import { userService } from "@/services/user.service";
 import { api } from "@/services/api";
-
-const formatDateBr = (dateValue: string | Date | undefined | null) => {
-  if (!dateValue) return "";
-  try {
-    const date = new Date(dateValue);
-    if (isNaN(date.getTime())) return "";
-
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const year = date.getUTCFullYear();
-
-    return `${day}/${month}/${year}`;
-  } catch (e) {
-    console.error("Erro ao formatar data:", e);
-    return "";
-  }
-};
 
 const profileSchema = z.object({
   nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
@@ -88,25 +71,12 @@ export default function Profile() {
   const [isSaving, setIsSaving] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
 
-  const [addressId, setAddressId] = useState<number | null>(null);
-
-  const [estadoId, setEstadoId] = useState<number | null>(null);
-  const [cidadeId, setCidadeId] = useState<number | null>(null);
-
-  const [formData, setFormData] = useState({
-    logradouro: "",
-    numero: "",
-    bairro: "",
-    cep: "",
-    estado: "",
-    cidade: "",
-  });
+  const [hasAddress, setHasAddress] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
     formState: { errors },
   } = useForm<ProfileFormValues>({
@@ -122,116 +92,51 @@ export default function Profile() {
     resolver: zodResolver(passwordSchema),
   });
 
-  const cepValue = watch("cep");
-
-  // 1. Carregar dados do perfil
-  // useEffect(() => {
-  //   const loadProfile = async () => {
-  //     try {
-  //       const data = await userService.getProfile();
-  //       console.log("Dados do perfil carregados:", data);
-
-  //       if (!data) throw new Error("Dados vazios");
-
-  //       reset({
-  //         nome: data.nome || "",
-  //         email: data.email || "",
-  //         telefone: data.telefone || "",
-  //         cep: data.cep || "",
-  //         cpfCnpj: data.cpfCnpj || "Não informado",
-  //         data_nasc: formatDateBr(data.data_nasc),
-  //         numero: data.numero || "",
-  //       });
-
-  //       if (data.cep) {
-  //         const address = await addressService.getAddressByCep(data.cep);
-  //         if (address) {
-  //           setValue("rua", address.logradouro);
-  //           setValue("bairro", address.bairro);
-  //           setValue("cidade", address.localidade);
-  //           setValue("estado", address.uf);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast.error("Erro ao carregar perfil");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   loadProfile();
-  // }, [reset, setValue]);
-
-  // 2. Efeito para atualizar endereço
-  // useEffect(() => {
-  //   const fetchAddress = async () => {
-  //     if (isEditing && cepValue && cepValue.length >= 8) {
-  //       const address = await addressService.getAddressByCep(cepValue);
-  //       if (address) {
-  //         setValue("rua", address.logradouro);
-  //         setValue("bairro", address.bairro);
-  //         setValue("cidade", address.localidade);
-  //         setValue("estado", address.uf);
-  //         setValue("cep", address.cep);
-  //       }
-  //     }
-  //   };
-
-  //   const timer = setTimeout(fetchAddress, 1000);
-  //   return () => clearTimeout(timer);
-  // }, [cepValue, isEditing, setValue]);
-
   useEffect(() => {
     if (!user) return;
 
-    async function loadUserAddress() {
+    async function loadUserAndAddress() {
       try {
         if (!user) return;
         const { data } = await api.get(`/address/user/${user.id_usuario}`);
+        console.log("user data:", user);
 
-        if (data && data.length > 0) {
-          const addr = data[0]; // pega o primeiro endereço
+        const addr = data && data.length > 0 ? data[0] : null;
 
-          setAddressId(addr.id_endereco);
+        reset({
+          // 🔹 Dados do usuário
+          nome: user.nome || "",
+          email: user.email || "",
+          telefone: user.telefone || "",
+          cpfCnpj: user.cpf_cnpj || "",
+          data_nasc: user.data_nasc || "",
 
-          setCidadeId(addr.cidade?.id_cidade || null);
-          setEstadoId(addr.estado?.id_estado || null);
+          // 🔹 Endereço (se existir)
+          rua: addr?.logradouro || "",
+          numero: addr?.numero?.toString() || "",
+          bairro: addr?.bairro || "",
+          cep: addr?.cep || "",
+          estado: addr?.estado?.nome_estado || "",
+          cidade: addr?.cidade?.nome_cidade || "",
+        });
 
-          const logradouro = addr.logradouro || "";
-          const numero = addr.numero?.toString() || "";
-          const bairro = addr.bairro || "";
-          const cep = addr.cep || "";
-          const estado = addr.estado?.nome_estado || "";
-          const cidade = addr.cidade?.nome_cidade || "";
-
-          // mantém seu formData se você quiser usar em outro lugar
-          setFormData({
-            logradouro,
-            numero,
-            bairro,
-            cep,
-            estado,
-            cidade,
-          });
-
-          // 🟢 joga os dados no formulário (React Hook Form)
-          setValue("rua", logradouro);
-          setValue("numero", numero);
-          setValue("bairro", bairro);
-          setValue("cep", cep);
-          setValue("estado", estado);
-          setValue("cidade", cidade);
+        if (addr) {
+          setHasAddress(true);
+        } else {
+          setHasAddress(false);
+          setIsEditing(true); // libera edição pra cadastrar endereço
         }
-
-        setIsLoading(false);
       } catch (error) {
         console.log("Usuário sem endereço ainda.");
+        setHasAddress(false);
+        setIsEditing(true);
+      } finally {
+        setIsLoading(false);
       }
     }
 
-    loadUserAddress();
-  }, [user, setValue]);
+    loadUserAndAddress();
+  }, [user, reset]);
 
   // 3. Salvar Alterações
   const onSubmit = async (data: ProfileFormValues) => {
@@ -239,14 +144,40 @@ export default function Profile() {
     setIsSaving(true);
 
     try {
+      // 1) Atualiza dados básicos do usuário
       const updatedUser = await userService.updateProfile(user.id_usuario, {
         nome: data.nome,
         email: data.email,
         telefone: data.telefone,
-        cep: data.cep,
-        numero: data.numero,
+        // se seu backend precisar, pode mandar cep/numero aqui também
+        // cep: data.cep,
+        // numero: data.numero,
       });
 
+      // 2) Monta o payload de endereço
+      const addressPayload = {
+        cep: data.cep,
+        logradouro: data.rua,
+        numero: data.numero,
+        bairro: data.bairro,
+        cidade: data.cidade,
+        estado: data.estado,
+        // se o backend espera id_usuario no body:
+        id_usuario: user.id_usuario,
+      };
+
+      // 3) Cria ou atualiza endereço
+      // if (hasAddress) {
+      //   // ajuste o nome do método conforme seu service
+      //   await addressService.updateAddress(user.id_usuario, addressPayload);
+      //   // ou, se usar id_endereco:
+      //   // await addressService.updateAddress(addressId, addressPayload);
+      // } else {
+      //   await addressService.createAddress(addressPayload);
+      //   setHasAddress(true);
+      // }
+
+      // 4) Atualiza contexto de auth
       const currentToken = localStorage.getItem("token");
       if (currentToken) {
         login(
@@ -262,6 +193,7 @@ export default function Profile() {
       toast.success("Perfil atualizado com sucesso!");
       setIsEditing(false);
     } catch (error: any) {
+      console.error(error);
       toast.error("Erro ao atualizar", {
         description: error.message || "Verifique os dados e tente novamente.",
       });
@@ -534,9 +466,9 @@ export default function Profile() {
                     <Label className="text-gray-600">Rua</Label>
                     <Input
                       {...register("rua")}
-                      disabled={true}
-                      className="bg-gray-100"
-                      placeholder="Carregando..."
+                      disabled={!isEditing}
+                      className="bg-gray-50/50"
+                      placeholder={hasAddress ? "" : "Digite o logradouro"}
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -553,8 +485,8 @@ export default function Profile() {
                   <Label className="text-gray-600">Bairro</Label>
                   <Input
                     {...register("bairro")}
-                    disabled={true}
-                    className="bg-gray-100"
+                    disabled={!isEditing}
+                    className="bg-gray-50/50"
                   />
                 </div>
                 <div className="grid grid-cols-3 gap-4">
@@ -562,16 +494,16 @@ export default function Profile() {
                     <Label className="text-gray-600">Cidade</Label>
                     <Input
                       {...register("cidade")}
-                      disabled={true}
-                      className="bg-gray-100"
+                      disabled={!isEditing}
+                      className="bg-gray-50/50"
                     />
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-gray-600">UF</Label>
                     <Input
                       {...register("estado")}
-                      disabled={true}
-                      className="bg-gray-100"
+                      disabled={!isEditing}
+                      className="bg-gray-50/50"
                     />
                   </div>
                 </div>
@@ -583,6 +515,7 @@ export default function Profile() {
                     className="bg-gray-50/50"
                     maxLength={9}
                   />
+
                   {errors.cep && (
                     <span className="text-xs text-red-500">
                       {errors.cep.message}

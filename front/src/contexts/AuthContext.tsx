@@ -1,9 +1,18 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-interface User {
+export interface User {
   id_usuario: number;
   nome: string;
   email: string;
+  telefone: string;
+  cpf_cnpj?: string;
+  data_nasc?: string;
+
+  senha?: string;
+
+  created_at?: string;
+  updated_at?: string | null;
+  disabled_at?: string | null;
 }
 
 interface AuthContextType {
@@ -35,6 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = (userData: User, token: string) => {
+    console.log("Logging in user:", userData);
     setUser(userData);
     setToken(token);
     setSignedIn(true);
