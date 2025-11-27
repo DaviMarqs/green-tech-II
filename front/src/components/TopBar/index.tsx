@@ -19,7 +19,7 @@ export default function TopBar() {
 			{/* Seção de busca e filtros */}
 			<div className="flex items-center gap-2 sm:gap-3 w-full sm:w-[70%] md:w-[60%] lg:w-[50%]">
 				{/* Input de busca */}
-				<div className="relative flex-1">
+				{/* <div className="relative flex-1">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400 pointer-events-none" />
 					<Input
 						placeholder="Pesquisar..."
@@ -27,10 +27,10 @@ export default function TopBar() {
 						onChange={(e) => setSearch(e.target.value)}
 						className="w-full rounded-lg pl-10 text-sm sm:text-base"
 					/>
-				</div>
+				</div> */}
 
 				{/* Botões de ordenar e filtrar - Desktop */}
-				<div className="hidden md:flex items-center gap-2">
+				{/* <div className="hidden md:flex items-center gap-2">
 					<Button 
 						variant="outline" 
 						className="text-gray-700 border-gray-300 text-sm whitespace-nowrap"
@@ -38,7 +38,7 @@ export default function TopBar() {
 						Ordenar por ▾
 					</Button>
 
-				</div>
+				</div> */}
 
 			</div>
 

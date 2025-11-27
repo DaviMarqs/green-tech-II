@@ -18,7 +18,11 @@ export const createProduct = async (
   return savedProduct;
 };
 export const getAllProducts = async (): Promise<ProductResponse[]> => {
-  return await productRepository.find();
+  return await productRepository.find({
+    order: {
+      created_at: "DESC"
+    }
+  });
 };
 
 export const getProductById = async (id: number): Promise<ProductResponse> => {
