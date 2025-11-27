@@ -1,13 +1,13 @@
+import { SuccessModal } from "@/components/SuccessModal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import { orderService, type CreateOrderDTO } from "@/services/order.service";
+import { paymentService, type PaymentMethod } from "@/services/payment.service";
+import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { paymentService, type PaymentMethod } from "@/services/payment.service";
-import { orderService, type CreateOrderDTO } from "@/services/order.service";
-import { ChevronDown } from "lucide-react";
-import { SuccessModal } from "@/components/SuccessModal";
 
 interface AddressData {
   logradouro: string;
@@ -146,6 +146,7 @@ export default function Checkout() {
       localStorage.removeItem("userAddress");
 
       setIsSuccessOpen(true);
+      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       const msg = err.response?.data?.message || "Erro ao processar pedido.";
