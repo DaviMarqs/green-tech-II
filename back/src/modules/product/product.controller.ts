@@ -9,7 +9,6 @@ import {
   updateProduct,
 } from "./product.service";
 
-// ✅ Cada controller agora é do tipo Promise<void>
 export const createController = async (
   req: Request,
   res: Response

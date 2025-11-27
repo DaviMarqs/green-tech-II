@@ -19,7 +19,7 @@ export default function DetailsProduct() {
 						<h3 className="text-base sm:text-lg md:text-xl text-gray-600">
 							Detalhes do produto
 						</h3>
-						<h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800 break-words">
+						<h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800 wrap-break-words">
 							{product?.nome}
 						</h2>
 					</div>
