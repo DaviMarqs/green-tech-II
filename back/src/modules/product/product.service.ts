@@ -17,17 +17,48 @@ export const createProduct = async (
   const savedProduct = await productRepository.save(newProduct);
   return savedProduct;
 };
+
 export const getAllProducts = async (): Promise<ProductResponse[]> => {
   return await productRepository.find({
     order: {
-      created_at: "DESC"
-    }
+      created_at: "DESC",
+    },
+    relations: ["usuario"], 
+    select: {
+      id: true,
+      nome: true,
+      descricao: true,
+      preco: true,
+      estoque: true,
+      id_usuario: true,
+      created_at: true,
+      updated_at: true,
+      usuario: {
+        id_usuario: true,
+        nome: true,
+      },
+    },
   });
 };
 
 export const getProductById = async (id: number): Promise<ProductResponse> => {
   const product = await productRepository.findOne({
     where: { id: id },
+    relations: ["usuario"],
+    select: {
+      id: true,
+      nome: true,
+      descricao: true,
+      preco: true,
+      estoque: true,
+      id_usuario: true,
+      created_at: true,
+      updated_at: true,
+      usuario: {
+        id_usuario: true,
+        nome: true,
+      },
+    },
   });
   if (!product) throw new AppError("Produto não encontrado.", 404);
   return product;
@@ -42,16 +73,19 @@ export const getFilteredProducts = async ({
 }: ProductFilter) => {
   const query = productRepository.createQueryBuilder("produto");
 
-  // 🔍 Filtros opcionais
+  query.leftJoinAndSelect("produto.usuario", "usuario");
+  
+  query.addSelect(["usuario.id_usuario", "usuario.nome"]);
+
   if (nome) query.andWhere("produto.nome ILIKE :nome", { nome: `%${nome}%` });
   if (minPreco) query.andWhere("produto.preco >= :minPreco", { minPreco });
   if (maxPreco) query.andWhere("produto.preco <= :maxPreco", { maxPreco });
 
-  // 📄 Paginação
   const skip = (page - 1) * limit;
   query.skip(skip).take(limit);
+  
+  query.orderBy("produto.created_at", "DESC");
 
-  // 🔢 Contagem total (sem paginação)
   const [data, total] = await query.getManyAndCount();
 
   return {

@@ -18,7 +18,6 @@ export default function ProductList() {
   const { addToCart } = useCart();
   const { user } = useAuth();
 
-  // Fetch products from your API
   const { data: products, loading, error, refetch } = useProducts();
 
   if (loading)
@@ -52,13 +51,23 @@ export default function ProductList() {
           key={product.id}
           className="flex flex-col gap-3 md:gap-4 w-full p-3 sm:p-4 md:p-6 border border-gray-200 shadow-md rounded-xl hover:shadow-lg transition relative overflow-hidden"
         >
-          {/* Barra verde no topo */}
+
+
+        {product.estoque == 0 ? (
+          <div className="w-full h-2 bg-gray-300 rounded-t-xl absolute top-0 left-0 right-0" />
+        ) : (
           <div className="w-full h-2 bg-green-600 rounded-t-xl absolute top-0 left-0 right-0" />
+        )}
 
           {/* Título do card */}
-          <div className="flex items-center justify-between mt-2"> 
+          <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-2" id="titulo-card">
-              <Zap className="size-5 sm:size-6 text-green-500 flex-shrink-0" />
+            {product.estoque == 0 ? (
+              <Zap className="size-5 sm:size-6 text-gray-300 shrink-0" />
+            ) : (
+              <Zap className="size-5 sm:size-6 text-green-500 shrink-0" />
+            )}
+              
               <CardTitle className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800 line-clamp-2">
                 {product.nome}
               </CardTitle>
@@ -73,16 +82,16 @@ export default function ProductList() {
           </div>
 
           {/* Grid de informações - Responsivo */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">  
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {/* ID do vendedor */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <User className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
-                <span className="text-gray-500 text-xs sm:text-sm">ID vendedor</span>
+                <User className="size-4 sm:size-5 text-gray-500 shrink-0" />
+                <span className="text-gray-500 text-xs sm:text-sm">Vendedor</span>
               </div>
               <div>
-                <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block">
-                  {product.id_usuario}
+                <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block" title={product.usuario?.nome}>
+                  {product.usuario?.nome || `ID: ${product.id_usuario}`}
                 </span>
               </div>
             </div>
@@ -90,7 +99,7 @@ export default function ProductList() {
             {/* Preço */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <CircleDollarSign className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
+                <CircleDollarSign className="size-4 sm:size-5 text-gray-500 shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">Preço</span>
               </div>
               <div>
@@ -104,7 +113,7 @@ export default function ProductList() {
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <Package className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
-                <span className="text-gray-500 text-xs sm:text-sm">Estoque</span>
+                <span className="text-gray-500 text-xs sm:text-sm">Cotas disponíveis</span>
               </div>
               <div>
                 <span className="text-gray-700 text-xs sm:text-sm font-medium">
@@ -116,7 +125,7 @@ export default function ProductList() {
             {/* Data de publicação */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <Calendar className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
+                <Calendar className="size-4 sm:size-5 text-gray-500 shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">Publicado</span>
               </div>
               <div>
@@ -137,17 +146,17 @@ export default function ProductList() {
 
             {product.id_usuario !== user?.id_usuario && (
               <Button
-                className="bg-green-600 hover:bg-green-700 text-white w-full text-xs sm:text-sm"
+                className={product.estoque === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}
                 onClick={() => setSelectedProduct(product)}
+                disabled={product.estoque === 0}
               >
-                Comprar
+                {product.estoque === 0 ? " Sem estoque" : "Comprar agora"}
               </Button>
             )}
           </div>
         </Card>
       ))}
 
-      {/* Dialog de compra - Responsivo */}
       <Dialog
         open={!!selectedProduct}
         onOpenChange={() => setSelectedProduct(null)}
@@ -163,21 +172,30 @@ export default function ProductList() {
             <div className="space-y-3 sm:space-y-4">
               <div className="space-y-1">
                 <p className="text-gray-700 text-xs sm:text-sm">
-                  <strong>Vendedor:</strong> {selectedProduct?.id_usuario}
+                  {/* 🔥 Alterado no Modal também */}
+                  <strong>Vendedor:</strong> {selectedProduct.usuario?.nome || selectedProduct.id_usuario}
                 </p>
                 <p className="text-gray-700 text-xs sm:text-sm">
                   <strong>Preço:</strong> R${selectedProduct.preco}
                 </p>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 sm:p-3">
-                <p className="text-yellow-700 text-xs sm:text-sm font-medium">
-                  Economia estimada: <strong>R$ 150,00/mês</strong>
-                </p>
-              </div>
 
+              {selectedProduct.estoque == 0 ? (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-2 sm:p-3">
+                  <p className="text-red-700 text-xs sm:text-sm font-medium">
+                    Produto esgotado no momento.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-2 sm:p-3">
+                  <p className="text-green-700 text-xs sm:text-sm font-medium">
+                    Cotas disponíveis: {selectedProduct.estoque}
+                  </p>
+                </div>
+              )}
               <Button
-                className="w-full bg-green-600 hover:bg-green-700 text-white mt-2 text-xs sm:text-sm"
+                className={`w-full ${selectedProduct.estoque === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"} text-white mt-2 text-xs sm:text-sm`}
                 onClick={() => {
                   addToCart({
                     id: selectedProduct.id,
@@ -189,8 +207,9 @@ export default function ProductList() {
                   });
                   setSelectedProduct(null);
                 }}
+                disabled={selectedProduct.estoque === 0}
               >
-                Adicionar ao carrinho
+                {selectedProduct.estoque === 0 ? " Indisponível" : "Adicionar ao carrinho"}
               </Button>
             </div>
           )}
