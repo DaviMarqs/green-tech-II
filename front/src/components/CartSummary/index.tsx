@@ -87,7 +87,7 @@ export default function CartSummary() {
             <div className="border-t pt-4 space-y-4">
               <div className="flex justify-between items-end">
                 <span className="text-gray-600">Total do pedido</span>
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="font-bold text-gray-900">
                   R$ {total.toFixed(2)}
                 </span>
               </div>
