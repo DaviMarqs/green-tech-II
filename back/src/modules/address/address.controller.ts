@@ -27,6 +27,7 @@ export const createEnderecoController = async (
       endereco: novo,
     });
   } catch (err) {
+    console.log("aqui", err);
     next(err);
   }
 };
