@@ -18,7 +18,6 @@ export default function ProductList() {
   const { addToCart } = useCart();
   const { user } = useAuth();
 
-  // Fetch products from your API
   const { data: products, loading, error, refetch } = useProducts();
 
   if (loading)
@@ -58,7 +57,7 @@ export default function ProductList() {
           {/* Título do card */}
           <div className="flex items-center justify-between mt-2"> 
             <div className="flex items-center gap-2" id="titulo-card">
-              <Zap className="size-5 sm:size-6 text-green-500 flex-shrink-0" />
+              <Zap className="size-5 sm:size-6 text-green-500 shrink-0" />
               <CardTitle className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800 line-clamp-2">
                 {product.nome}
               </CardTitle>
@@ -74,15 +73,15 @@ export default function ProductList() {
 
           {/* Grid de informações - Responsivo */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">  
-            {/* ID do vendedor */}
+            {/* Nome do vendedor */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <User className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
-                <span className="text-gray-500 text-xs sm:text-sm">ID vendedor</span>
+                <User className="size-4 sm:size-5 text-gray-500 shrink-0" />
+                <span className="text-gray-500 text-xs sm:text-sm">Vendedor</span>
               </div>
               <div>
-                <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block">
-                  {product.id_usuario}
+                <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block" title={product.usuario?.nome}>
+                  {product.usuario?.nome || `ID: ${product.id_usuario}`}
                 </span>
               </div>
             </div>
@@ -90,7 +89,7 @@ export default function ProductList() {
             {/* Preço */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <CircleDollarSign className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
+                <CircleDollarSign className="size-4 sm:size-5 text-gray-500 shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">Preço</span>
               </div>
               <div>
@@ -103,7 +102,7 @@ export default function ProductList() {
             {/* Estoque */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <Package className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
+                <Package className="size-4 sm:size-5 text-gray-500 shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">Estoque</span>
               </div>
               <div>
@@ -116,7 +115,7 @@ export default function ProductList() {
             {/* Data de publicação */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
-                <Calendar className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
+                <Calendar className="size-4 sm:size-5 text-gray-500 shrink-0" />
                 <span className="text-gray-500 text-xs sm:text-sm">Publicado</span>
               </div>
               <div>
@@ -147,7 +146,6 @@ export default function ProductList() {
         </Card>
       ))}
 
-      {/* Dialog de compra - Responsivo */}
       <Dialog
         open={!!selectedProduct}
         onOpenChange={() => setSelectedProduct(null)}
@@ -163,7 +161,8 @@ export default function ProductList() {
             <div className="space-y-3 sm:space-y-4">
               <div className="space-y-1">
                 <p className="text-gray-700 text-xs sm:text-sm">
-                  <strong>Vendedor:</strong> {selectedProduct?.id_usuario}
+                  {/* 🔥 Alterado no Modal também */}
+                  <strong>Vendedor:</strong> {selectedProduct.usuario?.nome || selectedProduct.id_usuario}
                 </p>
                 <p className="text-gray-700 text-xs sm:text-sm">
                   <strong>Preço:</strong> R${selectedProduct.preco}

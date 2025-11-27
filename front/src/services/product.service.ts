@@ -1,14 +1,17 @@
 import { http } from "./http";
 
 export type Product = {
-  id: number; // 17
-  nome: string; // "Painel Solar 550W"
-  descricao: string; // "Painel solar monocristalino de alta eficiência"
-  preco: string; // "1250.50"  ← string!
-  estoque: number; // 10
-  id_usuario: number; // 1
-  created_at: string; // "2025-11-04T02:13:04.448Z"
-  updated_at: string | null; // null
+  id: number;
+  nome: string;
+  descricao: string;
+  preco: string;
+  estoque: number;
+  id_usuario: number;
+  created_at: string;
+  updated_at: string | null;
+  usuario?: {
+    nome: string;
+  };
 };
 
 export type CreateProductDTO = {
@@ -37,7 +40,7 @@ export type ProductFilters = {
   maxPrice?: number;
   page?: number;
   pageSize?: number;
-  // Adicione o que seu /filtered aceitar
+  nome?: string; 
 };
 
 const path = "/products";
