@@ -58,7 +58,7 @@ export default function MyProducts({ dados, reloadOrders }: MyProductsProps) {
 
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[160px]">ID do pedido</TableHead>
+          <TableHead className="w-40">ID do pedido</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Método de pagamento</TableHead>
           <TableHead className="text-right">Valor (R$)</TableHead>
