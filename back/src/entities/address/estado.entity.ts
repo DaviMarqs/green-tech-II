@@ -20,6 +20,9 @@ export class Estado {
   @Column({ length: 2 })
   sigla: string;
 
+  @Column({ type: "int" })
+  id_estado_ibge: number;
+
   @CreateDateColumn({ type: "timestamp" })
   created_at: Date;
 
