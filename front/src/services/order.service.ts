@@ -22,7 +22,7 @@ export interface OrderUser {
   created_at: string;
   updated_at: string | null;
   disabled_at: string | null;
-  senha: string; // if you don't want this here, you can omit
+  senha: string; 
 }
 
 export interface OrderProductItem {
@@ -77,7 +77,7 @@ export type CreateOrderDTO = {
   vendedorId: number;
   formaPagamento: string;
   parcelas?: number;
-  produtos: ProductOrderDTO[]; // Backend espera 'produtos', não 'itens'
+  produtos: ProductOrderDTO[]; 
 };
 
 export type UpdateOrderDTO = Partial<CreateOrderDTO> & {

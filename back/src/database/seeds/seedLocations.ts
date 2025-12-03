@@ -20,15 +20,11 @@ export async function run() {
 
     const estados = response.data;
 
-    console.log(response.data);
-
     for (const estado of estados) {
-      console.log("Estado:", {
-        nome_estado: estado.nome,
-        sigla: estado.sigla,
-      });
+      console.log("Estado:", estado);
       await estadoRepo.insert({
         nome_estado: estado.nome,
+        id_estado_ibge: estado.id,
         sigla: estado.sigla,
       });
 
@@ -52,7 +48,7 @@ export async function run() {
       console.log(`📥 Baixando cidades de ${estado.nome_estado}...`);
 
       const response = await axios.get(
-        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado.id_estado}/municipios`
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado.id_estado_ibge}/municipios`
       );
 
       const cidades = response.data;
