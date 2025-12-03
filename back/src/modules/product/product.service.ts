@@ -18,27 +18,31 @@ export const createProduct = async (
   return savedProduct;
 };
 
-export const getAllProducts = async (): Promise<ProductResponse[]> => {
-  return await productRepository.find({
-    order: {
-      created_at: "DESC",
-    },
-    relations: ["usuario"], 
-    select: {
-      id: true,
-      nome: true,
-      descricao: true,
-      preco: true,
-      estoque: true,
-      id_usuario: true,
-      created_at: true,
-      updated_at: true,
-      usuario: {
-        id_usuario: true,
-        nome: true,
-      },
-    },
-  });
+export const getAllProducts = async (
+  id_usuario?: number
+): Promise<ProductResponse[]> => {
+  const query = productRepository
+    .createQueryBuilder("produto")
+    .leftJoinAndSelect("produto.usuario", "usuario")
+    .select([
+      "produto.id",
+      "produto.nome",
+      "produto.descricao",
+      "produto.preco",
+      "produto.estoque",
+      "produto.id_usuario",
+      "produto.created_at",
+      "produto.updated_at",
+      "usuario.id_usuario",
+      "usuario.nome",
+    ])
+    .orderBy("produto.created_at", "DESC");
+
+  if (id_usuario) {
+    query.andWhere("produto.id_usuario != :id_usuario", { id_usuario });
+  }
+
+  return await query.getMany();
 };
 
 export const getProductById = async (id: number): Promise<ProductResponse> => {
@@ -74,7 +78,7 @@ export const getFilteredProducts = async ({
   const query = productRepository.createQueryBuilder("produto");
 
   query.leftJoinAndSelect("produto.usuario", "usuario");
-  
+
   query.addSelect(["usuario.id_usuario", "usuario.nome"]);
 
   if (nome) query.andWhere("produto.nome ILIKE :nome", { nome: `%${nome}%` });
@@ -83,7 +87,7 @@ export const getFilteredProducts = async ({
 
   const skip = (page - 1) * limit;
   query.skip(skip).take(limit);
-  
+
   query.orderBy("produto.created_at", "DESC");
 
   const [data, total] = await query.getManyAndCount();

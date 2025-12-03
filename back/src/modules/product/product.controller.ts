@@ -53,11 +53,14 @@ export const listFilteredController = async (
 };
 
 export const listController = async (
-  _req: Request,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const products = await getAllProducts();
+    const { id_usuario } = req.query;
+    const products = await getAllProducts(
+      id_usuario ? Number(id_usuario) : undefined
+    );
     res.status(200).json(products);
   } catch (error) {
     console.log(error);
