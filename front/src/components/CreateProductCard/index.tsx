@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,21 +9,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
+import { useAuth } from "@/contexts/AuthContext";
 import { useCreateProduct } from "@/hooks/useProducts";
 import type { CreateProductDTO } from "@/services/product.service";
-import { useAuth } from "@/contexts/AuthContext";
 
-export default function CreateProductCard() {
+interface CreateProductCardProps {
+  onProductCreated?: () => void;
+}
+
+export default function CreateProductCard({
+  onProductCreated,
+}: CreateProductCardProps) {
   const { loading, error, createProduct } = useCreateProduct();
 
   // form controlado
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(""); // string no input, converte no submit
+  const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const { user } = useAuth();
-
 
   // UI feedback
   const [formError, setFormError] = useState<string | null>(null);
@@ -64,8 +69,10 @@ export default function CreateProductCard() {
       await createProduct(payload);
       setSuccessMsg("Produto cadastrado com sucesso!");
       resetForm();
+
+      onProductCreated?.();
+      setTimeout(() => setSuccessMsg(null), 2000);
     } catch {
-      // o hook já popula `error`; aqui só garantimos uma msg
       setFormError("Não foi possível cadastrar. Tente novamente.");
     }
   };

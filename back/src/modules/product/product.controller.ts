@@ -6,6 +6,7 @@ import {
   getAllProducts,
   getFilteredProducts,
   getProductById,
+  getProductsByUser,
   updateProduct,
 } from "./product.service";
 
@@ -58,6 +59,7 @@ export const listController = async (
 ): Promise<void> => {
   try {
     const { id_usuario } = req.query;
+    console.log("ID do usuário na listController:", id_usuario);
     const products = await getAllProducts(
       id_usuario ? Number(id_usuario) : undefined
     );
@@ -107,5 +109,22 @@ export const deleteController = async (
     if (error instanceof AppError)
       res.status(error.statusCode).json({ message: error.message });
     else res.status(500).json({ message: "Erro desconhecido." });
+  }
+};
+
+export const listByUserController = async (
+  req: Request<{ id_usuario: string }>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id_usuario } = req.params;
+    const products = await getProductsByUser(Number(id_usuario));
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    if (error instanceof AppError)
+      res.status(error.statusCode).json({ message: error.message });
+    else
+      res.status(500).json({ message: "Erro ao listar produtos do usuário." });
   }
 };

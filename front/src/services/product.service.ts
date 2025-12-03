@@ -91,4 +91,11 @@ export const productService = {
   delete(id: string, signal?: AbortSignal) {
     return http<void>(`${path}/${id}`, { method: "DELETE", signal });
   },
+
+  listByUser(id_usuario: number, signal?: AbortSignal) {
+    return http<ListResponse | Product[]>(`${path}/user/${id_usuario}`, {
+      method: "GET",
+      signal,
+    });
+  },
 };

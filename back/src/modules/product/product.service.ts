@@ -126,3 +126,28 @@ export const deleteProduct = async (
   await productRepository.delete(id);
   return { message: "Produto removido com sucesso." };
 };
+
+export const getProductsByUser = async (
+  id_usuario: number
+): Promise<ProductResponse[]> => {
+  const products = await productRepository
+    .createQueryBuilder("produto")
+    .leftJoinAndSelect("produto.usuario", "usuario")
+    .where("produto.id_usuario = :id_usuario", { id_usuario })
+    .select([
+      "produto.id",
+      "produto.nome",
+      "produto.descricao",
+      "produto.preco",
+      "produto.estoque",
+      "produto.id_usuario",
+      "produto.created_at",
+      "produto.updated_at",
+      "usuario.id_usuario",
+      "usuario.nome",
+    ])
+    .orderBy("produto.created_at", "DESC")
+    .getMany();
+
+  return products;
+};

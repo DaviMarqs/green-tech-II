@@ -238,3 +238,48 @@ export function useDeleteProduct() {
 
   return { loading, error, deleteProduct: mutate };
 }
+
+export function useUserProducts() {
+  const { user } = useAuth();
+  const abortRef = useRef<AbortController | null>(null);
+  const [state, setState] = useState<ListState>({
+    loading: true,
+    error: null,
+    data: null,
+  });
+
+  const refetch = useCallback(() => {
+    if (!user?.id_usuario) return;
+
+    abortRef.current?.abort();
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
+
+    setState({ loading: true, error: null, data: null });
+
+    productService
+      .listByUser(user.id_usuario, ctrl.signal)
+      .then((payload) => {
+        const { items, total, page, pageSize } = normalizeListPayload(payload);
+        setState({
+          loading: false,
+          error: null,
+          data: items,
+          total,
+          page,
+          pageSize,
+        });
+      })
+      .catch((err) => {
+        if (err.name === "AbortError") return;
+        setState({ loading: false, error: err as Error, data: null });
+      });
+  }, [user?.id_usuario]);
+
+  useEffect(() => {
+    refetch();
+    return () => abortRef.current?.abort();
+  }, [refetch]);
+
+  return { ...state, refetch };
+}
