@@ -92,7 +92,18 @@ export const createCompleto = async (body: RegisterEnderecoDTO) => {
 
       await manager.save(novoEndereco);
 
-      return novoEndereco;
+      const estado = await manager.findOne(Estado, {
+        where: { id_estado: body.id_estado },
+      });
+      const cidade = await manager.findOne(Cidade, {
+        where: { id_cidade: body.id_cidade },
+      });
+
+      return {
+        ...novoEndereco,
+        cidade: cidade?.nome_cidade,
+        estado: estado?.nome_estado,
+      };
     } catch (error) {
       console.log("erro no create completo", error);
       if (error instanceof QueryFailedError) {
