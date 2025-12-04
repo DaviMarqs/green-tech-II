@@ -79,7 +79,7 @@ export default function DetailsProduct() {
 					</div>
 				</div>
 
-				{user?.id_usuario !== product?.id_usuario ? (
+				{user?.id_usuario !== product?.id_usuario && product &&product?.estoque > 0 && (
 					<Button
 						className="w-full bg-green-600 hover:bg-green-700 text-white py-3 sm:py-6 text-sm sm:text-base font-medium rounded-lg shadow-md hover:shadow-lg transition-all"
 						onClick={() => {
@@ -94,7 +94,26 @@ export default function DetailsProduct() {
 					>
 						Adicionar ao carrinho
 					</Button>
-				) : (
+				) }
+
+				{user?.id_usuario !== product?.id_usuario && product &&product?.estoque == 0 && (
+					<Button
+						className="w-full bg-green-600 hover:bg-green-700 text-white py-3 sm:py-6 text-sm sm:text-base font-medium rounded-lg shadow-md hover:shadow-lg transition-all"
+						onClick={() => {
+							addToCart({
+								id: product?.id || 0,
+								name: product?.nome || "",
+								image: "",
+								price: Number(product?.preco) || 0,
+								quantity: 1,
+							});
+						}}
+						disabled
+					>
+						Sem estoque
+					</Button>
+				) }
+				{ user?.id_usuario === product?.id_usuario && (
 					<Dialog>
 						<DialogTrigger asChild>
 							<Button
@@ -118,7 +137,6 @@ export default function DetailsProduct() {
 						</DialogContent>
 					</Dialog>
 				)}
-
 				{product?.id && (
 					<div className="w-full">
 						<ProductReviews productId={product.id} />

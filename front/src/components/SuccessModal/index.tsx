@@ -26,6 +26,11 @@ export function SuccessModal({
 }: SuccessModalProps) {
 	const navigate = useNavigate();
 
+	const handleClose = () => {
+		onOpenChange(false);
+		navigate("/dashboard");
+	};
+
 	const handleGoToOrders = () => {
 		onOpenChange(false);
 		navigate("/my-orders", { state: { newPayment: paymentData } });
@@ -51,8 +56,17 @@ export function SuccessModal({
 	const hasCode = pixCode || boletoCode;
 
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-md text-center">
+		<Dialog 
+			open={open} 
+			onOpenChange={handleClose}
+			modal={true}
+		>
+			<DialogContent 
+				className="sm:max-w-md text-center"
+				onPointerDownOutside={(e) => e.preventDefault()}
+				onEscapeKeyDown={(e) => e.preventDefault()}
+				onInteractOutside={(e) => e.preventDefault()}
+			>
 				<div className="flex flex-col items-center gap-4 py-6">
 					<div className="p-3 bg-green-100 rounded-full">
 						<CheckCircle2 className="w-12 h-12 text-green-600" />
