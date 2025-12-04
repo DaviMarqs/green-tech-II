@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import TopBar from "@/components/TopBar";
 import { orderService, type OrderDetails } from "@/services/order.service";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { Loader2 } from "lucide-react";
 
 const formatDateTimeBr = (dateStr: string) => {
@@ -102,13 +103,6 @@ export default function NotaFiscal() {
       </div>
     );
   }
-
-  // helper só pra mostrar os produtos da NF bonitinho
-  const formatCurrency = (value: string | number) =>
-    new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(typeof value === "string" ? parseFloat(value) : value);
 
   return (
     <div className="flex min-h-screen bg-gray-100">

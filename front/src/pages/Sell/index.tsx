@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useUserProducts } from "@/hooks/useProducts";
 import type { Product } from "@/services/product.service";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
 
@@ -68,10 +69,10 @@ export function Sell() {
                     <div className="flex justify-between items-end">
                       <div>
                         <p className="text-lg font-semibold text-green-600">
-                          R$ {product.preco}
+                          {formatCurrency(product.preco)}
                         </p>
                         <p className="text-xs text-gray-500">
-                          Estoque: {product.estoque}
+                          Cota (kWh): {product.estoque}
                         </p>
                       </div>
                     </div>

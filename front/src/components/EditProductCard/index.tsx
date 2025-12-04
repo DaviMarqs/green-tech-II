@@ -172,7 +172,7 @@ export default function EditProductCard({
             htmlFor="estoque"
             className="text-sm font-semibold text-gray-700"
           >
-            Estoque
+            Cota (kWh)
           </Label>
           <Input
             id="estoque"
