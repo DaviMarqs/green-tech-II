@@ -10,7 +10,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useProducts } from "@/hooks/useProducts";
 import type { Product } from "@/services/product.service";
-import { Calendar, CircleDollarSign, User, Package, Zap } from "lucide-react";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { Calendar, CircleDollarSign, Package, User, Zap } from "lucide-react";
 import { useState } from "react";
 
 export default function ProductList() {
@@ -51,23 +52,21 @@ export default function ProductList() {
           key={product.id}
           className="flex flex-col gap-3 md:gap-4 w-full p-3 sm:p-4 md:p-6 border border-gray-200 shadow-md rounded-xl hover:shadow-lg transition relative overflow-hidden"
         >
-
-
-        {product.estoque == 0 ? (
-          <div className="w-full h-2 bg-gray-300 rounded-t-xl absolute top-0 left-0 right-0" />
-        ) : (
-          <div className="w-full h-2 bg-green-600 rounded-t-xl absolute top-0 left-0 right-0" />
-        )}
+          {product.estoque == 0 ? (
+            <div className="w-full h-2 bg-gray-300 rounded-t-xl absolute top-0 left-0 right-0" />
+          ) : (
+            <div className="w-full h-2 bg-green-600 rounded-t-xl absolute top-0 left-0 right-0" />
+          )}
 
           {/* Título do card */}
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-2" id="titulo-card">
-            {product.estoque == 0 ? (
-              <Zap className="size-5 sm:size-6 text-gray-300 shrink-0" />
-            ) : (
-              <Zap className="size-5 sm:size-6 text-green-500 shrink-0" />
-            )}
-              
+              {product.estoque == 0 ? (
+                <Zap className="size-5 sm:size-6 text-gray-300 shrink-0" />
+              ) : (
+                <Zap className="size-5 sm:size-6 text-green-500 shrink-0" />
+              )}
+
               <CardTitle className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800 line-clamp-2">
                 {product.nome}
               </CardTitle>
@@ -87,10 +86,15 @@ export default function ProductList() {
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <User className="size-4 sm:size-5 text-gray-500 shrink-0" />
-                <span className="text-gray-500 text-xs sm:text-sm">Vendedor</span>
+                <span className="text-gray-500 text-xs sm:text-sm">
+                  Vendedor
+                </span>
               </div>
               <div>
-                <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block" title={product.usuario?.nome}>
+                <span
+                  className="text-gray-700 text-xs sm:text-sm font-medium truncate block"
+                  title={product.usuario?.nome}
+                >
                   {product.usuario?.nome || `ID: ${product.id_usuario}`}
                 </span>
               </div>
@@ -104,7 +108,7 @@ export default function ProductList() {
               </div>
               <div>
                 <span className="text-gray-700 text-xs sm:text-sm font-medium">
-                  R${product.preco ?? "—"}
+                  {formatCurrency(product.preco ?? "0")}
                 </span>
               </div>
             </div>
@@ -113,7 +117,9 @@ export default function ProductList() {
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <Package className="size-4 sm:size-5 text-gray-500 flex-shrink-0" />
-                <span className="text-gray-500 text-xs sm:text-sm">Cotas disponíveis</span>
+                <span className="text-gray-500 text-xs sm:text-sm">
+                  Cotas disponíveis
+                </span>
               </div>
               <div>
                 <span className="text-gray-700 text-xs sm:text-sm font-medium">
@@ -126,11 +132,14 @@ export default function ProductList() {
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <Calendar className="size-4 sm:size-5 text-gray-500 shrink-0" />
-                <span className="text-gray-500 text-xs sm:text-sm">Publicado</span>
+                <span className="text-gray-500 text-xs sm:text-sm">
+                  Publicado
+                </span>
               </div>
               <div>
                 <span className="text-gray-700 text-xs sm:text-sm font-medium truncate block">
-                  {product.created_at && new Date(product.created_at).toLocaleDateString("pt-BR")}
+                  {product.created_at &&
+                    new Date(product.created_at).toLocaleDateString("pt-BR")}
                 </span>
               </div>
             </div>
@@ -146,7 +155,11 @@ export default function ProductList() {
 
             {product.id_usuario !== user?.id_usuario && (
               <Button
-                className={product.estoque === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}
+                className={
+                  product.estoque === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700"
+                }
                 onClick={() => setSelectedProduct(product)}
                 disabled={product.estoque === 0}
               >
@@ -173,13 +186,14 @@ export default function ProductList() {
               <div className="space-y-1">
                 <p className="text-gray-700 text-xs sm:text-sm">
                   {/* 🔥 Alterado no Modal também */}
-                  <strong>Vendedor:</strong> {selectedProduct.usuario?.nome || selectedProduct.id_usuario}
+                  <strong>Vendedor:</strong>{" "}
+                  {selectedProduct.usuario?.nome || selectedProduct.id_usuario}
                 </p>
                 <p className="text-gray-700 text-xs sm:text-sm">
-                  <strong>Preço:</strong> R${selectedProduct.preco}
+                  <strong>Preço:</strong>{" "}
+                  {formatCurrency(selectedProduct.preco ?? "0")}
                 </p>
               </div>
-
 
               {selectedProduct.estoque == 0 ? (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-2 sm:p-3">
@@ -195,7 +209,11 @@ export default function ProductList() {
                 </div>
               )}
               <Button
-                className={`w-full ${selectedProduct.estoque === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"} text-white mt-2 text-xs sm:text-sm`}
+                className={`w-full ${
+                  selectedProduct.estoque === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700"
+                } text-white mt-2 text-xs sm:text-sm`}
                 onClick={() => {
                   addToCart({
                     id: selectedProduct.id,
@@ -209,7 +227,9 @@ export default function ProductList() {
                 }}
                 disabled={selectedProduct.estoque === 0}
               >
-                {selectedProduct.estoque === 0 ? " Indisponível" : "Adicionar ao carrinho"}
+                {selectedProduct.estoque === 0
+                  ? " Indisponível"
+                  : "Adicionar ao carrinho"}
               </Button>
             </div>
           )}

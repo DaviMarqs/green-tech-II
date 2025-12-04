@@ -1,7 +1,8 @@
-import TopBar from "@/components/TopBar";
 import MyProducts from "@/components/MyProducts";
-import { useUserOrders } from "@/hooks/useOrders";
+import TopBar from "@/components/TopBar";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserOrders } from "@/hooks/useOrders";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const STATUS_MAP: Record<string, string> = {
   AGUARDANDO_PAGAMENTO: "Aguardando Pagamento",
@@ -57,7 +58,7 @@ export default function MyOrders() {
               id: p.id_pedido,
               status: STATUS_MAP[p.status] || p.status,
               statusColor: STATUS_STYLES[p.status] || STATUS_STYLES.DEFAULT,
-              valor: Number(p.valor), // converte string → número, se necessário
+              valor: formatCurrency(p.valor), // converte string → número, se necessário
               forma: PAYMENT_MAP[p.forma_pagamento] || p.forma_pagamento, // pode vir do backend depois
             }))}
           />

@@ -1,20 +1,28 @@
 import AddressModal from "@/components/AddressModal";
 import { useCart } from "@/contexts/CartContext";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../ui/button";
 import RemoveProductCartModal from "../RemoveProductCartModal";
+import { Button } from "../ui/button";
 
 export default function CartSummary() {
   const { items, total, removeFromCart, updateQuantity, clearCart } = useCart();
-  
+
   // Modais
   const [openAddressModal, setOpenAddressModal] = useState(false);
-  
-  // Estado para controlar qual item será removido via Modal
-  const [itemToRemove, setItemToRemove] = useState<{ id: number; name: string } | null>(null);
 
-  const handleDecreaseQuantity = (id: number, currentQuantity: number, name: string) => {
+  // Estado para controlar qual item será removido via Modal
+  const [itemToRemove, setItemToRemove] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+
+  const handleDecreaseQuantity = (
+    id: number,
+    currentQuantity: number,
+    name: string
+  ) => {
     if (currentQuantity > 1) {
       updateQuantity(id, currentQuantity - 1);
     } else {
@@ -49,7 +57,7 @@ export default function CartSummary() {
                   <div className="flex-1">
                     <p className="font-medium text-gray-900">{item.name}</p>
                     <p className="text-sm text-green-600 font-semibold">
-                      R$ {item.price.toFixed(2)}
+                      {formatCurrency(item.price.toFixed(2))}
                     </p>
                   </div>
 
@@ -57,8 +65,18 @@ export default function CartSummary() {
                     <div className="flex items-center border rounded-md">
                       <button
                         className="p-1 hover:bg-gray-100 text-gray-600 disabled:opacity-50 transition-colors"
-                        onClick={() => handleDecreaseQuantity(item.id, item.quantity, item.name)}
-                        aria-label={item.quantity === 1 ? "Remover item" : "Diminuir quantidade"}
+                        onClick={() =>
+                          handleDecreaseQuantity(
+                            item.id,
+                            item.quantity,
+                            item.name
+                          )
+                        }
+                        aria-label={
+                          item.quantity === 1
+                            ? "Remover item"
+                            : "Diminuir quantidade"
+                        }
                       >
                         {item.quantity === 1 ? (
                           <Trash2 className="size-4 text-red-500 hover:text-red-800 cursor-pointer" />
@@ -66,14 +84,16 @@ export default function CartSummary() {
                           <Minus className="size-4 text-red-500 hover:text-red-800" />
                         )}
                       </button>
-                      
+
                       <span className="w-8 text-center text-sm font-medium">
                         {item.quantity}
                       </span>
-                      
+
                       <button
                         className="p-1 hover:bg-gray-100 text-gray-600"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
                         aria-label="Aumentar quantidade"
                       >
                         <Plus className="size-4 text-green-600" />
@@ -88,7 +108,7 @@ export default function CartSummary() {
               <div className="flex justify-between items-end">
                 <span className="text-gray-600">Total do pedido</span>
                 <span className="font-bold text-gray-900">
-                  R$ {total.toFixed(2)}
+                  {formatCurrency(total.toFixed(2))}
                 </span>
               </div>
 
@@ -112,9 +132,9 @@ export default function CartSummary() {
         )}
       </div>
 
-      <AddressModal 
-        open={openAddressModal} 
-        onClose={() => setOpenAddressModal(false)} 
+      <AddressModal
+        open={openAddressModal}
+        onClose={() => setOpenAddressModal(false)}
       />
 
       <RemoveProductCartModal

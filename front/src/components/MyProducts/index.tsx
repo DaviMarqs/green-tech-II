@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // 👈 add this
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,8 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { api } from "@/services/api";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 👈 add this
 import { toast } from "sonner";
 
 interface Pedido {
@@ -84,9 +84,7 @@ export default function MyProducts({ dados, reloadOrders }: MyProductsProps) {
 
               <TableCell>{pedido.forma}</TableCell>
 
-              <TableCell className="text-right">
-                R$ {pedido.valor.toFixed(2)}
-              </TableCell>
+              <TableCell className="text-right">R$ {pedido.valor}</TableCell>
 
               <TableCell className="text-right">
                 {!isPaid ? (

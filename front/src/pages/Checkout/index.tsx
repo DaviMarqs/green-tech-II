@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { orderService, type CreateOrderDTO } from "@/services/order.service";
 import { paymentService, type PaymentMethod } from "@/services/payment.service";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -286,7 +287,9 @@ export default function Checkout() {
                 loading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
               } text-white font-semibold`}
             >
-              {loading ? "Processando..." : `Pagar R$ ${total.toFixed(2)}`}
+              {loading
+                ? "Processando..."
+                : `Pagar ${formatCurrency(total.toFixed(2))}`}
             </Button>
           </div>
         </div>
@@ -306,7 +309,8 @@ export default function Checkout() {
                 >
                   <span className="font-medium">{item.name}</span>
                   <span>
-                    {item.quantity}x <strong>R${item.price.toFixed(2)}</strong>
+                    {item.quantity}x{" "}
+                    <strong>{formatCurrency(item.price.toFixed(2))}</strong>
                   </span>
                 </li>
               ))}
@@ -314,7 +318,7 @@ export default function Checkout() {
           )}
           <div className="flex justify-between text-lg font-semibold text-gray-800 border-t pt-4">
             <span>Total:</span>
-            <span>R$ {total.toFixed(2)}</span>
+            <span>{formatCurrency(total.toFixed(2))}</span>
           </div>
         </div>
       </div>
