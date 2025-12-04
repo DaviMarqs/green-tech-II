@@ -15,6 +15,7 @@ import MyOrders from "./pages/MyOrders";
 import { Sell } from "./pages/Sell";
 import Profile from "./pages/Profile";
 import NotaFiscal from "./pages/NotaFiscal";
+import Home from "./components/Home";
 
 function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -34,7 +35,8 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
 }
 
 const publicRoutes = [
-  { path: "/", element: <Login /> },
+  { path: "/", element: <Home /> },
+  { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/forgot", element: <Esqueci /> },
 ];
