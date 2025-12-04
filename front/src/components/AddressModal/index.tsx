@@ -118,6 +118,8 @@ export default function AddressModal({
         toast.success("Endereço atualizado!");
       } else {
         response = await api.post("/address", payload);
+
+        console.log("response", response);
         toast.success("Endereço cadastrado!");
       }
 
@@ -125,8 +127,8 @@ export default function AddressModal({
         "userAddress",
         JSON.stringify({
           ...payload,
-          cidade: formData.cidade,
-          estado: formData.estado,
+          cidade: formData.cidade || response.data.endereco.cidade,
+          estado: formData.estado || response.data.endereco.estado,
         })
       );
       onClose();

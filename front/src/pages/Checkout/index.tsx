@@ -146,7 +146,6 @@ export default function Checkout() {
       localStorage.removeItem("userAddress");
 
       setIsSuccessOpen(true);
-      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       const msg = err.response?.data?.message || "Erro ao processar pedido.";

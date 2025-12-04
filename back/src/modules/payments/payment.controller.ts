@@ -14,16 +14,16 @@ export const createPaymentController = async (
 	next: NextFunction,
 ) => {
 	try {
-		// if (!req.user) {
-		// 	throw new AppError("Usuário não autenticado.", 401);
-		// }
-		// const userId = req.user.id;
+		if (!req.user) {
+			throw new AppError("Usuário não autenticado.", 401);
+		}
+		const userId = req.user.id;
 
 		const paymentData = req.body;
 
 		const fullPaymentDTO: CreatePaymentDTO = {
 			...paymentData,
-			// id_usuario: userId,
+			id_usuario: userId,
 		};
 
 		if (!fullPaymentDTO.id_pedido || !fullPaymentDTO.valor) {

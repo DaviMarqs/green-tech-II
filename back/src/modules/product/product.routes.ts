@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { protect } from "../../middleware/auth.middleware";
 import {
   createController,
   deleteController,
   getByIdController,
+  listByUserController,
   listController,
   listFilteredController,
   updateController,
@@ -16,8 +16,9 @@ const productRoutes = Router();
 
 // CRUD completo
 productRoutes.post("/", createController); // Criar produto
-productRoutes.get("/", listController); // Listar todos
 productRoutes.get("/filtered", listFilteredController); // Listar filtrado
+productRoutes.get("/user/:id_usuario", listByUserController); // Listar por usuário
+productRoutes.get("/", listController); // Listar todos
 productRoutes.get("/:id", getByIdController); // Obter por ID
 productRoutes.put("/:id", updateController); // Atualizar
 productRoutes.delete("/:id", deleteController); // Deletar

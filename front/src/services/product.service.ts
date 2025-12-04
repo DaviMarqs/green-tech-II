@@ -40,7 +40,7 @@ export type ProductFilters = {
   maxPrice?: number;
   page?: number;
   pageSize?: number;
-  nome?: string; 
+  nome?: string;
 };
 
 const path = "/products";
@@ -60,8 +60,9 @@ export const productService = {
     return http<Product>(path, { method: "POST", body: data, signal });
   },
 
-  list(signal?: AbortSignal) {
-    return http<ListResponse | Product[]>(path, {
+  list(signal?: AbortSignal, id_usuario?: number) {
+    const qs = id_usuario ? `?id_usuario=${id_usuario}` : "";
+    return http<ListResponse | Product[]>(`${path}${qs}`, {
       method: "GET",
       signal,
     });
@@ -89,5 +90,12 @@ export const productService = {
 
   delete(id: string, signal?: AbortSignal) {
     return http<void>(`${path}/${id}`, { method: "DELETE", signal });
+  },
+
+  listByUser(id_usuario: number, signal?: AbortSignal) {
+    return http<ListResponse | Product[]>(`${path}/user/${id_usuario}`, {
+      method: "GET",
+      signal,
+    });
   },
 };

@@ -1,11 +1,4 @@
-import {
-  Archive,
-  Banknote,
-  Bolt,
-  CircleQuestionMark,
-  LogOut,
-  ShoppingCart,
-} from "lucide-react";
+import { Archive, Banknote, LogOut, ShoppingCart } from "lucide-react";
 
 import {
   Sidebar,
@@ -20,7 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/contexts/AuthContext";
 
-import logoSrc from '/logo-greentech.svg';
+import logoSrc from "/logo-greentech.svg";
 
 export function AppSidebar() {
   const { logout } = useAuth();
@@ -40,16 +33,16 @@ export function AppSidebar() {
       url: "/my-orders",
       icon: Archive,
     },
-    {
-      title: "Suporte",
-      url: "#",
-      icon: CircleQuestionMark,
-    },
-    {
-      title: "Configurações",
-      url: "#",
-      icon: Bolt,
-    },
+    // {
+    //   title: "Suporte",
+    //   url: "#",
+    //   icon: CircleQuestionMark,
+    // },
+    // {
+    //   title: "Configurações",
+    //   url: "#",
+    //   icon: Bolt,
+    // },
   ];
 
   const footerItems = [
