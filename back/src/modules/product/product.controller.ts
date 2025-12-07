@@ -106,6 +106,7 @@ export const deleteController = async (
     const result = await deleteProduct(Number(req.params.id));
     res.status(200).json(result);
   } catch (error) {
+    console.error('error',error)
     if (error instanceof AppError)
       res.status(error.statusCode).json({ message: error.message });
     else res.status(500).json({ message: "Erro desconhecido." });

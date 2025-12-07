@@ -28,7 +28,7 @@ interface MyProductsProps {
 
 export default function MyProducts({ dados, reloadOrders }: MyProductsProps) {
   const [loadingId, setLoadingId] = useState<number | null>(null);
-  const navigate = useNavigate(); // 👈 hook de navegação
+  const navigate = useNavigate(); 
 
   const handleInformarPagamento = async (pedidoId: number) => {
     setLoadingId(pedidoId);
@@ -49,7 +49,7 @@ export default function MyProducts({ dados, reloadOrders }: MyProductsProps) {
   };
 
   const handleVerDetalhes = (pedidoId: number) => {
-    navigate(`/my-orders/${pedidoId}`); // 👈 redireciona para /my-orders/:id
+    navigate(`/my-orders/${pedidoId}`); 
   };
 
   return (

@@ -52,7 +52,9 @@ export function SuccessModal({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-md text-center">
+			<DialogContent className="sm:max-w-md text-center [&>button]:hidden"
+			onPointerDownOutside={(e) => e.preventDefault()}
+                onEscapeKeyDown={(e) => e.preventDefault()} >
 				<div className="flex flex-col items-center gap-4 py-6">
 					<div className="p-3 bg-green-100 rounded-full">
 						<CheckCircle2 className="w-12 h-12 text-green-600" />

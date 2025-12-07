@@ -42,20 +42,12 @@ export const register = async (
     senha: passwordHash,
     telefone: dto.telefone,
     data_nasc: dataFormatada,
-    // Aqui está a mágica do TypeORM:
-    // Informamos a FK 'cep' através da relação 'logradouro'
-    // logradouro: { cep: dto.cep },
+  
   });
 
-  // 5. Salva no banco (valida a FK do CEP automaticamente)
   try {
     await userRepository.save(newUser);
   } catch (error) {
-    // Captura erro de FK (ex: CEP não existe na tabela gt_logradouro)
-    // if (error.code === "23503") {
-    //   // Código de erro de FK violation
-    //   throw new AppError("O CEP informado não foi encontrado.", 404);
-    // }
     throw new AppError("Erro ao salvar usuário.", 500);
   }
 

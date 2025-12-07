@@ -80,7 +80,7 @@ export function Register() {
 			});
 
 			toast.success("Cadastro feito com sucesso!", { duration: 4000 });
-			navigate("/");
+			navigate("/login");
 		} catch (error: any) {
 			console.error(error);
 			const msg = error.response?.data?.message || "Erro ao fazer cadastro!";

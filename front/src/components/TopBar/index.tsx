@@ -16,7 +16,7 @@ export default function TopBar() {
 
 	return (
 		<div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center px-3 sm:px-6 md:px-8 py-3 sm:py-4 border-b bg-white w-full">
-			<div className="flex items-center gap-2 sm:gap-3 w-full sm:w-[70%] md:w-[60%] lg:w-[50%]">
+			<div className="flex items-center mx-auto gap-2 sm:gap-3 w-full sm:w-[70%] md:w-[60%] lg:w-[50%]">
 				 <div className="relative flex-1">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400 pointer-events-none" />
 					<Input

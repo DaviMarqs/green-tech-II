@@ -191,7 +191,7 @@ export const updateOrderStatus = async (
         // DESTINATÁRIO (usuário)
         nome_destinatario: pedido.comprador?.nome ?? "",
         email_destinatario: pedido.comprador?.email ?? "",
-        endereco_destinatario: "pedido.comprador?.endereco",
+        endereco_destinatario: pedido.comprador?.endereco ?? "Não informado",
         cpf_cnpj_destinatario: pedido.comprador?.cpf_cnpj ?? "",
 
         // EMITENTE (dados fixos ou configuráveis)

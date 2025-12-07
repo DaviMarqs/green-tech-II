@@ -58,8 +58,8 @@ export default function MyOrders() {
               id: p.id_pedido,
               status: STATUS_MAP[p.status] || p.status,
               statusColor: STATUS_STYLES[p.status] || STATUS_STYLES.DEFAULT,
-              valor: formatCurrency(p.valor), // converte string → número, se necessário
-              forma: PAYMENT_MAP[p.forma_pagamento] || p.forma_pagamento, // pode vir do backend depois
+              valor: p.valor, 
+              forma: PAYMENT_MAP[p.forma_pagamento] || p.forma_pagamento, 
             }))}
           />
         ) : (
